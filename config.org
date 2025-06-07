@@ -88,7 +88,7 @@ sync toc? like modify here and reflect changes and viceversa
 - [[#hydra][HYDRA]]
 - [[#typing-break][TYPING BREAK]]
 - [[#lispy][LISPY]]
-- [[#football-ultras-font][FOOTBALL ULTRAS FONT]]
+- [[#ft-ultras-font][FT ULTRAS FONT]]
 - [[#niceties][NICETIES]]
 - [[#snacksnvim][Snacks.nvim]]
   - [[#recent-files][RECENT FILES]]
