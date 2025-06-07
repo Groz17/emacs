@@ -1,0 +1,10 @@
+/*
+!/config.org
+!/scripts/
+!/scripts/*
+!/images/
+!/images/*
+!/init.el
+!/early-init.el
+!/.gitignore
+
