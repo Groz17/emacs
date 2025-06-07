@@ -1,0 +1,2163 @@
+#+TITLE: Groz's GNU Emacs Config
+#+AUTHOR: Groz
+#+DESCRIPTION: Groz's personal Emacs config
+#+STARTUP: folded
+#+STARTUP: overview
+#+OPTIONS: toc:2
+
+It would be nice to automatically fold just table of contents....
+
+sync toc? like modify here and reflect changes and viceversa
+
+* TABLE OF CONTENTS :toc:
+- [[#task-list][TASK LIST]]
+  - [[#vim-feature-parity-210-20][Vim feature parity]]
+  - [[#emacs-662-9][Emacs]]
+  - [[#emacsvim-interaction-evil-mode][Emacs/vim interaction (Evil Mode)]]
+- [[#important-programs-to-load-first][IMPORTANT PROGRAMS TO LOAD FIRST]]
+  - [[#adding-the-scripts-directory-to-path][Adding the scripts directory to path]]
+  - [[#sourcing-the-scripts][Sourcing the scripts]]
+- [[#personal-information][Personal information]]
+- [[#all-the-icons][ALL THE ICONS]]
+- [[#backup][BACKUP]]
+- [[#company][COMPANY]]
+- [[#dashboard][DASHBOARD]]
+- [[#diminish][DIMINISH]]
+- [[#dired][DIRED]]
+  - [[#making-deleted-files-go-to-trash-can][Making deleted files go to trash can]]
+- [[#ediff][EDIFF]]
+- [[#elfeed][ELFEED]]
+- [[#evil][EVIL]]
+- [[#flycheck][FLYCHECK]]
+- [[#fonts][FONTS]]
+  - [[#setting-the-font-face][Setting the Font Face]]
+- [[#general-keybindings][GENERAL KEYBINDINGS]]
+- [[#git][GIT]]
+  - [[#magit][Magit]]
+  - [[#forge][Forge]]
+- [[#highlight-todo][HIGHLIGHT TODO]]
+- [[#ivy-counsel][IVY (COUNSEL)]]
+- [[#language-support][LANGUAGE SUPPORT]]
+- [[#minibuffer][MINIBUFFER]]
+  -  [[#escape][ESCAPE]]
+  -  [[#readline-sanity][READLINE SANITY]]
+- [[#modeline][MODELINE]]
+- [[#neotree][NEOTREE]]
+- [[#org-mode][ORG MODE]]
+  - [[#enabling-table-of-contents][Enabling Table of Contents]]
+  - [[#enabling-org-bullets][Enabling Org Bullets]]
+  - [[#diminish-org-indent-mode][Diminish Org Indent Mode]]
+  - [[#org-level-headers][Org Level Headers]]
+  - [[#source-code-block-tag-expansion][Source Code Block Tag Expansion]]
+  - [[#org-agenda][ORG AGENDA]]
+  - [[#org-babel][ORG BABEL]]
+  - [[#tangle][tangle]]
+  - [[#images][IMAGES]]
+  - [[#tables][TABLES]]
+  - [[#vimscript][Vimscript]]
+  - [[#calc][CALC]]
+  - [[#org-mpv-note][org-mpv-note]]
+  - [[#org-tempo][org-tempo]]
+  - [[#org-autolist][org-autolist]]
+  - [[#keybindings][keybindings]]
+  - [[#org-modern][org modern]]
+- [[#pdfs][PDFs]]
+  - [[#org-noter][org-noter]]
+- [[#perspective][PERSPECTIVE]]
+- [[#rainbow-delimiters][RAINBOW DELIMITERS]]
+- [[#rainbow-mode][RAINBOW MODE]]
+- [[#subword-mode][SUBWORD MODE]]
+- [[#calc-mode][CALC MODE]]
+- [[#sane-defaults][SANE DEFAULTS]]
+- [[#shells-and-terminals][SHELLS AND TERMINALS]]
+  - [[#eshell][Eshell]]
+  - [[#vterm][Vterm]]
+  - [[#vterm-toggle][Vterm-Toggle]]
+- [[#sudo-edit][SUDO EDIT]]
+- [[#theme][THEME]]
+- [[#tldr][TLDR]]
+- [[#transparency][TRANSPARENCY]]
+- [[#which-key][WHICH-KEY]]
+- [[#command-log][COMMAND-LOG]]
+- [[#kanata-sheganigans][KANATA SHEGANIGANS]]
+- [[#full-screen][FULL SCREEN]]
+- [[#noice][NOICE]]
+- [[#artist-mode][ARTIST MODE]]
+- [[#helpful-system-crafters][HELPFUL (system crafters)]]
+- [[#hooks][HOOKS]]
+- [[#hydra][HYDRA]]
+- [[#typing-break][TYPING BREAK]]
+- [[#lispy][LISPY]]
+- [[#football-ultras-font][FOOTBALL ULTRAS FONT]]
+- [[#niceties][NICETIES]]
+- [[#snacksnvim][Snacks.nvim]]
+  - [[#recent-files][RECENT FILES]]
+- [[#universal-argument][Universal argument]]
+- [[#one-shot-mappings][One-shot mappings]]
+- [[#erc][ERC]]
+- [[#vim-parity][VIM PARITY]]
+- [[#quiz][QUIZ]]
+- [[#themes][THEMES]]
+- [[#docs][DOCS]]
+- [[#anki-editor][anki editor]]
+- [[#emms][emms]]
+- [[#notes][notes?]]
+- [[#radio][radio]]
+- [[#info][info]]
+- [[#diff-hl][diff-hl]]
+- [[#multiple-cursors][multiple cursors]]
+- [[#docker][docker]]
+- [[#ai][AI]]
+- [[#utility-apps][Utility apps]]
+  - [[#calendar][Calendar]]
+  - [[#calc-1][Calc]]
+- [[#eof][eof]]
+- [[#lsp][LSP]]
+- [[#tree-sitter][Tree-sitter]]
+  - [[#text-objects][Text-objects]]
+
+* TODO TASK LIST
+** Vim feature parity [2/10] [20%]
+  - [ ] :restart command/keybinding... (maybe C-x C-S-c?)
+  - [ ] Alt+key should act as Esc key (trick terminal in insert mode?)
+  - [ ] gf shows popup for some reason
+  - [X] tabout w/ jl? just use c-f
+  - [ ] how to use default keybinding (like norm! in vim) for c-x c-f?
+  - [ ] create c-s-% to replace backwards and regex version(so u can use vim and emacs to cover all 3 cases)
+  - [ ] from emacs mode to insert mode and viceversa? like for ctrl-r mappings...
+  - [ ] emacs keybindins in command mode?
+  - [ ] seamlessly switch between emacs and neovim? in a split also
+  - [ ] v:count tab doesn't work in org mode tables? also how to make column same width?
+  - [ ] use vimscript function in emacs? process?
+  - [ ] lazy ui for slowest plugins?
+  - [X] C-j indents, C-m doesn't
+  - [X] {} in visual mode doesn't work?
+    
+** Emacs [6/62] [9%]
+  - [ ] what is alist?
+  - [ ] kill shell buffer with C-d if first char?
+  - [ ] emmet?
+  - [ ] olivetti mode
+  - [ ] I still see asterisks in org mode?
+  - [ ] automatically update percentage in todo list
+  - [ ] make undo work like vim (u0?)
+  - [ ] gz operator to narrow
+  - [ ] make c-] and c-m-] work like readline...
+  - [ ] c-o in help buffers?
+  - [ ] ts textobjects
+  - [ ] reload pdf on save?
+  - [ ] vip non comprende begin_src?
+  - [ ] make emacs same ts and lsp as mason? or just use guix ffs
+  - [ ] whenever u put ^, use it as control vim prefix (for picker loclist, etc... and stuff like ^y in insert mode)
+  - [ ] C-c C- ->localleader in normal mode?
+  - [ ] fixa f keys terminal
+  - [ ] also put ~/dotfiles in org agend for all Todos
+  - [ ] reload this config?
+  - [ ] use space as l in operator mode
+  - [ ] u could also use c-w as prefix since u use a/l for that, but don't since vim doesn't have function for windows... maybe wincmd though?
+  - [ ] text-scale-increase
+  - [ ] recompile
+  - [ ] C-l as enter for imenu, etc...?
+  - [ ] ghostty?
+  - [ ] is perspectie a global minor mode since it used c-c m-... as prefix?
+  - [ ] n/l text objects
+  - [ ] for some reason c-o doesn't work in minibuffer
+  - [ ] (beacon-mode 1)
+  - [ ] search in this todo lists?
+  - [ ] automatically jump if symlink... (libraries)
+  - [ ] reload config?
+  - [X] quickfix/loclist equivalent? kinda, c-c c-o
+  - [ ] % match also comments (FIX)
+  - [ ]  expand region = mapping? like tridactyl
+  - [ ] use i to go to emacs mode from normal mode? like tridactyl
+  - [ ] use o to go to one shot emacs mode from normal mode? like C-o in vim
+  - [ ] M-spc and C-M-spc as set mark kinda like universal-argument?
+  - [ ] 'EtiamNullam/deferred-clipboard.nvim',
+  - [ ] surround doesn't work well
+  - [ ] use localleader in normal mode for emacs keybindings? like localleder vi for identify matrix in emacs calc
+  - [ ] use C-o in emacs mode to one shot insert mode?
+  - [ ] fixa C-w kill region
+  - [ ] using vimscript for scripting/mapping? like %s? create transpiler
+  - [ ] r kinda doesn't work? (evil-mode)
+  - [X] company ctrl {j,k,l}
+  - [X] artist-mode doesn't work
+  - [ ] generate commented section for each orgmode header?
+  - [ ] focus on the minibuffer keybinding? ctrlx-o works, also ctrlw-{h,j,k,l}
+  - [ ] make insert mode be like emacs mode? get rid of insert mode
+  - [X] unimpaired co? so u can use z and / "modifiers"
+  - [ ] go to normal mode for pickers?
+  - [ ] readline in shell
+  - [ ] whatsapp
+  - [ ] indent/dedent in insert/emacs mode?
+  - [ ] tilde eof
+  - [-] doom modeline at the top? or at least tabline?
+  - [ ] vim insert mode equivalents in emacs?
+  - [ ] colorscheme change night/day?
+  - [ ] fixa eol behaviour?
+  - [X] minibuffer in the center like noice?
+  - [X] markdown-mode?
+  - [ ] emacs terminal yank clipboard
+  - [ ] emacs terminal fn keys
+  - [ ] org mode headers colored like chakras
+** Emacs/vim interaction (Evil Mode)
+  - [ ] swap file or notify when working on the same file?
+  - [ ] zj and zk in evil?
+  - [ ] set ft should work like for emacs modes
+  - [ ] c-r and c-y comparison?
+  - [ ] in emacs/insert mode, use c-x pressed as k and then x for vim insert, and l/s for emacs c-x
+  - [ ] use c/m for vim insert mode mappings?
+  - [ ] syncronize shada/command history
+  - [ ] from normal mode, go to insert mode after certain keybindings like M-; or M-RET
+* IMPORTANT PROGRAMS TO LOAD FIRST
+To keep this =config.org= a reasonable length, I have moved a lot of code to individual scripts that will be sourced by this config.  These scripts are found in "~/.config/emacs/scripts" and do not contain any code that most people are likely to need to edit.
+
+** Adding the scripts directory to path
+#+begin_src elisp
+(add-to-list 'load-path "~/.config/emacs/scripts/")
+#+end_src
+
+** Sourcing the scripts
+#+begin_src elisp
+(require 'elpaca-setup)  ;; The Elpaca Package Manager
+(require 'buffer-move)   ;; Buffer-move for better window management
+(require 'app-launchers) ;; Use emacs as a run launcher like dmenu (experimental)
+#+end_src
+
+* Personal information
+#+begin_src elisp :tangle no
+;; Private Stuff
+(setq user-full-name "")
+(setq user-mail-address "")
+#+end_src
+
+* ALL THE ICONS
+This is an icon set that can be used with dashboard, dired, ibuffer and other Emacs programs.
+  
+#+begin_src elisp
+(use-package all-the-icons
+  :ensure t
+  :if (display-graphic-p))
+
+(use-package all-the-icons-dired
+  :hook (dired-mode . (lambda () (all-the-icons-dired-mode t))))
+#+end_src
+
+* BACKUP 
+By default, Emacs creates automatic backups of files in their original directories, such "file.el" and the backup "file.el~".  This leads to a lot of clutter, so let's tell Emacs to put all backups that it creates in the =TRASH= directory.
+
+#+begin_src elisp
+(setq backup-directory-alist '((".*" . "~/.local/share/Trash/files")))
+#+end_src
+
+* COMPANY
+[[https://company-mode.github.io/][Company]] is a text completion framework for Emacs. The name stands for "complete anything".  Completion will start automatically after you type a few letters. Use M-n and M-p to select, <return> to complete or <tab> to complete the common part.
+
+#+begin_src elisp
+(use-package company
+  :defer 2
+  :diminish
+  :custom
+  (company-begin-commands '(self-insert-command))
+  (company-idle-delay .1)
+  (company-minimum-refix-length 2)
+  (company-show-numbers t)
+  (company-tooltip-align-annotations 't)
+  (global-company-mode t)
+:bind(
+;; :map evil-insert-state-map
+:map company-active-map
+
+    ("C-j" . company-select-next-or-abort)
+    ("C-k" . company-select-previous-or-abort)
+    ("C-l" . company-complete-selection))
+
+
+;; (define-key company-search-map (kbd "C-t") 'company-search-toggle-filtering)
+
+)
+
+(use-package company-box
+  :after company
+  :diminish
+  :hook (company-mode . company-box-mode))
+#+end_src
+
+* DASHBOARD
+Emacs Dashboard is an extensible startup screen showing you recent files, bookmarks, agenda items and an Emacs banner.
+
+#+begin_src elisp
+  (use-package dashboard
+    :ensure t
+    :init
+    (setq initial-buffer-choice 'dashboard-open)
+    (setq dashboard-set-heading-icons t)
+    (setq dashboard-set-file-icons t)
+    (setq dashboard-banner-logo-title "Emacs Is More Than A Text Editor!")
+    ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
+  ;; TODO: make transparent
+    ;; https://www.reddit.com/r/emacs/comments/1f068oi/i_have_commissioned_an_artist_to_draw_an_emacs/
+
+    (setq dashboard-startup-banner "~/.config/emacs/images/emacs-dragon-small.png")  ;; use custom image as banner
+    (setq dashboard-center-content t) ;; set to 't' for centered content
+    (setq dashboard-items '((recents . 5)
+                            (agenda . 5 )
+                            (bookmarks . 3)
+                            (projects . 3)
+                            (registers . 3)))
+    :custom 
+    (dashboard-modify-heading-icons '((recents . "file-text")
+                (bookmarks . "book")))
+    :config
+    (dashboard-setup-startup-hook))
+
+#+end_src
+
+* DIMINISH
+This package implements hiding or abbreviation of the modeline displays (lighters) of minor-modes.  With this package installed, you can add ':diminish' to any use-package block to hide that particular mode in the modeline.
+
+#+begin_src elisp
+(use-package diminish)
+#+end_src
+
+* DIRED
+Bookmarks like in mini.files?
+#+begin_src elisp
+(setq dired-dwim-target t)
+(use-package dired-open
+  :config
+  (setq dired-open-extensions '(("gif" . "sxiv")
+                                ("jpg" . "sxiv")
+                                ("png" . "sxiv")
+                                ("mkv" . "mpv")
+                                ("mp4" . "mpv"))))
+
+(use-package peep-dired
+  :after dired
+  :hook (evil-normalize-keymaps . peep-dired-hook)
+  :config
+    (evil-define-key 'normal dired-mode-map (kbd "h") 'dired-up-directory)
+    (evil-define-key 'normal dired-mode-map (kbd "l") 'dired-open-file) ; use dired-find-file instead if not using dired-open package
+    (evil-define-key 'normal peep-dired-mode-map (kbd "j") 'peep-dired-next-file)
+    (evil-define-key 'normal peep-dired-mode-map (kbd "k") 'peep-dired-prev-file)
+)
+
+#+end_src
+
+** Making deleted files go to trash can
+#+begin_src elisp
+(setq delete-by-moving-to-trash t trash-directory "~/.local/share/Trash/files/")
+#+end_src
+
+NOTE: For convenience, you may want to create a symlink to 'local/share/Trash' in your home directory:
+#+begin_example
+cd ~/
+ln -s ~/.local/share/Trash .
+#+end_example
+* EDIFF
+'ediff' is a diff program that is built into Emacs.  By default, 'ediff' splits files vertically and places the 'help' frame in its own window.  I have changed this so the two files are split horizontally and the 'help' frame appears as a lower split within the existing window.  Also, I create my own 'dt-ediff-hook' where I add 'j/k' for moving to next/prev diffs.  By default, this is set to 'n/p'.
+
+automatically fold when moving j/k?
+
+#+begin_src elisp
+(setq ediff-split-window-function 'split-window-horizontally
+      ediff-window-setup-function 'ediff-setup-windows-plain)
+
+;; i guess this is the default?
+;; (defun dt-ediff-hook ()
+;;   (ediff-setup-keymap)
+;;   (define-key ediff-mode-map "j" 'ediff-next-difference)
+;;   (define-key ediff-mode-map "k" 'ediff-previous-difference))
+
+;; (add-hook 'ediff-mode-hook 'dt-ediff-hook)
+
+(use-package ztree)
+#+end_src 
+
+* ELFEED
+An RSS newsfeed reader for Emacs.  Move through the articles with 'j/k'.  Move through the stories with 'CTRL j/k' when in other frame.
+
+#+begin_src elisp
+(use-package elfeed
+  :config
+  (setq elfeed-search-feed-face ":foreground #ffffff :weight bold"
+        elfeed-feeds (quote
+                       (("https://www.reddit.com/r/linux.rss" reddit linux)
+                        ("https://www.reddit.com/r/commandline.rss" reddit commandline)
+                        ("https://www.reddit.com/r/distrotube.rss" reddit distrotube)
+                        ("https://www.reddit.com/r/emacs.rss" reddit emacs)
+                        ("https://www.gamingonlinux.com/article_rss.php" gaming linux)
+                        ("https://hackaday.com/blog/feed/" hackaday linux)
+                        ("https://opensource.com/feed" opensource linux)
+                        ("https://linux.softpedia.com/backend.xml" softpedia linux)
+                        ("https://itsfoss.com/feed/" itsfoss linux)
+                        ("https://www.zdnet.com/topic/linux/rss.xml" zdnet linux)
+                        ("https://www.phoronix.com/rss.php" phoronix linux)
+                        ("http://feeds.feedburner.com/d0od" omgubuntu linux)
+                        ("https://www.computerworld.com/index.rss" computerworld linux)
+                        ("https://www.networkworld.com/category/linux/index.rss" networkworld linux)
+                        ("https://www.techrepublic.com/rssfeeds/topic/open-source/" techrepublic linux)
+                        ("https://betanews.com/feed" betanews linux)
+                        ("http://lxer.com/module/newswire/headlines.rss" lxer linux)
+                        ("https://distrowatch.com/news/dwd.xml" distrowatch linux)))))
+ 
+
+(use-package elfeed-goodies
+  :init
+  (elfeed-goodies/setup)
+  :config
+  (setq elfeed-goodies/entry-pane-size 0.5))
+
+(use-package elfeed-tube
+  :ensure t
+  :after elfeed
+  :demand t
+  :config
+  ;; (setq elfeed-tube-auto-save-p nil) ; default value
+  ;; (setq elfeed-tube-auto-fetch-p t)  ; default value
+  (elfeed-tube-setup)
+
+  :bind (:map elfeed-show-mode-map
+         ("F" . elfeed-tube-fetch)
+         ([remap save-buffer] . elfeed-tube-save)
+         :map elfeed-search-mode-map
+         ("F" . elfeed-tube-fetch)
+         ([remap save-buffer] . elfeed-tube-save)))
+
+(use-package elfeed-tube-mpv
+  :ensure t
+  :bind (:map elfeed-show-mode-map
+              ("C-c C-f" . elfeed-tube-mpv-follow-mode)
+              ("C-c C-w" . elfeed-tube-mpv-where)))
+
+#+end_src
+
+#+RESULTS:
+
+* EVIL
+[[https://github.com/emacs-evil/evil][Evil]] is an extensible vi/vim layer for Emacs.  Because...let's face it.  The Vim keybindings are just plain better.
+
+#+begin_src elisp
+;; Expands to: (elpaca evil (use-package evil :demand t))
+(use-package evil
+  :init      ;; tweak evil's configuration before loading it
+
+  ;;  :custom
+
+  (setq evil-want-integration t  ;; This is optional since it's already set to t by default.
+        evil-want-keybinding nil
+	;; this way i can learn emacs
+	;; still want a way/keybinding to use one-shot insert mode keybinding tho (C-z)?
+        evil-disable-insert-state-bindings t ;; also wanna disable command-state-bindings?
+        evil-vsplit-window-right t
+        evil-split-window-below t
+        evil-undo-system 'undo-redo;; Adds vim-like C-r redo functionality
+        ;; evil-want-C-h-delete t
+        evil-want-C-u-scroll t
+        evil-want-Y-yank-to-eol t
+        ;;evil-want-C-w-delete t
+
+	;;DISAMBIGUATE TAB and C-i
+	evil-want-C-i-jump t
+        )  
+  :config
+  (evil-mode 1))
+
+(use-package evil-collection
+  :after evil
+  :config
+  ;; Do not uncomment this unless you want to specify each and every mode
+  ;; that evil-collection should works with.  The following line is here 
+  ;; for documentation purposes in case you need it.  
+  ;; (setq evil-collection-mode-list '(calendar dashboard dired ediff info magit ibuffer))
+  (add-to-list 'evil-collection-mode-list 'help) ;; evilify help mode
+
+  (evil-collection-init)
+  (evil-select-search-module 'evil-search-module 'evil-search)
+
+  (add-hook 'git-commit-setup-hook 'evil-insert-state)
+   (dolist (mode-map '((inferior-emacs-lisp-mode . emacs)
+   				(nrepl-mode . insert)
+   				(pylookup-mode . emacs)
+   				(comint-mode . normal)
+   				(shell-mode . insert)
+   				(git-commit-mode . insert)
+   				(git-rebase-mode . emacs)
+   				(term-mode . emacs)
+   				(help-mode . normal)
+   				(helm-grep-mode . emacs)
+   				(grep-mode . emacs)
+   				(bc-menu-mode . emacs)
+   				(magit-branch-manager-mode . emacs)
+   				(rdictcc-buffer-mode . emacs)
+   				;; (dired-mode . emacs)
+   				(wdired-mode . normal)))
+(evil-set-initial-state `,(car mode-map) `,(cdr mode-map)))
+
+  )
+
+;; https://www.reddit.com/r/emacs/comments/mtuvyw/people_should_not_bombard_newbies_with_messages/
+;; buffer-modified-p and after-change-functions
+;; would be nice to differentiate between manual and automatic saving...
+;; (add-hook 'evil-insert-state-exit-hook 'save-buffer
+(defun my-save-if-bufferfilename ()
+  (if (buffer-file-name)
+      (progn
+        (save-buffer)
+        )
+    (message "no file is associated to this buffer: do nothing")
+    )
+  )
+
+(add-hook 'evil-insert-state-exit-hook 'my-save-if-bufferfilename)
+
+
+(use-package evil-surround :ensure t :config (global-evil-surround-mode 1)
+  (setq-default evil-surround-pairs-alist (push '(?a . ("<" . ">")) evil-surround-pairs-alist))
+  (setq-default evil-surround-pairs-alist (push '(?r . ("[" . "]")) evil-surround-pairs-alist))
+  ;; https://github.com/konrad1977/emacs/blob/a9bfdec276198b080783377a2d4ade3e009c7210/init.el#L985
+  ;; :custom (evil-surround-pairs-alist
+  ;;          '((?r . ("[" . "]"))
+  ;;            (?a . ("<" . ">"))))
+  )
+(use-package evil-numbers
+  :bind (
+	 :map evil-normal-state-map
+	 ("C-a" . evil-numbers/inc-at-pt)
+	 ("C-x" . evil-numbers/dec-at-pt)
+
+	 ))
+(use-package evil-tutor)
+
+;; (define-key evil-normal-state-map (kbd "C-n") nil)
+;; (use-package evil-mc :ensure t :config (global-evil-mc-mode 1) )
+(use-package evil-commentary :ensure t :config (evil-commentary-mode))
+(use-package goto-chg)
+;; https://github.com/roman/evil-paredit
+
+(use-package evil-exchange
+:ensure t
+:config
+;; change default key bindings (if you want) HERE
+;; (setq evil-exchange-key (kbd "c x"))
+(evil-exchange-cx-install)
+)
+(use-package evil-goggles
+:ensure t
+:custom
+(evil-goggles-pulse t)
+(evil-goggles-duration 0.100)
+:config
+(evil-goggles-mode)
+(evil-goggles-use-diff-faces)
+
+)
+;; also add evil-markdown and check out similar plugins
+;; (use-package evil-org
+;; :ensure t
+;; :after org
+;; :hook(org-mode . (lambda() evil-org-mode))
+;; :config
+;; (require 'evil-org-agenda)
+;; (evil-org-agenda-set-keys)
+;; )
+
+
+;; Using RETURN to follow links in Org/Evil 
+;; Unmap keys in 'evil-maps if not done, (setq org-return-follows-link t) will not work
+(with-eval-after-load 'evil-maps
+
+  (define-key evil-normal-state-map (kbd "C-i") 'evil-jump-forward)
+
+  ;; i want just emacs mode, normal mode and visual mode...
+  ;; like snacks bindings
+  ;;(define-key evil-normal-state-map (kbd "C-k") (kbd "C-x C-+"))
+  ;;(define-key evil-normal-state-map (kbd "C-j") (kbd "C-x C--"))
+  ;; (define-key evil-normal-state-map (kbd "C-c k") (kbd "C-x C-+"))
+  ;; (define-key evil-normal-state-map (kbd "C-c j") (kbd "C-x C--"))
+  ;; actually u can use viml
+  ;;(define-key evil-normal-state-map (kbd "ycc") (kbd "yygccp")
+  ;; usa native keybindings...
+  ;; (define-key evil-insert-state-map (kbd "S-SPC") 'save-buffer)
+  ;; (define-key evil-normal-state-map (kbd "S-SPC") 'save-buffer)
+  ;;(define-key evil-insert-state-map (kbd "C-h") 'backward-delete-char-untabify)
+  ;; (define-key evil-insert-state-map (kbd "C-u") 'evil-delete-backward-char-and-join)
+  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+  ;; (define-key evil-command-window-mode-map (kbd "C-h") 'backward-delete-char-untabify)
+  (define-key evil-ex-completion-map (kbd "C-h") 'backward-delete-char-untabify)
+  (define-key evil-ex-completion-map (kbd "C-d") 'delete-forward-char)
+  ;; (define-key evil-emacs-state-map (kbd "C-h") 'backward-delete-char-untabify)
+  ;; (define-key evil-ex-completion-map (kbd "C-h") 'backward-delete-char-untabify)
+  ;; only if not in region?
+  (define-key evil-insert-state-map (kbd "C-w") 'backward-kill-word)
+  ;; (define-key evil-ex-search-keymap "\C-w" 'backward-kill-word)
+  (define-key evil-ex-search-keymap "\C-w" #'evil-delete-backward-word)
+  (define-key evil-ex-search-keymap "\C-h" #'backward-delete-char-untabify)
+
+  (define-key evil-outer-text-objects-map "j" 'subword)
+
+  (define-key evil-outer-text-objects-map "r" 'evil-a-bracket)
+  (define-key evil-inner-text-objects-map "r" 'evil-a-bracket)
+  (define-key evil-outer-text-objects-map "a" 'evil-an-angle)
+  (define-key evil-inner-text-objects-map "a" 'evil-an-angle)
+  ;; alias for multiple?
+  (define-key evil-outer-text-objects-map "q" 'evil-a-double-quote)
+  (define-key evil-inner-text-objects-map "q" 'evil-inner-double-quote)
+
+  ;; (define-key evil-insert-state-map (kbd "<Launch5>") (kbd "D"))
+  ;; (define-key evil-insert-state-map (kbd "<Launch5>") (kbd "C-o C-w"))
+  ;;(define-key evil-normal-state-map (kbd "<Launch5>") (kbd "C-w"))
+  ;;(define-key evil-normal-state-map (kbd "<Launch5>") (lookup-key global-map(kbd"C-w")))
+  (define-key evil-normal-state-map (kbd "<Launch7>") 'evil-window-map)
+  (define-key evil-insert-state-map (kbd "<Launch7>") 'evil-window-map)
+  
+  ;; these don't work...
+(evil-global-set-key 'motion "g j"  'evil-next-visual-line)
+(evil-global-set-key 'motion "g k"  'evil-previous-visual-line)
+
+  ;;(evil-normal-state)(setq unread-comand-events (listify-key-sequence (kbd "C-w")))))
+
+  ;; so i can use C-h as backspace and C-h as help
+  ;; (global-set-key (kbd "<Launch7>")#'help-command)
+;; <help> translation?
+  (define-key global-map (kbd "<Launch9>") #'help-command)
+  ;; also want this in ivy/command... basially everywhere (use remap?)
+
+  ;; (define-key evil-normal-state-map (y c c) lambda() comment-line duplicate-line
+  (define-key evil-normal-state-map (kbd "C-c 1") 'org-store-link)
+  (define-key evil-insert-state-map (kbd "C-c 1") 'org-store-link)
+  (define-key evil-normal-state-map (kbd "C-c a") 'org-agenda)
+  (define-key evil-insert-state-map (kbd "C-c a") 'org-agenda)
+  (define-key evil-normal-state-map (kbd "C-c c") 'org-capture)
+  (define-key evil-insert-state-map (kbd "C-c c") 'org-capture)
+
+
+  ;; FFS doesn't work in minibuffer/find-file
+  ;; (evil-define-key 'insert 'global "\C-h" 'backward-delete-char-untabify)
+
+  (define-key evil-motion-state-map (kbd "SPC") nil)
+  ;; doesn't work in terminal?
+  (define-key evil-motion-state-map (kbd "RET") nil)
+  (define-key evil-motion-state-map (kbd "TAB") nil))
+;; Setting RETURN key in org-mode to follow links
+(setq org-return-follows-link  t)
+
+#+end_src
+
+* FLYCHECK
+Install =luacheck= from your Linux distro's repositories for flycheck to work correctly with lua files.  Install =python-pylint= for flycheck to work with python files.  Haskell works with flycheck as long as =haskell-ghc= or =haskell-stack-ghc= is installed.  For more information on language support for flycheck, [[https://www.flycheck.org/en/latest/languages.html][read this]].
+
+#+begin_src elisp
+(use-package flycheck
+  :ensure t
+  :defer t
+  :diminish
+  :init (global-flycheck-mode))
+
+#+end_src
+
+* FONTS
+Defining the various fonts that Emacs will use.
+
+** Setting the Font Face
+#+begin_src elisp
+ (set-face-attribute 'default nil
+   ;; :font "JetBrains Mono"
+   ;; :font "Iosevka Term Curly-regular-normal"
+   :font "Aporetic Sans"
+   :height 110
+   :weight 'medium)
+ (set-face-attribute 'variable-pitch nil
+   :font "Aporetic Sans"
+   :height 120
+   :weight 'medium)
+ (set-face-attribute 'fixed-pitch nil
+   :font "JetBrains Mono"
+   :height 110
+   :weight 'medium)
+;; Makes commented text and keywords italics.
+;; This is working in emacsclient but not emacs.
+;; Your font must have an italic face available.
+(set-face-attribute 'font-lock-comment-face nil
+  :slant 'italic)
+(set-face-attribute 'font-lock-keyword-face nil
+  :slant 'italic)
+
+;; This sets the default font on all graphical frames created after restarting Emacs.
+;; Does the same thing as 'set-face-attribute default' above, but emacsclient fonts
+;; are not right unless I also add this method of setting the default font.
+;; (add-to-list 'default-frame-alist '(font . "JetBrains Mono-11"))
+;; (add-to-list 'default-frame-alist '(font . "Aporetic Sans"))
+
+;; Uncomment the following line if line spacing needs adjusting.
+(setq-default line-spacing 0.12)
+
+#+end_src
+
+#+begin_src elisp
+(use-package expand-region :bind("C-=" . er/expand-region)
+;; ("C-=" . er/contract-region)
+)
+#+end_src
+
+* GENERAL KEYBINDINGS
+#+begin_src elisp
+(use-package general
+  :config
+  (general-evil-setup)
+
+  (general-create-definer gz/unimpaired
+    ;; add insert
+    :states '(normal insert)
+    :keymaps 'override
+    ;; :prefix "co" ;; set leader
+    ;; what the heck is tools
+    :prefix "<Tools>" ;; set leader
+    )
+  (gz/unimpaired
+    "n" '(display-line-numbers-mode :wk "Toggle line numbers")
+    ;; this isnt wrap though
+    ;;"w" '(visual-line-mode :wk "Toggle truncated lines"))
+    "w" '(toggle-truncate-lines :wk "Toggle truncated lines")
+    ;;"SPC" '(whitespace-mode :wk "Toggle whitespace-mode"))
+    "l" '(whitespace-mode :wk "Toggle whitespace-mode"))
+
+  ;;"e" '(eshell-toggle :wk "Toggle eshell")
+  ;;"f" '(flycheck-mode :wk "Toggle flycheck")
+  ;;"n" '(neotree-toggle :wk "Toggle neotree file viewer")
+  ;;"o" '(org-mode :wk "Toggle org mode")
+  ;;"r" '(rainbow-mode :wk "Toggle rainbow mode")
+  ;;"v" '(vterm-toggle :wk "Toggle vterm"))
+
+  ;; set up 'SPC' as the global leader key
+  (general-create-definer gz/leader-keys
+    :states '(normal insert visual emacs)
+    :keymaps 'override
+    :prefix "SPC" ;; set leader
+    ;; :global-prefix "M-SPC";; access leader in insert mode
+    :global-prefix "<f19>";; i wanna use m-spc in insert mode... per il momento ignora, magari usa S-spc
+    )
+
+
+  ;;"SPC" '(counsel-M-x :wk "Counsel M-x")
+  (gz/leader-keys
+    "." '(find-file :wk "Find file")
+    ;;"=" '(perspective-map :wk "Perspective") ;; Lists all the perspective keybindings
+    "u" '(universal-argument :wk "Universal argument")
+    "V" '(lambda()(interactive)
+            (if buffer-file-name
+                (async-shell-command 
+                 (format "ghostty -e 'nvim +%d %s'"
+                         (line-number-at-pos)
+                         (shell-quote-argument buffer-file-name)))
+              (message "Current buffer is not visiting a file."))) :wk "Open in Neovim"
+
+	      ;; doesn't work
+    "E" '(lambda()(interactive)
+            (if buffer-file-name
+                (async-shell-command 
+                 (format "dbus-launch emacsclient -a emacs -n -c +%d %s"
+                         (line-number-at-pos)
+                         (shell-quote-argument buffer-file-name)))
+              (message "Current buffer is not visiting a file."))) :wk "Open in Emacs GUI"
+    )
+
+
+  ;; (dt/leader-keys
+  ;;   "b" '(:ignore t :wk "Bookmarks/Buffers")
+  ;;   "b b" '(switch-to-buffer :wk "Switch to buffer")
+  ;;   "b c" '(clone-indirect-buffer :wk "Create indirect buffer copy in a split")
+  ;;   "b C" '(clone-indirect-buffer-other-window :wk "Clone indirect buffer in new window")
+  ;;   "b d" '(bookmark-delete :wk "Delete bookmark")
+  ;;   "b i" '(ibuffer :wk "Ibuffer")
+  ;;   "b k" '(kill-current-buffer :wk "Kill current buffer")
+  ;;   "b K" '(kill-some-buffers :wk "Kill multiple buffers")
+  ;;   "b l" '(list-bookmarks :wk "List bookmarks")
+  ;;   "b m" '(bookmark-set :wk "Set bookmark")
+  ;;   "b r" '(revert-buffer :wk "Reload buffer")
+  ;;   "b R" '(rename-buffer :wk "Rename buffer")
+  ;;   "b s" '(basic-save-buffer :wk "Save buffer")
+  ;;   "b w" '(bookmark-save :wk "Save current bookmarks to bookmark file"))
+
+  ;; (dt/leader-keys
+  ;;   "d" '(:ignore t :wk "Dired")
+  ;;   "d n" '(neotree-dir :wk "Open directory in neotree")
+  ;;   "d p" '(peep-dired :wk "Peep-dired"))
+
+  ;; (dt/leader-keys
+  ;;   "e" '(:ignore t :wk "Eshell/Evaluate")    
+  ;;   "e b" '(eval-buffer :wk "Evaluate elisp in buffer")
+  ;;   "e d" '(eval-defun :wk "Evaluate defun containing or after point")
+  ;;   "e e" '(eval-expression :wk "Evaluate and elisp expression")
+  ;;   "e h" '(counsel-esh-history :which-key "Eshell history")
+  ;;   "e l" '(eval-last-sexp :wk "Evaluate elisp expression before point")
+  ;;   "e r" '(eval-region :wk "Evaluate elisp in region")
+  ;;   "e R" '(eww-reload :which-key "Reload current page in EWW")
+  ;;   "e s" '(eshell :which-key "Eshell")
+  ;;   "e w" '(eww :which-key "EWW emacs web wowser"))
+
+  ;; how to show the descriptions in c-h l (lossage)?
+;; (directory-files "~/dotfiles" t "_[[:alpha:]]\\.org$")
+  (gz/leader-keys
+    ;; use bookmarks?
+    "e" '(:ignore t :wk "Edit")    
+    ;; uppercase: containing directory/global
+    ;; crea unico file e tangle in both vim & emacs?
+    "e E" '((lambda () (interactive) (dired "~/.config/emacs/")) :wk "user-emacs-directory in dired")
+    "e e" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "emacs ")
+    "e k" '((lambda () (interactive) (find-file "~/dotfiles/kanata.org")) :wk "kanata")
+    "e v" '((lambda () (interactive) (find-file "~/.config/nvim/lua/config/keymaps.lua")) :wk "Neovim keymaps.lua")
+    "e V" '((lambda () (interactive) (dired "~/.config/nvim/")) :wk "user-neovim-directory in dired")
+    "e f" '((lambda () (interactive) (find-file "~/dotfiles/fzf.org")) :wk "fzf")
+    "e m" '((lambda () (interactive) (find-file "~/dotfiles/mpv.org")) :wk "Mpv")
+    "e r" '((lambda () (interactive) (find-file "~/dotfiles/reaper.org")) :wk "Reaper")
+    "e d" '((lambda () (interactive) (find-file "~/dotfiles/rofi.org")) :wk "Rofi")
+    "e h" '((lambda () (interactive) (find-file "~/dotfiles/hypr.org")) :wk "Hypr")
+    "e a" '((lambda () (interactive) (find-file "~/dotfiles/atuin.org")) :wk "Atuin")
+					; "e H" '((lambda () (interactive) (dired "~/.config/hypr/")) :wk "hypr in dired")
+    "e s" '((lambda () (interactive) (find-file "~/dotfiles/sioyek.org")) :wk "Sioyek")
+    "e w" '((lambda () (interactive) (find-file "~/dotfiles/waybar.org")) :wk "Waybar")
+    "e b" '((lambda () (interactive) (find-file "~/dotfiles/bashrc.org")) :wk "Bashrc")
+    "e t" '((lambda () (interactive) (find-file "~/dotfiles/tridactylrc.org")) :wk "Tridactyl")
+
+    "e g" '((lambda () (interactive) (find-file (concat (magit-toplevel) ".gitconfig"))) :wk "Gitconfig")
+    "e G" '((lambda () (interactive) (find-file "~/.gitconfig")) :wk "global Gitconfig")
+    "e i" '((lambda () (interactive) (find-file (concat (magit-toplevel) ".gitignore"))) :wk "Gitignore")
+    "e I" '((lambda () (interactive) (find-file "~/.gitignore")) :wk "global Gitignore")
+    ;;
+    ;; "e x" '((lambda () (interactive) (find-file (concat (magit-toplevel) ".git/info/exclude"))) :wk "Gitignore")
+    ;; ;; "e X" '((lambda () (interactive) (find-file "~/.gitignore")) :wk "global Gitignore")
+    ;;     basically g[i][n]
+    "e n" '((lambda () (interactive) (find-file (concat (magit-toplevel) ".git/info/exclude"))) :wk "Gitignore")
+
+    "e <RET>" '((lambda () (interactive)
+		  (find-file "~/dotfiles/_ghostty.org")) 
+		:wk "ghostty config"))
+
+					; "e d" '(find-grep-dired :wk "Search for string in files in DIR")
+					; "e g" '(counsel-grep-or-swiper :wk "Search for string current file")
+					; "e i" '((lambda () (interactive)
+					;           (find-file "~/.config/emacs/init.el")) 
+					;         :wk "Open emacs init.el")
+					; "e j" '(counsel-file-jump :wk "Jump to a file below current directory")
+					; "e l" '(counsel-locate :wk "Locate a file")
+					; "e r" '(counsel-recentf :wk "Find recent files")
+					; "e u" '(sudo-edit-find-file :wk "Sudo find file")
+					; "e U" '(sudo-edit :wk "Sudo edit file"))
+  
+  ;; how to put these in use-package?
+  (gz/leader-keys
+    "a" '(:ignore t :wk "AI")    
+    ;; automatically select if only 1 entry?
+    "a a" '(gptel :wk "gptel")
+    "a m" '(gptel-menu :wk "gptel menu")
+    )
+
+  (gz/leader-keys
+    "g" '(:ignore t :wk "Git")    
+    "g /" '(magit-dispatch :wk "Magit dispatch")
+    "g ." '(magit-file-dispatch :wk "Magit file dispatch")
+    ;; "g b" '(magit-branch-checkout :wk "Switch branch")
+    "g b" '(magit-branch :wk "Magit branch")
+    "g c" '(:ignore t :wk "Create") 
+    ;; -or-
+    "g c b" '(magit-branch-and-checkout :wk "Create branch and checkout")
+    "g c c" '(magit-commit-create :wk "Create commit")
+    "g c f" '(magit-commit-fixup :wk "Create fixup commit")
+    "g C" '(magit-clone :wk "Clone repo")
+    ;; "g f" '(:ignore t :wk "Find") 
+    ;; "g f c" '(magit-show-commit :wk "Show commit")
+    ;; "g f" '(magit-fetch :wk "Fetch")
+    "g F" '(magit-fetch-all :wk "Fetch All")
+    ;; "g f f" '(magit-find-file :wk "Magit find file")
+    ;; "g f g" '(magit-find-git-config-file :wk "Find gitconfig file")
+    ;; "g g" '(magit-status :wk "Magit status")  ;; actually use default C-xg
+    "g i" '(magit-init :wk "Initialize git repo")
+    "g l" '(magit-log-buffer-file :wk "Magit buffer log")
+    "g L" '(magit-log-current :wk "Magit log")
+    ;; "g r" '(vc-revert :wk "Git revert file")
+    "g r" '(magit-rebase :wk "Rebase")
+    ;;"g s" '(magit-stage-file :wk "Git stage file")
+    "g w" '(magit-stage-file :wk "Git stage file")
+    ;; just magit namespace here pal
+    ;; "g t" '(git-timemachine :wk "Git time machine")
+    ;; "g u" '(magit-stage-file :wk "Git unstage file")
+    "g p" '(magit-pull-branch :wk "Pull")
+    "g P" '(magit-push-current :wk "Push")
+    "g d" '(magit-diff-buffer-file :wk "Git diff file")
+    "g D" '(magit-diff-unstaged :wk "Git diff repo"))
+
+
+
+
+  ;; (dt/leader-keys
+  ;;    "h" '(:ignore t :wk "Help")
+  ;;    "h a" '(counsel-apropos :wk "Apropos")
+  ;;    "h b" '(describe-bindings :wk "Describe bindings")
+  ;;    "h c" '(describe-char :wk "Describe character under cursor")
+  ;;    "h d" '(:ignore t :wk "Emacs documentation")
+  ;;    "h d a" '(about-emacs :wk "About Emacs")
+  ;;    "h d d" '(view-emacs-debugging :wk "View Emacs debugging")
+  ;;    "h d f" '(view-emacs-FAQ :wk "View Emacs FAQ")
+  ;;    "h d m" '(info-emacs-manual :wk "The Emacs manual")
+  ;;    "h d n" '(view-emacs-news :wk "View Emacs news")
+  ;;    "h d o" '(describe-distribution :wk "How to obtain Emacs")
+  ;;    "h d p" '(view-emacs-problems :wk "View Emacs problems")
+  ;;    "h d t" '(view-emacs-todo :wk "View Emacs todo")
+  ;;    "h d w" '(describe-no-warranty :wk "Describe no warranty")
+  ;;    "h e" '(view-echo-area-messages :wk "View echo area messages")
+  ;;    "h f" '(describe-function :wk "Describe function")
+  ;;    "h F" '(describe-face :wk "Describe face")
+  ;;    "h g" '(describe-gnu-project :wk "Describe GNU Project")
+  ;;    "h i" '(info :wk "Info")
+  ;;    "h I" '(describe-input-method :wk "Describe input method")
+  ;;    "h k" '(describe-key :wk "Describe key")
+  ;;    "h l" '(view-lossage :wk "Display recent keystrokes and the commands run")
+  ;;    "h L" '(describe-language-environment :wk "Describe language environment")
+  ;;    "h m" '(describe-mode :wk "Describe mode")
+  ;;    "h r" '(:ignore t :wk "Reload")
+  ;;    "h r r" '((lambda () (interactive)
+  ;;                (load-file "~/.config/emacs/init.el")
+  ;;                (ignore (elpaca-process-queues)))
+  ;;              :wk "Reload emacs config")
+  ;;    "h t" '(load-theme :wk "Load theme")
+  ;;    "h v" '(describe-variable :wk "Describe variable")
+  ;;    "h w" '(where-is :wk "Prints keybinding for command if set")
+  ;;    "h x" '(describe-command :wk "Display full documentation for command"))
+
+  ;; (dt/leader-keys
+  ;;   "m" '(:ignore t :wk "Org")
+  ;;   "m a" '(org-agenda :wk "Org agenda")
+  ;;   "m e" '(org-export-dispatch :wk "Org export dispatch")
+  ;;   "m i" '(org-toggle-item :wk "Org toggle item")
+  ;;   "m t" '(org-todo :wk "Org todo")
+  ;;   "m B" '(org-babel-tangle :wk "Org babel tangle")
+  ;;   "m T" '(org-todo-list :wk "Org todo list"))
+
+  ;; (dt/leader-keys
+  ;;   "m b" '(:ignore t :wk "Tables")
+  ;;   "m b -" '(org-table-insert-hline :wk "Insert hline in table"))
+
+  ;; (dt/leader-keys
+  ;;   "m d" '(:ignore t :wk "Date/deadline")
+  ;;   "m d t" '(org-time-stamp :wk "Org time stamp"))
+
+  ;; (dt/leader-keys
+  ;;   "o" '(:ignore t :wk "Open")
+  ;;   "o d" '(dashboard-open :wk "Dashboard")
+  ;;   "o e" '(elfeed :wk "Elfeed RSS")
+  ;;   "o f" '(make-frame :wk "Open buffer in new frame")
+  ;;   "o F" '(select-frame-by-name :wk "Select frame by name"))
+
+  ;; projectile-command-map already has a ton of bindings 
+  ;; set for us, so no need to specify each individually.
+  ;; (dt/leader-keys
+  ;;  "p" '(projectile-command-map :wk "Projectile"))
+
+  ;; (dt/leader-keys
+  ;;   "s" '(:ignore t :wk "Search")
+  ;;   "s d" '(dictionary-search :wk "Search dictionary")
+  ;;   "s m" '(man :wk "Man pages")
+  ;;   "s t" '(tldr :wk "Lookup TLDR docs for a command")
+  ;;   "s w" '(woman :wk "Similar to man but doesn't require man"))
+
+  ;;   (dt/leader-keys
+  ;;     "w" '(:ignore t :wk "Windows")
+  ;;     ;; Window splits
+  ;;     "w c" '(evil-window-delete :wk "Close window")
+  ;;     "w n" '(evil-window-new :wk "New window")
+  ;;     "w s" '(evil-window-split :wk "Horizontal split window")
+  ;;     "w v" '(evil-window-vsplit :wk "Vertical split window")
+  ;;     ;; Window motions
+  ;;     "w h" '(evil-window-left :wk "Window left")
+  ;;     "w j" '(evil-window-down :wk "Window down")
+  ;;     "w k" '(evil-window-up :wk "Window up")
+  ;;     "w l" '(evil-window-right :wk "Window right")
+  ;;     "w w" '(evil-window-next :wk "Goto next window")
+  ;;     ;; Move Windows
+  ;;     "w H" '(buf-move-left :wk "Buffer move left")
+  ;;     "w J" '(buf-move-down :wk "Buffer move down")
+  ;;     "w K" '(buf-move-up :wk "Buffer move up")
+  ;;     "w L" '(buf-move-right :wk "Buffer move right"))
+  )
+
+ #+end_src
+
+* GIT
+** Magit
+[[https://magit.vc/manual/][Magit]] is a full-featured git client for Emacs.
+
+saving = C-c behavior?
+how to go from diff to file w/ line num?
+
+- [ ] Always open status on the right? I'd like To know how to do it with smth dumb like ^wL
+
+#+begin_src elisp
+(use-package transient)
+(setq magit-define-global-key-bindings 'recommended)
+(use-package magit :after transient
+;; using just keys without fn like in lazy?
+;; :bind ()
+  :custom
+ (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+
+)
+(use-package magit-todos
+  :after magit
+  :config (magit-todos-mode 1))
+
+#+end_src
+
+** Forge
+#+begin_src elisp
+;; (use-package forge)
+#+end_src
+
+* HIGHLIGHT TODO
+Adding highlights to TODO and related words.
+
+#+begin_src elisp
+(use-package hl-todo
+  :hook ((org-mode . hl-todo-mode)
+         (prog-mode . hl-todo-mode))
+  :config
+  (setq hl-todo-highlight-punctuation ":"
+        hl-todo-keyword-faces
+        `(("TODO"       warning bold)
+          ("FIXME"      error bold)
+          ("HACK"       font-lock-constant-face bold)
+          ("REVIEW"     font-lock-keyword-face bold)
+          ("NOTE"       success bold)
+          ("DEPRECATED" font-lock-doc-face bold))))
+
+#+end_src
+
+* IVY (COUNSEL)
++ Ivy, a generic completion mechanism for Emacs.
++ Counsel, a collection of Ivy-enhanced versions of common Emacs commands.
++ Ivy-rich allows us to add descriptions alongside the commands in M-x.
+
+  M-v doesn't work if first item...
+  does wk work?
+
+;;("SPC SPC" .counsel-M-x :wk "Counsel M-x")
+#+begin_src elisp
+(use-package counsel
+  :after ivy
+  :diminish
+  :bind (
+;; :map evil-visual-state-map
+
+	 ;; o as omnibar (still a picker tecnically)
+;; ("C-;" . counsel-M-x)		   ; so u can use it insert mode as well
+;; ("-" . counsel-M-x)
+:map evil-normal-state-map
+; ("SPC SPC" . counsel-M-x)
+  ;; so I can use spc spc as C-u C-u
+;; ("C-x l" . counsel-M-x)
+;; ("<clt-x> l" . counsel-M-x)
+;; ("<return>" . counsel-M-x) terribably binding cr (like for dashboard and others)
+;; ("<escape>" . counsel-M-x)
+  ;; like c-m = cr
+;; ("C-c m" . counsel-M-x)
+;; ("-" . counsel-M-x)		   ; Right under x in M-x
+;; ("C-l" . counsel-M-x)
+
+;; ("C-;" . counsel-M-x)		   ; so u can use it insert mode as well
+("C-p" . counsel-fzf) ;; current cwd
+("C-S-p" . counsel-fzf)		   ; project?
+;; ("C-q" . counsel-grep like vim?)
+;; ("C-l" . counsel-locate)
+;; how to make this work?
+;; ("C-x d" . counsel-dired)
+;; ([ctl-x] "d" . counsel-dired)
+;; ("C-x b" . counsel-ibuffer)
+;; ([ctl-x] "b" . counsel-ibuffer)
+
+;; :prefix [ctl-x]
+;; :prefix-map "lol"
+;; :prefix "<clt-x>"
+;; ("b" . counsel-ibuffer)
+;; ("d" . counsel-dired)
+
+;; per il momento faccio cosi
+("<clt-x> d" . counsel-dired)
+;; ("<clt-x> b" . counsel-ibuffer)
+
+)
+  :config 
+  (counsel-mode)
+  (setq ivy-initial-inputs-alist nil)) ;; removes starting ^ regex in M-x
+
+(use-package swiper
+    :after ivy
+  :bind (
+  :map swiper-map			; void?
+  ("C-l" . ivy-done)
+      )
+        )
+
+(use-package ivy
+  :bind
+  ;; ivy-resume resumes the last Ivy-based completion.
+  (
+   ;; ("C-c C-r" . ivy-resume)
+   ;; ("C-x B" . ivy-switch-buffer-other-window)
+   :map ivy-minibuffer-map
+   ;; ("TAB" . ivy-alt-done)
+   ;; <cr>? C-l is nice because u alredy use jk/<cr> for invoking it (anzi, usalo per quickfix)
+   ;; ("C-l" . ivy-alt-done)
+   ("C-j" . ivy-next-line)
+   ("C-k" . ivy-previous-line)
+   ("C-l" . ivy-done)
+   ("C-h" . backward-delete-char-untabify)
+   ("C-w" . backward-kill-word)
+   :map ivy-switch-buffer-map
+   ("C-k" . ivy-previous-line)
+   ("C-l" . ivy-done)
+   ;;("C-l" . (lambda() (ivy-done)(ivy-posframe-hide))
+   ("C-d" . ivy-switch-buffer-kill)
+   ("C-h" . backward-delete-char-untabify)
+   ("C-w" . backward-kill-word)
+   :map ivy-reverse-i-search-map
+   ("C-k" . ivy-previous-line)
+   ("C-d" . ivy-reverse-i-search-kill)
+   ("C-h" . backward-delete-char-untabify)
+   ("C-w" . backward-kill-word)
+)
+  :diminish
+  :custom
+  (ivy-use-virtual-buffers t)
+  (ivy-count-format "(%d/%d) ")
+  (enable-recursive-minibuffers t)
+  (ivy-wrap t)
+  :config
+;;  keybinding to toggle fuzzy/regex?
+;; (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)) )
+  (ivy-mode 1)
+  )
+
+(use-package all-the-icons-ivy-rich
+  :ensure t
+  :init (all-the-icons-ivy-rich-mode 1))
+
+(use-package ivy-rich
+  :after ivy
+  :ensure t
+  :custom
+  (ivy-virtual-abbreviate 'full
+			  ivy-rich-switch-buffer-align-virtual-buffer t
+			  ivy-rich-path-style 'abbrev)
+  :config
+   (ivy-rich-mode 1) ;; this gets us descriptions in M-x.
+   )
+
+#+end_src
+
+* LANGUAGE SUPPORT
+Emacs has built-in programming language modes for Lisp, Scheme, DSSSL, Ada, ASM, AWK, C, C++, Fortran, Icon, IDL (CORBA), IDLWAVE, Java, Javascript, M4, Makefiles, Metafont, Modula2, Object Pascal, Objective-C, Octave, Pascal, Perl, Pike, PostScript, Prolog, Python, Ruby, Simula, SQL, Tcl, Verilog, and VHDL.  Other languages will require you to install additional modes.
+
+#+begin_src elisp
+(use-package haskell-mode)
+(use-package lua-mode)
+(use-package php-mode)
+
+#+end_src
+
+* MINIBUFFER
+**  ESCAPE
+By default, Emacs requires you to hit ESC three times to escape quit the minibuffer.  
+
+#+begin_src elisp
+;; mappa escape a c-g e c-g a original vim behaviour?
+(global-set-key [escape] 'keyboard-escape-quit)
+   ;;; esc quits
+   ;;(define-key evil-normal-state-map [escape] 'keyboard-quit)
+   ;;(define-key evil-visual-state-map [escape] 'keyboard-quit)
+   ;;(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+   ;;(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+   ;;(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+   ;;(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+   ;;(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+
+#+end_src
+
+**  READLINE SANITY
+#+begin_src elisp
+;; replica instert mappings in emacs state?
+(define-key minibuffer-local-map (kbd "C-h") #'backward-delete-char)
+(define-key minibuffer-local-map (kbd "C-w") #'backward-kill-word)
+
+;; is interactive necessary here?
+
+(with-eval-after-load 'evil-maps
+(define-key evil-insert-state-map (kbd "<ctl-x> C-?") (lambda () (interactive)(kill-line 0)))
+)
+(define-key minibuffer-local-map (kbd "<ctl-x> C-?") (lambda () (interactive)(kill-line 0)))
+; (define-key minibuffer-local-map (kbd "M-#") (lambda () (interactive)( 0)))
+#+end_src
+
+* MODELINE
+The modeline is the bottom status bar that appears in Emacs windows.  While you can create your own custom modeline, why go to the trouble when Doom Emacs already has a nice modeline package available.  For more information on what is available to configure in the Doom modeline, check out: [[https://github.com/seagle0128/doom-modeline][Doom Modeline]]
+
+#+begin_src elisp
+(use-package doom-modeline
+  :ensure t
+  :init
+ (doom-modeline-mode 1)
+;; change mode-line to the top (put on the left?)
+;; (setq-default mode-line-format nil)
+;; (setq-default header-line-format (doom-modeline-set-main-modeline))
+;; :config
+  :custom
+  (doom-modeline-height 35      ;; sets modeline height
+        doom-modeline-bar-width 5    ;; sets right bar width
+        ;;doom-modeline-persp-name t   ;; adds perspective name to modeline
+        doom-modeline-persp-icon t ;; adds folder icon next to persp name
+ doom-modeline-buffer-file-name-style 'relative-to-project)
+  (doom-modeline-lsp t)
+)
+
+(use-package spacious-padding :ensure t :if (display-graphic-p) :config (spacious-padding-mode))
+
+#+end_src
+
+* NEOTREE
+Neotree is a file tree viewer.  When you open neotree, it jumps to the current file thanks to neo-smart-open.  The neo-window-fixed-size setting makes the neotree width be adjustable.  NeoTree provides following themes: classic, ascii, arrow, icons, and nerd.  Theme can be config'd by setting "two" themes for neo-theme: one for the GUI and one for the terminal.  I like to use 'SPC t' for 'toggle' keybindings, so I have used 'SPC t n' for toggle-neotree.
+
+
+it looks bad
+| COMMAND          | DESCRIPTION                 | KEYBINDING   |
+| ---------------- + --------------------------- + ------------ |
+| neotree-toggle   | /Toggle neotree/            | SPC t n      |
+| neotree- dir     | /Open directory in neotree/ | SPC d n      |
+
+#+begin_src elisp
+(use-package neotree
+  :config
+  (setq neo-smart-open t
+        neo-show-hidden-files t
+        neo-window-width 55
+        neo-window-fixed-size nil
+        inhibit-compacting-font-caches t
+        projectile-switch-project-action 'neotree-projectile-action) 
+        ;; truncate long file names in neotree
+        (add-hook 'neo-after-create-hook
+           #'(lambda (_)
+               (with-current-buffer (get-buffer neo-buffer-name)
+                 (setq truncate-lines t)
+                 (setq word-wrap nil)
+                 (make-local-variable 'auto-hscroll-mode)
+                 (setq auto-hscroll-mode nil)))))
+
+#+end_src
+
+* ORG MODE
+** Enabling Table of Contents
+#+begin_src elisp
+(use-package toc-org
+    :commands toc-org-enable
+    :init (add-hook 'org-mode-hook 'toc-org-enable))
+#+end_src
+
+** Enabling Org Bullets
+Org-bullets gives us attractive bullets rather than asterisks.
+
+#+begin_src elisp
+(add-hook 'org-mode-hook 'org-indent-mode)
+(use-package org-bullets)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+#+end_src
+
+** Diminish Org Indent Mode
+Removes "Ind" from showing in the modeline.
+
+#+begin_src elisp
+(eval-after-load 'org-indent '(diminish 'org-indent-mode))
+
+#+end_src
+
+** Org Level Headers
+#+begin_src elisp
+  (custom-set-faces
+   '(org-level-1 ((t (:inherit outline-1 :height 1.7))))
+   '(org-level-2 ((t (:inherit outline-2 :height 1.6))))
+   '(org-level-3 ((t (:inherit outline-3 :height 1.5))))
+   '(org-level-4 ((t (:inherit outline-4 :height 1.4))))
+   '(org-level-5 ((t (:inherit outline-5 :height 1.3))))
+   '(org-level-6 ((t (:inherit outline-5 :height 1.2))))
+   '(org-level-7 ((t (:inherit outline-5 :height 1.1)))))
+#+end_src
+
+** Source Code Block Tag Expansion
+Org-tempo is not a separate package but a module within org that can be enabled.  Org-tempo allows for '<s' followed by TAB to expand to a begin_src tag.  Other expansions available include:
+
+| Typing the below + TAB | Expands to ...                           |
+| ---------------------- + ---------------------------------------- |
+| <a                     | '#+BEGIN_EXPORT ascii' … '#+END_EXPORT   |
+| <c                     | '#+BEGIN_CENTER'       … '#+END_CENTER'  |
+| <C                     | '#+BEGIN_COMMENT'      … '#+END_COMMENT' |
+| <e                     | '#+BEGIN_EXAMPLE'      … '#+END_EXAMPLE' |
+| <E                     | '#+BEGIN_EXPORT'       … '#+END_EXPORT'  |
+| <h                     | '#+BEGIN_EXPORT html'  … '#+END_EXPORT'  |
+| <l                     | '#+BEGIN_EXPORT latex' … '#+END_EXPORT'  |
+| <q                     | '#+BEGIN_QUOTE'        … '#+END_QUOTE'   |
+| <s                     | '#+BEGIN_SRC'          … '#+END_SRC'     |
+| <v                     | '#+BEGIN_VERSE'        … '#+END_VERSE'   |
+
+
+#+begin_src elisp 
+(require 'org-tempo)
+#+end_src
+
+** ORG AGENDA
+#+begin_src elisp 
+(setq org-directory "~/notes")
+;; (setq org-agenda-files "~/notes/agenda.org")
+(setq org-agenda-files (list org-directory))
+(setq org-log-done 'time)
+;; (setq org-log-done 'note)
+(setq org-support-shift-select t) 	;; always?
+;; https://github.com/legalnonsense/elgantt
+#+end_src
+
+** ORG BABEL
+#+begin_src elisp
+(setq org-confirm-babel-evaluate nil)
+;;(use-package ob-mermaid)
+   (org-babel-do-load-languages
+      'org-babel-load-languages
+      ;; how To make all langs true?
+         '(;; other Babel languages
+         (plantuml . t)
+         ; (typst . t)
+         (ditaa . t)
+         (python . t)
+         (calc . t)
+         (lua . t)
+         (C . t)
+         (java . t)
+;; how does this work?
+         (sed . t)
+         (shell . t)
+         ;;(mermaid . t)
+         ;;(scheme . t)
+))
+(setq org-plantuml-jar-path (expand-file-name "/usr/share/java/plantuml/plantuml.jar"))
+(setq org-ditaa-jar-path (expand-file-name "/usr/share/java/ditaa/ditaa-0.11.jar"))
+(add-to-list 'org-structure-template-alist '("ditaa" . "src ditaa :file ./images/.png :cmdline -E"))
+;;(setq ob-mermaid-cli-cpath "/usr/bin/mmdc")
+#+end_src
+
+** tangle
+#+begin_src elisp
+(use-package org-auto-tangle
+:defer t
+:hook (org-src-mode . org-auto-tangle-mode))
+#+end_src
+
+** IMAGES
+#+begin_src elisp
+(setq org-image-actual-width '(1200))	;; so i can use :width attribute
+(setq org-startup-with-inline-images t) ;; would be nice if automatically open if over line like neovim/snacks
+(setq org-latex-pdf-process '("tectonic %f")) ;; https://www.reddit.com/r/emacs/comments/jf9hzm/use_tectonic_in_latex_and_orgmode/
+;;https://github.com/tectonic-typesetting/tectonic/discussions/928
+(setq org-latex-pdf-process '("tectonic -X compile --outdir=%o -Z shell-escape -Z continue-on-errors %f"))
+#+end_src
+
+** TABLES
+#+TBLFM: $1=@#-1 does work except for last row
+  #+TBLFM: @2$1..@>$1 = @# - 1
+** Vimscript
+#+begin_src elisp
+;;TODO: babel?
+(use-package vimrc-mode)
+#+end_src
+
+** CALC
+#+begin_src elisp
+;; (use-package literate-calc-mode :ensure t)
+#+end_src
+
+** org-mpv-note
+usa with yt-dlp
+** org-tempo
+< emacs lisp?
+
+** org-autolist
+#+begin_src elisp
+(use-package org-autolist :diminish :hook (org-mode . org-autolist-mode))
+#+end_src
+
+org-cheatsheet, org-reveal.js? mindmaps?
+
+** keybindings
+(evil-define-key 'normal org-mode-map 
+(kbd "g j") 'evil-next-visual-line
+(kbd "g k") 'evil-previous-line)
+** org modern
+#+begin_src elisp
+(use-package org-modern
+:hook (org-mode . org-modern-mode))
+#+end_src
+
+* PDFs
+[[https://github.com/vedang/pdf-tools][pdf-tools]] is a replacement of DocView for viewing PDF files inside Emacs.  It uses the =poppler= library, which also means that 'pdf-tools' can by used to modify PDFs.  I use to disable 'display-line-numbers-mode' in 'pdf-view-mode' because line numbers crash it.
+
+fit page to window size?
+invert colors?
+#+begin_src elisp
+(use-package pdf-tools
+  :defer t
+  :commands (pdf-loader-install)
+  :mode "\\.pdf\\'"
+  :bind (:map pdf-view-mode-map
+              ("j" . pdf-view-next-line-or-next-page)
+              ("k" . pdf-view-previous-line-or-previous-page)
+              ;; ("C-=" . pdf-view-enlarge)
+              ;; ("C--" . pdf-view-shrink))
+              ;; ("C-j" . nil)
+              ;; ("C-k" . nil)
+              ;; ("C-j" . pdf-view-shrink)
+              ;; ("C-k" . pdf-view-enlarge)
+	      )
+  :init (pdf-loader-install)
+  :config (add-to-list 'revert-without-query ".pdf")
+;; :hook  (pdf-view-mode-hook . (lambda() 
+;;  (display-line-numbers-mode -1)
+;;  (blink-cursor-mode -1)
+;;  (doom-modeline-mode -1)     )
+ ;; (define-key pdf-view-mode-map (kbd "C-j")#'pdf-view-shrink)
+;; (define-key evil-normal-state-local-map (kbd "C-k")#'pdf-view-enlarge)
+)
+
+(add-hook 'pdf-view-mode-hook #'(lambda () (interactive) (display-line-numbers-mode -1)
+                                                         (blink-cursor-mode -1)
+                                                         (doom-modeline-mode -1)
+	  ; (define-key evil-normal-state-local-map (kbd "C-j")#'pdf-view-shrink)
+	  ;; (define-key evil-normal-state-map (kbd "C-j")#'pdf-view-shrink)
+	  ;; (define-key evil-normal-state-map (kbd "C-k")#'pdf-view-enlarge)
+)
+)
+(add-hook 'pdf-view-mode-hook 'auto-revert-mode)
+
+;; difference above and below hook?
+;; (eval-after-load 'pdf-view '(add-hook 'pdf-view-mode-hook (lambda()define-key pdf-view-mode-map (kbd "C-j")#'pdf-view-shrink)))
+;; (eval-after-load 'pdf-view '(add-hook 'pdf-view-mode-hook (lambda()define-key pdf-view-mode-map (kbd "C-k")#'pdf-view-enlarge)))
+;; (with-eval-after-load 'pdf-view (evil-define-key 'normal pdf-view-mode-map (kbd "C-j")#'pdf-view-shrink))
+;; (with-eval-after-load 'pdf-view (evil-define-key 'normal pdf-view-mode-map (kbd "C-k")#'pdf-view-enlarge))
+#+end_src
+
+** org-noter
+#+begin_src elisp :tangle no
+(use-package org-noter
+  ;; what's this?
+  :load-path "~/notes/"
+  :ensure t
+  :demand t
+;;   :bind (:map evil-normal-state-map
+;;  ("i" . #'org-noter-insert-note) ;; also works for org buffer ffs
+;; )
+  ;; :config
+)
+    (with-eval-after-load 'org-noter
+       (define-key org-noter-doc-mode-map (kbd "i")   'org-noter-insert-precise-note)
+       (define-key org-noter-doc-mode-map (kbd "C-i") 'org-noter-insert-note)
+       (define-key org-noter-doc-mode-map (kbd "I")   'org-noter-insert-precise-note-toggle-no-questions)
+       (define-key org-noter-doc-mode-map (kbd "M-i") 'org-noter-insert-note-toggle-no-questions))
+#+end_src
+
+* PERSPECTIVE
+[[https://github.com/nex3/perspective-el][Perspective]] provides multiple named workspaces (or "perspectives") in Emacs, similar to multiple desktops in window managers.  Each perspective has its own buffer list and its own window layout, along with some other isolated niceties, like the [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Xref.html][xref]] ring.
+
+#+begin_src elisp :tangle no
+(use-package perspective
+  :custom
+  ;; NOTE! I have also set 'SCP =' to open the perspective menu.
+  ;; I'm only setting the additional binding because setting it
+  ;; helps suppress an annoying warning message.
+ (persp-mode-prefix-key (kbd "C-c M-p"))
+  :init 
+  (persp-mode)
+  :config
+  ;; Sets a file to write to when we save states
+  (setq persp-state-default-file "~/.config/emacs/sessions"))
+
+;; This will group buffers by persp-name in ibuffer.
+(add-hook 'ibuffer-hook
+          (lambda ()
+            (persp-ibuffer-set-filter-groups)
+            (unless (eq ibuffer-sorting-mode 'alphabetic)
+              (ibuffer-do-sort-by-alphabetic))))
+
+;; Automatically save perspective states to file when Emacs exits.
+(add-hook 'kill-emacs-hook #'persp-state-save)
+
+#+end_src
+
+# * PROJECTILE
+# [[https://github.com/bbatsov/projectile][Projectile]] is a project interaction library for Emacs.  It should be noted that many projectile commands do not work if you have set "fish" as the "shell-file-name" for Emacs.  I had initially set "fish" as the "shell-file-name" in the Vterm section of this config, but oddly enough I changed it to "bin/sh" and projectile now works as expected, and Vterm still uses "fish" because my default user "sh" on my Linux system is "fish".
+
+#+begin_src elisp
+
+;; (use-package projectile
+;; :diminish projectile-mode
+;; :config (projectile-mode)
+;; :custom ((projectile-completion-system 'ivy))
+;; :bind-keymap
+;; ("C-c p" . projectile-command-map)
+;; :init
+;; (when (file-directory-p "~/Projects/Code")
+;; (setq projectile-project-search-path '("~/Projects/Code")))
+;; (setq projectile-switch-project-action #'projectile-dired))
+;;
+;;       (use-package counsel-projectile :config(counsel-projectile-mode))
+
+#+end_src
+
+* RAINBOW DELIMITERS
+Adding rainbow coloring to parentheses.
+
+#+begin_src elisp
+(use-package rainbow-delimiters
+  ;; :hook ((emacs-lisp-mode . rainbow-delimiters-mode)
+  ;;        (clojure-mode . rainbow-delimiters-mode)))
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+#+end_src
+
+* RAINBOW MODE
+Display the actual color as a background for any hex color value (ex. #ffffff).  The code block below enables rainbow-mode in all programming modes (prog-mode) as well as org-mode, which is why rainbow works in this document.  
+
+#+begin_src elisp
+(use-package rainbow-mode
+  :diminish
+  :hook org-mode prog-mode)
+#+end_src
+
+* SUBWORD MODE
+use ij/aj for this?
+#+begin_src elisp
+(add-hook 'prog-mode-hook #'subword-mode)
+#+end_src
+
+* CALC MODE
+#+begin_src elisp
+    ;; otherwise many keymaps are shadowed
+  ;;(add-hook 'calc-mode-hook #'evil-emacs-state)
+#+end_src
+
+* SANE DEFAULTS
+The following settings are simple modes that are enabled (or disabled) so that Emacs functions more like you would expect a proper editor/IDE to function.
+
+#+begin_src elisp
+(delete-selection-mode 1)    ;; You can select text and delete it by typing.
+(electric-indent-mode -1)    ;; Turn off the weird indenting that Emacs does by default.
+(electric-pair-mode 1)       ;; Turns on automatic parens pairing
+;; The following prevents <> from auto-pairing when electric-pair-mode is on.
+;; Otherwise, org-tempo is broken when you try to <s TAB...
+(add-hook 'org-mode-hook (lambda ()
+           (setq-local electric-pair-inhibit-predicate
+                   `(lambda (c)
+                  (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
+(global-auto-revert-mode t)  ;; Automatically show changes if the file has changed
+(column-number-mode)
+;; t and 1 difference here?
+(global-display-line-numbers-mode 1) ;; Display line numbers
+;; Disable line numbers for some modes
+(dolist(mode '(org-mode-hook term-mode-hook shell-mode-hook eshell-mode-hook))(add-hook mode (lambda()(display-line-numbers-mode 0))))
+(global-visual-line-mode t)  ;; Enable truncated lines
+(menu-bar-mode -1)           ;; Disable the menu bar 
+(scroll-bar-mode -1)         ;; Disable the scroll bar
+(tool-bar-mode -1)           ;; Disable the tool bar
+(setq org-edit-src-content-indentation 0) ;; Set src block automatic indent to 0 instead of 2.
+
+;; (global-set-key [(control h)]  'delete-backward-char)
+;; (keyboard-translate ?\C-h ?\s-m-h)
+(setq show-trailing-whitespace t)
+
+(setq use-short-answers t)
+
+(setq disabled-command-function nil)
+
+;; https://www.reddit.com/r/emacs/comments/osscfd/pgtk_emacswaylandgnome_no_shiftspace/
+(setq pgtk-use-im-context nil)
+(setq pgtk-use-im-context-on-new-connection nil)
+
+(setq which-key-idle-delay 0.1)
+(setq confirm-kill-emacs nil)
+(setq-default indicate-empty-lines t)	; i also don't want to Go beyond last line
+
+;; display current and total matches
+;; (use-package anzu
+;; :config
+;; (global-anzu-mode +1)
+
+;; (setq isearch-wrap-pause nil)		;wrap search
+;; )
+
+(setenv "PATH" (concat (expand-file-name "~/.local/bin") ":" (getenv "PATH")))
+(setq exec-path (cons (expand-file-name "~/.local/bin") exec-path))
+
+
+#+end_src
+
+* SHELLS AND TERMINALS
+In my configs, all of my shells (bash, fish, zsh and the ESHELL) require my shell-color-scripts-git package to be installed.  On Arch Linux, you can install it from the AUR.  Otherwise, go to my shell-color-scripts repository on GitLab to get it.
+
+** Eshell
+Eshell is an Emacs 'shell' that is written in Elisp.
+
+#+begin_src elisp
+(use-package eshell-toggle
+  :custom
+  (eshell-toggle-size-fraction 3)
+  (eshell-toggle-use-projectile-root t)
+  (eshell-toggle-run-command nil)
+  (eshell-toggle-init-function #'eshell-toggle-init-ansi-term))
+
+  (use-package eshell-syntax-highlighting
+    :after esh-mode
+    :config
+    (eshell-syntax-highlighting-global-mode +1))
+
+  ;; eshell-syntax-highlighting -- adds fish/zsh-like syntax highlighting.
+  ;; eshell-rc-script -- your profile for eshell; like a bashrc for eshell.
+  ;; eshell-aliases-file -- sets an aliases file for the eshell.
+
+  (setq eshell-rc-script (concat user-emacs-directory "eshell/profile")
+        eshell-aliases-file (concat user-emacs-directory "eshell/aliases")
+        eshell-history-size 5000
+        eshell-buffer-maximum-lines 5000
+        eshell-hist-ignoredups t
+        eshell-scroll-to-bottom-on-input t
+        eshell-destroy-buffer-when-process-dies t
+        eshell-visual-commands'("bash" "fish" "htop" "ssh" "top" "zsh"))
+#+end_src
+
+** Vterm
+Vterm is a terminal emulator within Emacs.  The 'shell-file-name' setting sets the shell to be used in M-x shell, M-x term, M-x ansi-term and M-x vterm.  By default, the shell is set to 'fish' but could change it to 'bash' or 'zsh' if you prefer.
+
+#+begin_src elisp
+(use-package vterm
+:config
+(setq shell-file-name "/bin/sh"
+      vterm-max-scrollback 5000))
+#+end_src
+
+** Vterm-Toggle 
+[[https://github.com/jixiuf/vterm-toggle][vterm-toggle]] toggles between the vterm buffer and whatever buffer you are editing.
+
+#+begin_src elisp
+(use-package vterm-toggle
+  :after vterm
+  :bind (
+
+    ("C-`" . vterm-toggle)
+    )
+  :config
+  ;; When running programs in Vterm and in 'normal' mode, make sure that ESC
+  ;; kills the program as it would in most standard terminal programs.
+  (evil-define-key 'normal vterm-mode-map (kbd "<escape>") 'vterm--self-insert)
+  (setq vterm-toggle-fullscreen-p nil)
+  (setq vterm-toggle-scope 'project)
+  (add-to-list 'display-buffer-alist
+               '((lambda (buffer-or-name _)
+                     (let ((buffer (get-buffer buffer-or-name)))
+                       (with-current-buffer buffer
+                         (or (equal major-mode 'vterm-mode)
+                             (string-prefix-p vterm-buffer-name (buffer-name buffer))))))
+                  (display-buffer-reuse-window display-buffer-at-bottom)
+                  ;;(display-buffer-reuse-window display-buffer-in-direction)
+                  ;;display-buffer-in-direction/direction/dedicated is added in emacs27
+                  ;; (direction . right)
+                  ;;(dedicated . t) ;dedicated is supported in emacs27
+                  (reusable-frames . visible)
+                  (window-height . 0.4))))
+
+#+end_src
+
+* SUDO EDIT
+[[https://github.com/nflath/sudo-edit][sudo-edit]] gives us the ability to open files with sudo privileges or switch over to editing with sudo privileges if we initially opened the file without such privileges.
+
+#+begin_src elisp
+(use-package sudo-edit)
+#+end_src
+
+* THEME
+The first line below designates the directory where will place all of our custom-made themes, which I have created only one (dtmacs).  You can create your own Emacs themes with the help of the [[https://emacsfodder.github.io/emacs-theme-editor/][Emacs Theme Editor]].  I am also installing =doom-themes= because it contains a huge collection of themes.  M-x load-theme will list all of the themes available.
+
+#+begin_src elisp
+(add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
+
+;; (use-package doom-themes
+;;   :config
+;;   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+;;         doom-themes-enable-italic t) ; if nil, italics is universally disabled
+;;   ;; Sets the default theme to load!!! 
+;;   ;; (load-theme 'doom-one t)
+;;   ;;(load-theme 'doom-feather-dark t)
+;;   (load-theme 'modus-vivendi t)
+;;   ;; (load-theme 'doom-moonlight t)
+;;   ;; (load-theme 'doom-miramare t)
+;;   ;; (load-theme 'doom-outrun-electric t)
+;;   ;; Enable custom neotree theme (all-the-icons must be installed!)
+;;   (doom-themes-neotree-config)
+;;   ;; Corrects (and improves) org-mode's native fontification.
+;;   (doom-themes-org-config))
+
+;; (use-package ef-themes :ensure t :config(ef-themes-select 'ef-cyprus))
+(use-package ef-themes :ensure t :config(ef-themes-select 'ef-dark))
+#+end_src
+
+* TLDR
+
+#+begin_src elisp
+(use-package tldr)
+
+#+end_src
+
+* TRANSPARENCY
+With Emacs version 29, true transparency has been added.  I have turned transparency off by setting the alpha to '100'.  If you want some slight transparency, try setting alpha to '90'.  Of course, if you set alpha to '0', the background of Emacs would completely transparent.
+
+TODO: doesn't work in terminal
+
+#+begin_src elisp
+(add-to-list 'default-frame-alist '(alpha-background . 87)) ; For all new frames henceforth
+#+end_src
+
+* WHICH-KEY
+TODO: put popup in the middle?
+how to copy or put everything in the popup in a buffer?
+#+begin_src elisp
+(use-package which-key
+  :init
+    (which-key-mode 1)
+  :diminish
+  :config
+  (setq which-key-side-window-location 'top
+	  which-key-sort-order #'which-key-key-order-alpha
+	  which-key-allow-imprecise-window-fit nil
+	  which-key-sort-uppercase-first nil
+	  which-key-add-column-padding 1
+	  which-key-max-display-columns nil
+	  which-key-min-display-lines 6
+	  which-key-side-window-slot -10
+	  which-key-side-window-max-height 0.33
+	  which-key-idle-delay 0.8
+	  which-key-max-description-length 25
+	  which-key-allow-imprecise-window-fit nil
+	  which-key-separator " → " ))
+;; height? how to align?
+(use-package which-key-posframe
+:after which-key
+:diminish t
+:ensure t
+:config (which-key-posframe-mode)
+(setq which-key-posframe-poshandler 'posframe-poshandler-frame-center)
+)
+#+end_src
+
+* COMMAND-LOG
+#+begin_src elisp
+;;(use-package command-log-mode)
+#+end_src
+
+* TODO [#B] KANATA SHEGANIGANS
+#+begin_src elisp
+
+;; TODO: these don't work in terminal?
+;;(define-key key-translation-map (kbd "<f13>") (kdb "C-h"))
+;;(global-set-key  (kbd "<f13>") 'help-command)
+;;(general-define-key  :keymaps 'override "<f13>" 'help-command)
+ ;;(keyboard-translate ?\C-h ?\s-m-h)
+;; (define-key key-translation-map (kbd "<Launch5>") (kdb "C-h"))
+;; now get rid of c-x and c-c in normal mode?
+ ; (define-key key-translation-map (kbd "<Launch6>") (kbd "C-x"))
+ ;; (define-key key-translation-map (kbd "<clt-x>") (kbd "C-x"))
+ ;; (define-key global-map (kbd "<clt-x>") ctl-x-map)
+;; now i can use C-x behaviour in normal mode!
+;; press f12 to show which-key i guess, u cannot do the same with modifiers or f13-f24 since they're not on the kbd
+;; TODO: make c-c c-x work
+(define-key key-translation-map (kbd "<f12>") [ctl-x]) ; hide translation in help files? don't really care
+(define-key global-map [ctl-x] ctl-x-map)
+; (define-key key-translation-map (kbd "<Launch5>") [snacks])
+(define-key key-translation-map (kbd "<Launch6>") (kbd "C-c"))
+;; (define-key key-translation-map (kbd "<Launch5>") (lambda()(interactive)(universal-argument 0))) ;; doesn't even work
+(define-key key-translation-map (kbd "<Launch5>") (kbd "M-0")) ;; basically u can use 0 for v:count now
+
+
+;; TODO: hide translated from...
+;;(define-key key-translation-map (kbd "<Launch5>") (kbd "C-c"))
+;; can i make so it send the original C-h?
+ ;;(define-key key-translation-map (kbd "<Launch7>") (kbd "C-h"))
+;;(keymap-global-set "<Launch5>" ctl-x-map)
+;; esplora input-method tho
+;;(define-key evil-insert-state-map (kbd "C-\\ C-n") 'evil-normal-state)
+;;(define-key evil-insert-state-map (kbd "<Launch5>") 'evil-normal-state)
+ ; (define-key key-translation-map (kbd "<Launch5>") (kbd "<Escape> C-w"))
+; (define-key evil-insert-state-map (kbd "<Launch5>") (lambda()
+;    (evil-normal-state)(setq unread-comand-events (listify-key-sequence (kbd "C-w")))))
+#+end_src
+
+* FULL SCREEN
+# (setq ns-use-native-fullscreen :true)
+# (add-to-list 'default-frame-alist '(fullscreen . fullscreen))
+
+* NOICE :vim:
+#+begin_src elisp
+;;(use-package mini-frame
+;;:init (mini-frame-mode)
+;;)
+;; at cursor in insert mode and at center in normal mode
+;; can't see last line though
+(use-package ivy-posframe
+:ensure t
+:after ivy
+:config
+ (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
+ ;; (setq ivy-posframe-height 70)
+  (defun my-ivy-posframe-get-size ()
+    "Set the ivy-posframe size according to the current frame."
+    (let ((height (or ivy-posframe-height (or ivy-height 20)))
+          (width (min (or ivy-posframe-width 200) (round (* .75 (frame-width))))))
+      (list :height height :width width :min-height height :min-width width)))
+
+  (setq ivy-posframe-size-function 'my-ivy-posframe-get-size)
+(ivy-posframe-mode 1))
+#+end_src
+
+* ARTIST MODE
+#+begin_src elisp
+  ;; https://stackoverflow.com/questions/46513910/emacs-evil-mode-binding-mouse-event
+(with-eval-after-load 'evil-maps (define-key evil-motion-state-map [down-mouse-1] nil))
+#+end_src
+
+* HELPFUL (system crafters)
+* HOOKS
+# when exiting emacs open terminal?
+* HYDRA
+#+begin_src elisp
+;; (use-package hydra)
+;; (defhydra hydra-text-scale (:timeout 4)
+;; "scale text"
+;; ("j" text-scale-increase "in")
+;; ("k" text-scale-decrease "out")
+;; ("f" nil "finished" :exit t))
+
+;; (rune/leader-keys
+;; "ts" '(hydra-text-scale/body :which-key "scale text"))
+#+end_src
+
+* TYPING BREAK
+ogni-ora attiva type-break (timer_start in vim)
+
+* LISPY
+#+begin_src elisp
+;; (use-package lispy)
+;; (use-package evil-lispy
+;;   :ensure t
+;;   :hook ((emacs-lisp-mode clojure-mode) . evil-lispy-mode))
+;; (use-package lispyville
+;;   :init
+;;   (general-add-hook '(emacs-lisp-mode-hook lisp-mode-hook) #'lispyville-mode)
+;;   :config
+;;   (lispyville-set-key-theme '(operators c-w additional)))
+#+end_src
+
+* FT ULTRAS FONT
+for programming
+
+* NICETIES
+#+begin_src elisp
+;; (with-eval-after-load 'evil-maps (define-key evil-insert-state-map (kbd "M-o") lambda() C-o o ))
+(with-eval-after-load 'evil-maps
+  ;; would nice that it resptected v:count like 2gO to show only 2nd level header?
+  (define-key evil-normal-state-map (kbd "g O") #'counsel-imenu )
+  ;; (define-key evil-insert-state-map (kbd "M-g g") #'avy-goto-line )
+  ;; (define-key evil-normal-state-map (kbd "M-g g") #'avy-goto-line )
+)
+
+#+end_src
+
+* Snacks.nvim
+  is there a similar plugin for emacs?
+  maybe use translation
+  maybe use one prefix for snacks and another for one shot commands
+;; use C-c leter for one-shot keybindings (without groups) and leader for groups
+#+begin_src elisp
+(with-eval-after-load 'evil-maps
+  (define-key evil-insert-state-map (kbd "<Launch8> m") #'man) (define-key evil-normal-state-map (kbd "<Launch8> m") #'man)
+  (define-key evil-normal-state-map (kbd "<Launch8> /") 'swiper)
+  ;; zen/zoom?
+(define-key evil-normal-state-map (kbd "<Launch8> r") 'counsel-recentf)
+(define-key evil-normal-state-map (kbd "<Launch8> c") 'counsel-load-theme) ; make this refresh theme?
+;; library and packages difference?
+(define-key evil-normal-state-map (kbd "<Launch8> p") 'counsel-find-library) ; make this refresh theme?
+)
+#+end_src
+
+counsel rhytmbox stop current song?
+
+** [[https://www.masteringemacs.org/article/find-files-faster-recent-files-package][RECENT FILES]]
+#+begin_src elisp
+(require 'recentf)
+
+;; get rid of `find-file-read-only' and replace it with something
+;; more useful.
+;;(global-set-key (kbd "C-c r") 'ido-recentf-open)
+
+;; enable recent files mode.
+(recentf-mode t)
+
+; 50 files ought to be enough.
+(setq recentf-max-saved-items 50)
+
+;; (defun ido-recentf-open ()
+;;   "Use `ido-completing-read' to \\[find-file] a recent file"
+;;   (interactive)
+;;   (if (find-file (ido-completing-read "Find recent file: " recentf-list))
+;;       (message "Opening file...")
+;;     (message "Aborting")))
+#+end_src
+
+* Universal argument
+basically space followed by a modifier should behave as C-u, otherwise as space (leader prefix for groups) (sadly doesn't work for stuff like c-u s in magit..., use hook?)
+lol, empty source blocks don't make emacs work...
+;;#+begin_src elisp
+;;#+end_src
+
+* One-shot mappings
+#+begin_src elisp
+;; find way to bind those in all states
+;; what about space + symbols excluding letters? also those are one shot...
+(with-eval-after-load 'evil-maps
+  ;; maybe use flycheck w/ kanata
+  (define-key evil-insert-state-map (kbd "C-c c") #'compile)
+  (define-key evil-normal-state-map (kbd "C-c c") #'compile)
+  ;; (define-key evil-normal-state-map (kbd "C-c c") #'save and exit)
+  ;; (define-key evil-normal-state-map (kbd "C-c 2") #'vterm-toggle)
+)
+#+end_src
+
+* ERC
+#+begin_src elisp
+(setq erc-prompt(lambda()(concat"["(buffer-name)"]"))
+erc-server "irc.libera.chat"
+)
+;; hide IP?
+#+end_src
+
+* VIM PARITY
+ivy-restrict-to-matches S-<space>
+#+begin_src elisp
+(defun open-line-below ()
+  "Open a new line below the current line and move the cursor to it."
+  (interactive)
+  (end-of-line)
+  (newline-and-indent))
+
+(defun open-line-above ()
+  "Open a new line above the current line and move the cursor to it."
+  (interactive)
+  (beginning-of-line)
+  (newline-and-indent)
+  (forward-line -1)
+  (indent-according-to-mode))
+
+(with-eval-after-load 'evil-maps
+;; doesn't work
+  ;;(define-key evil-normal-state-map (kbd "d =") #'ediff-current-file)
+  ;; terminal trick
+ (define-key evil-insert-state-map (kbd "M-o") #'open-line-below)
+ (define-key evil-insert-state-map (kbd "M-O") #'open-line-above)
+)
+;; c-l diffupdate? automatically though?
+
+#+end_src
+
+gj/gk org?
+gcO equivalenent: O<M-j>
+gco equivalenent: o<M-j>
+screenshots?
+  bs visual mode remove duplicates
+
+* QUIZ
+#+begin_src elisp
+(use-package key-quiz)
+#+end_src
+
+* THEMES
+
+doesn't work!
+https://www.reddit.com/r/emacs/comments/1kr94v4/automagic_dark_mode_automatically_create_a_dark/
+#+begin_src elisp
+;;(use-package auto-dark
+;;  :ensure t
+;;  :custom
+;;  (auto-dark-themes '((doom-feather-light) (doom-feather-dark)))
+;;  :hook
+;;  (auto-dark-dark-mode
+;;   . (lambda ()
+;;        (automagic-dark-mode t)    ;; HERE
+;;        ))
+;;  (auto-dark-light-mode
+;;   . (lambda ()
+;;        (automagic-dark-mode nil)  ;; and HERE
+;;        ))
+;;  :init (setq custom-safe-themes t)(auto-dark-mode))
+#+end_src
+
+* DOCS
+#+begin_src elisp
+(use-package devdocs
+  :bind (("C-h D" . devdocs-lookup))
+  )
+#+end_src
+
+* anki editor
+* emms
+can i use super key if emacs window not focused? if i used --daemon b4?
+#+begin_src elisp
+;; (use-package emms
+;; :ensure t
+;; :config (require 'emms-setup) :bind ("s-n" . emms))
+#+end_src
+
+* notes?
+ css: #+setupfile: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
+* radio
+#+begin_src elisp
+(use-package eradio
+  :init
+  (setq eradio-player '("mpv" "--no-video" "--no-terminal"))
+  :bind
+
+  ("C-c r" . eradio-toggle)
+  :config
+(setq eradio-channels '(("def con - soma fm" . "https://somafm.com/defcon256.pls")          ;; electronica with defcon-speaker bumpers
+                        ("metal - soma fm"   . "https://somafm.com/metal130.pls")           ;; \m/
+                        ("cyberia - lainon"  . "https://lainon.life/radio/cyberia.ogg.m3u") ;; cyberpunk-esque electronica
+                        ("cafe - lainon"     . "https://lainon.life/radio/cafe.ogg.m3u")))  ;; boring ambient, but with lain
+)
+#+end_src
+
+* info
+#+begin_src elisp
+(use-package info-colors
+  :hook (Info-selection . info-colors-fontify-node)
+)
+#+end_src
+
+* diff-hl
+is this like gitsigns.nvim?
+#+begin_src elisp
+(use-package diff-hl
+   :bind
+(
+:map evil-normal-state-map
+("[g" . diff-hl-previous-hunk)
+("]g" . diff-hl-next-hunk)
+:map evil-visual-state-map
+("[g" . diff-hl-previous-hunk)
+("]g" . diff-hl-next-hunk)
+
+)
+  :config (global-diff-hl-mode)
+)
+#+end_src
+
+* multiple cursors
+#+begin_src elisp
+  (use-package multiple-cursors
+      :bind (
+
+:map evil-normal-state-map
+("C-n" . 'mc/mark-next-like-this-word)
+("M-n" . 'mc/mark-all-words-like-this)
+  ; ( "C-x" . 'mc/skip-to-next-like-this)
+:map evil-visual-state-map
+("C-n" . 'mc/mark-next-like-this-word)
+        ))
+#+end_src
+
+* docker
+#+begin_src elisp
+(use-package docker
+  :ensure t
+  :bind ("C-c d" . docker)
+  )
+#+end_src
+
+* AI
+use general leader keymaps
+#+begin_src elisp
+(use-package gptel ;; :bind ("C-c RET" . 'gptel)
+  :config
+  (setq gptel-model 'claude-3.7-sonnet
+  ;; (setq gptel-model 'gemma3:12b
+  gptel-backend
+  (gptel-make-gh-copilot "Copilot")
+  ;; (gptel-make-ollama "Ollama" :host "localhost:11434" :stream t :models '(gemma3:12b))
+  )
+  ;; :bind (
+         ;; ("C-c g" . 'gptel)
+         ;; :map gptel-mode-map
+         ;; ("C-c C-c" . 'gptel-send)
+         ;; )
+  :custom
+  (gptel-default-mode #'org-mode)
+  )
+
+#+end_src
+
+* Utility apps
+** Calendar
+** Calc
+
+* eof
+
+#+begin_src elisp
+; (use-package vi-tilde-fringe-mode)
+#+end_src
+
+* LSP
+* Tree-sitter
+** Text-objects
+Wait a few months
+#+begin_src elisp :tangle no
+(use-package evil-textobj-tree-sitter :ensure t
+:after evil
+:config
+;; bind `function.outer`(entire function block) to `f` for use in things like `vaf`, `yaf`
+(define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
+(define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner"))
+(define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer")))
+)
+;; Goto start of next function
+(define-key evil-normal-state-map
+            (kbd "]f")
+            (lambda ()
+              (interactive)
+              (evil-textobj-tree-sitter-goto-textobj "function.outer")))
+
+;; Goto start of previous function
+(define-key evil-normal-state-map
+            (kbd "[f")
+            (lambda ()
+              (interactive)
+              (evil-textobj-tree-sitter-goto-textobj "function.outer" t)))
+
+;; Goto end of next function
+(define-key evil-normal-state-map
+            (kbd "]F")
+            (lambda ()
+              (interactive)
+              (evil-textobj-tree-sitter-goto-textobj "function.outer" nil t)))
+
+;; Goto end of previous function
+(define-key evil-normal-state-map
+            (kbd "[F")
+            (lambda ()
+              (interactive)
+              (evil-textobj-tree-sitter-goto-textobj "function.outer" t t)))
+#+end_src
