@@ -44,6 +44,7 @@ Sync toc? Like modify here and reflect changes and viceversa
 - [[#modeline][MODELINE]]
 - [[#neotree][NEOTREE]]
 - [[#org-mode][ORG MODE]]
+  - [[#make-more-appealing][Make more appealing]]
   - [[#enabling-table-of-contents][Enabling Table of Contents]]
   - [[#enabling-org-bullets][Enabling Org Bullets]]
   - [[#diminish-org-indent-mode][Diminish Org Indent Mode]]
@@ -135,6 +136,7 @@ Sync toc? Like modify here and reflect changes and viceversa
     
 ** Emacs [6/62] [9%]
   - [ ] what is alist?
+  - [ ] dotfiles dirs in projects/bookmarks?
   - [ ] kill shell buffer with C-d if first char?
   - [ ] emmet?
   - [ ] olivetti mode
@@ -146,6 +148,7 @@ Sync toc? Like modify here and reflect changes and viceversa
   - [ ] c-o in help buffers?
   - [ ] ts textobjects
   - [ ] reload pdf on save?
+  - [ ] text object for orgmode block?
   - [ ] vip non comprende begin_src?
   - [ ] make emacs same ts and lsp as mason? or just use guix ffs
   - [ ] whenever u put ^, use it as control vim prefix (for picker loclist, etc... and stuff like ^y in insert mode)
@@ -693,7 +696,7 @@ Defining the various fonts that Emacs will use.
 
 #+end_src
 
-#+begin_src elisp
+#+begin_src elisp :tangle no
 (use-package expand-region :bind("C-=" . er/expand-region)
 ;; ("C-=" . er/contract-region)
 )
@@ -1252,6 +1255,32 @@ it looks bad
 #+end_src
 
 * ORG MODE
+** Make more appealing
+#+begin_src elisp
+(use-package org
+:defer t
+:config
+(setq org-ellipsis " ▼"
+org-hide-emphasis-markers t)
+;; Replace list hyphen with dot
+;; (font-lock-add-keywords 'org-mode
+;; '(("^ *\\([-]\\) "
+;; 
+;; (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "·"))))))
+
+;; Ensure that anything that should be fixed-pitch in Org files appears that way
+(set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+)
+
+
+#+end_src
+
 ** Enabling Table of Contents
 #+begin_src elisp
 (use-package toc-org
@@ -1262,7 +1291,7 @@ it looks bad
 ** Enabling Org Bullets
 Org-bullets gives us attractive bullets rather than asterisks.
 
-#+begin_src elisp
+#+begin_src elisp :tangle no
 (add-hook 'org-mode-hook 'org-indent-mode)
 (use-package org-bullets)
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
@@ -1404,6 +1433,16 @@ org-cheatsheet, org-reveal.js? mindmaps?
 :hook (org-mode . org-modern-mode))
 #+end_src
 
+** visual-fill-column
+#+begin_src elisp
+(defun efs/org-mode-visual-fill ()
+  (setq visual-fill-column-width 100
+        visual-fill-column-center-text t)
+  (visual-fill-column-mode 1))
+
+(use-package visual-fill-column
+  :hook (org-mode . efs/org-mode-visual-fill))
+#+end_src
 * PDFs
 [[https://github.com/vedang/pdf-tools][pdf-tools]] is a replacement of DocView for viewing PDF files inside Emacs.  It uses the =poppler= library, which also means that 'pdf-tools' can by used to modify PDFs.  I use to disable 'display-line-numbers-mode' in 'pdf-view-mode' because line numbers crash it.
 
