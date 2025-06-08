@@ -7,7 +7,7 @@
 
 It would be nice to automatically fold just table of contents....
 
-sync toc? like modify here and reflect changes and viceversa
+Sync toc? Like modify here and reflect changes and viceversa
 
 * TABLE OF CONTENTS :toc:
 - [[#task-list][TASK LIST]]
@@ -1352,7 +1352,11 @@ Org-tempo is not a separate package but a module within org that can be enabled.
 #+begin_src elisp
 (use-package org-auto-tangle
 :defer t
-:hook (org-src-mode . org-auto-tangle-mode))
+; :hook (org-src-mode . org-auto-tangle-mode)
+:hook (org-mode . org-auto-tangle-mode)
+:config
+(setq org-auto-tangle-default t)
+)
 #+end_src
 
 ** IMAGES
