@@ -7,7 +7,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-enabled-themes '(doom-feather-dark))
  '(custom-safe-themes
    '("a6920ee8b55c441ada9a19a44e9048be3bfb1338d06fc41bce3819ac22e4b5a1"
      "f053f92735d6d238461da8512b9c071a5ce3b9d972501f7a5e6682a90bf29725"

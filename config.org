@@ -675,7 +675,7 @@ Defining the various fonts that Emacs will use.
    :height 120
    :weight 'medium)
  (set-face-attribute 'fixed-pitch nil
-   :font "JetBrains Mono"
+   :font "Aporetic Sans Mono"
    :height 110
    :weight 'medium)
 ;; Makes commented text and keywords italics.
@@ -1270,7 +1270,7 @@ org-hide-emphasis-markers t)
 ;; (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "·"))))))
 
 ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-(set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-block nil :foreground 'unspecified :inherit 'fixed-pitch)
 (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
 (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
 (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
@@ -1731,7 +1731,7 @@ Vterm is a terminal emulator within Emacs.  The 'shell-file-name' setting sets t
 The first line below designates the directory where will place all of our custom-made themes, which I have created only one (dtmacs).  You can create your own Emacs themes with the help of the [[https://emacsfodder.github.io/emacs-theme-editor/][Emacs Theme Editor]].  I am also installing =doom-themes= because it contains a huge collection of themes.  M-x load-theme will list all of the themes available.
 
 #+begin_src elisp
-(add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
+;; (add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
 
 ;; (use-package doom-themes
 ;;   :config
