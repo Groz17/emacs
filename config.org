@@ -4,6 +4,8 @@
 #+STARTUP: folded
 #+STARTUP: overview
 #+OPTIONS: toc:2
+#+property: header-args :tangle ~/.config/emacs/init.el
+maybe tangle org-babel-load in init.el?
 
 It would be nice to automatically fold just table of contents....
 
@@ -45,6 +47,13 @@ Sync toc? Like modify here and reflect changes and viceversa
 - [[#neotree][NEOTREE]]
 - [[#org-mode][ORG MODE]]
   - [[#make-more-appealing][Make more appealing]]
+  - [[#log][Log]]
+  - [[#states][States]]
+  - [[#configure-custom-agenda-views][Configure custom agenda views]]
+  - [[#set-of-commonly-known-tags][Set of commonly known tags]]
+  - [[#refiling][Refiling]]
+  - [[#capture-templates][Capture templates]]
+  - [[#habit-tracking][Habit tracking]]
   - [[#enabling-table-of-contents][Enabling Table of Contents]]
   - [[#enabling-org-bullets][Enabling Org Bullets]]
   - [[#diminish-org-indent-mode][Diminish Org Indent Mode]]
@@ -52,7 +61,8 @@ Sync toc? Like modify here and reflect changes and viceversa
   - [[#source-code-block-tag-expansion][Source Code Block Tag Expansion]]
   - [[#org-agenda][ORG AGENDA]]
   - [[#org-babel][ORG BABEL]]
-  - [[#tangle][tangle]]
+  - [[#templates][Templates]]
+  - [[#auto-tangle][Auto-tangle]]
   - [[#images][IMAGES]]
   - [[#tables][TABLES]]
   - [[#vimscript][Vimscript]]
@@ -62,7 +72,6 @@ Sync toc? Like modify here and reflect changes and viceversa
   - [[#org-autolist][org-autolist]]
   - [[#keybindings][keybindings]]
   - [[#org-modern][org modern]]
-  - [[#visual-fill-column][visual-fill-column]]
 - [[#pdfs][PDFs]]
   - [[#org-noter][org-noter]]
 - [[#perspective][PERSPECTIVE]]
@@ -137,6 +146,7 @@ Sync toc? Like modify here and reflect changes and viceversa
     
 ** Emacs [6/62] [9%]
   - [ ] what is alist?
+  - [ ] have auto revert turned on
   - [ ] dotfiles dirs in projects/bookmarks?
   - [ ] kill shell buffer with C-d if first char?
   - [ ] emmet?
@@ -627,13 +637,6 @@ An RSS newsfeed reader for Emacs.  Move through the articles with 'j/k'.  Move t
   ;; also want this in ivy/command... basially everywhere (use remap?)
 
   ;; (define-key evil-normal-state-map (y c c) lambda() comment-line duplicate-line
-  (define-key evil-normal-state-map (kbd "C-c 1") 'org-store-link)
-  (define-key evil-insert-state-map (kbd "C-c 1") 'org-store-link)
-  (define-key evil-normal-state-map (kbd "C-c a") 'org-agenda)
-  (define-key evil-insert-state-map (kbd "C-c a") 'org-agenda)
-  (define-key evil-normal-state-map (kbd "C-c c") 'org-capture)
-  (define-key evil-insert-state-map (kbd "C-c c") 'org-capture)
-
 
   ;; FFS doesn't work in minibuffer/find-file
   ;; (evil-define-key 'insert 'global "\C-h" 'backward-delete-char-untabify)
@@ -1270,16 +1273,26 @@ org-hide-emphasis-markers t)
 ;; (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "·"))))))
 
 ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-(set-face-attribute 'org-block nil :foreground 'unspecified :inherit 'fixed-pitch)
-(set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-(set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
-(set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-(set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-(set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-(set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+;; (set-face-attribute 'org-block nil :foreground 'unspecified :inherit 'fixed-pitch)
+;; (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+;; (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+;; (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+;; (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+;; (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+;; (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
 ;; )
 
+#+end_src
 
+*** visual-fill-column
+#+begin_src elisp
+(defun efs/org-mode-visual-fill ()
+  (setq visual-fill-column-width 100
+        visual-fill-column-center-text t)
+  (visual-fill-column-mode 1))
+
+(use-package visual-fill-column
+  :hook (org-mode . efs/org-mode-visual-fill))
 #+end_src
 
 ** Log
@@ -1408,8 +1421,6 @@ org-hide-emphasis-markers t)
       ("mw" "Weight" table-line (file+headline "~/notes/Metrics.org" "Weight")
        "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
 
-  (define-key global-map (kbd "C-c j")
-    (lambda () (interactive) (org-capture nil "jj")))
 #+end_src
 
 ** Habit tracking
@@ -1478,13 +1489,17 @@ Org-tempo is not a separate package but a module within org that can be enabled.
 
 ** ORG AGENDA
 #+begin_src elisp 
-(setq org-directory "~/notes")
+; (setq org-directory "~/notes")
 ;; (setq org-agenda-files "~/notes/agenda.org")
-(setq org-agenda-files (list org-directory))
-(setq org-log-done 'time)
+; (setq org-agenda-files (list org-directory))
 ;; (setq org-log-done 'note)
 (setq org-support-shift-select t) 	;; always?
 ;; https://github.com/legalnonsense/elgantt
+
+  (setq org-agenda-files
+	'("~/notes/Tasks.org"
+	  "~/notes/Habits.org"
+	  "~/notes/Birthdays.org"))
 #+end_src
 
 ** ORG BABEL
@@ -1499,6 +1514,7 @@ Org-tempo is not a separate package but a module within org that can be enabled.
          ; (typst . t)
          (ditaa . t)
          (python . t)
+         (perl . t)
          (calc . t)
          (lua . t)
          (C . t)
@@ -1513,17 +1529,45 @@ Org-tempo is not a separate package but a module within org that can be enabled.
 (setq org-ditaa-jar-path (expand-file-name "/usr/share/java/ditaa/ditaa-0.11.jar"))
 (add-to-list 'org-structure-template-alist '("ditaa" . "src ditaa :file ./images/.png :cmdline -E"))
 ;;(setq ob-mermaid-cli-cpath "/usr/bin/mmdc")
+
+;; Highlight Conf Files
+(push '("conf-unix" . conf-unix) org-src-lang-modes)
+
 #+end_src
 
-** tangle
+** Templates
+I'm using the file extension here.
+Automate with rg --type-list
+#+begin_example
+echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute(line->split(":")[1:][0]->split(",")->sort({a,b->len(a)>len(b)})[0],'\W','','g')}})
+#+end_example
+
 #+begin_src elisp
-(use-package org-auto-tangle
-:defer t
-; :hook (org-src-mode . org-auto-tangle-mode)
-:hook (org-mode . org-auto-tangle-mode)
-:config
-(setq org-auto-tangle-default t)
-)
+(with-eval-after-load 'org
+  ;; This is needed as of Org 9.2
+  (require 'org-tempo)
+
+  (add-to-list 'org-structure-template-alist '("sh"  . "src shell"))
+  (add-to-list 'org-structure-template-alist '("el"  . "src elisp"))
+  (add-to-list 'org-structure-template-alist '("py"  . "src python"))
+  (add-to-list 'org-structure-template-alist '("pl"  . "src perl"))
+  (add-to-list 'org-structure-template-alist '("lua" . "src lua")))
+#+end_src
+
+** Auto-tangle
+#+begin_src elisp
+;; Automatically tangle our dotfiles when we save them
+(defun efs/org-babel-tangle-config ()
+  (when (or
+	 (string-prefix-p (expand-file-name "~/dotfiles/") (buffer-file-name))
+	 (string-equal (expand-file-name "~/.config/emacs/config.org") (buffer-file-name)))
+
+    ;; Dynamic scoping to the rescue
+    (let ((org-confirm-babel-evaluate nil))
+      (org-babel-tangle))))
+
+(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
+
 #+end_src
 
 ** IMAGES
@@ -1562,25 +1606,26 @@ usa with yt-dlp
 org-cheatsheet, org-reveal.js? mindmaps?
 
 ** keybindings
-(evil-define-key 'normal org-mode-map 
-(kbd "g j") 'evil-next-visual-line
-(kbd "g k") 'evil-previous-line)
+#+begin_src elisp
+;; (evil-define-key 'normal org-mode-map 
+;; (kbd "g j") 'evil-next-visual-line
+;; (kbd "g k") 'evil-previous-line)
+;; useless (define-key global-map (kbd "C-c j") (lambda () (interactive) (org-capture nil "jj")))
+(define-key global-map (kbd "C-c c") 'org-capture)
+(define-key global-map (kbd "C-c 1") 'org-store-link)
+(define-key global-map (kbd "C-c 1") 'org-store-link)
+(define-key global-map (kbd "C-c a") 'org-agenda)
+(define-key global-map (kbd "C-c a") 'org-agenda)
+(define-key global-map (kbd "C-c c") 'org-capture)
+(define-key global-map (kbd "C-c c") 'org-capture)
+#+end_src
+
 ** org modern
 #+begin_src elisp
 (use-package org-modern
 :hook (org-mode . org-modern-mode))
 #+end_src
 
-** visual-fill-column
-#+begin_src elisp
-(defun efs/org-mode-visual-fill ()
-  (setq visual-fill-column-width 100
-        visual-fill-column-center-text t)
-  (visual-fill-column-mode 1))
-
-(use-package visual-fill-column
-  :hook (org-mode . efs/org-mode-visual-fill))
-#+end_src
 * PDFs
 [[https://github.com/vedang/pdf-tools][pdf-tools]] is a replacement of DocView for viewing PDF files inside Emacs.  It uses the =poppler= library, which also means that 'pdf-tools' can by used to modify PDFs.  I use to disable 'display-line-numbers-mode' in 'pdf-view-mode' because line numbers crash it.
 
@@ -2113,8 +2158,8 @@ lol, empty source blocks don't make emacs work...
 ;; what about space + symbols excluding letters? also those are one shot...
 (with-eval-after-load 'evil-maps
   ;; maybe use flycheck w/ kanata
-  (define-key evil-insert-state-map (kbd "C-c c") #'compile)
-  (define-key evil-normal-state-map (kbd "C-c c") #'compile)
+  ;; (define-key evil-insert-state-map (kbd "C-c c") #'compile)
+  ;; (define-key evil-normal-state-map (kbd "C-c c") #'compile)
   ;; (define-key evil-normal-state-map (kbd "C-c c") #'save and exit)
   ;; (define-key evil-normal-state-map (kbd "C-c 2") #'vterm-toggle)
 )
@@ -2280,11 +2325,12 @@ use general leader keymaps
   (gptel-make-gh-copilot "Copilot")
   ;; (gptel-make-ollama "Ollama" :host "localhost:11434" :stream t :models '(gemma3:12b))
   )
-  ;; :bind (
-         ;; ("C-c g" . 'gptel)
-         ;; :map gptel-mode-map
-         ;; ("C-c C-c" . 'gptel-send)
-         ;; )
+  :bind (
+         ("C-c g" . 'gptel)
+         :map gptel-mode-map
+         ;;("C-c C-c" . 'gptel-send)
+         ("<return>" . 'gptel-send)
+         )
   :custom
   (gptel-default-mode #'org-mode)
   )
