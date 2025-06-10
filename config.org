@@ -1827,6 +1827,7 @@ The following settings are simple modes that are enabled (or disabled) so that E
 (setenv "PATH" (concat (expand-file-name "~/.local/bin") ":" (getenv "PATH")))
 (setq exec-path (cons (expand-file-name "~/.local/bin") exec-path))
 
+;; you can start Emacs from a terminal where ssh-agent is already running, or propagate the SSH_AUTH_SOCK env var to Emacs using:
 (setenv "SSH_AUTH_SOCK" (getenv "SSH_AUTH_SOCK"))
 
 
@@ -2180,30 +2181,35 @@ erc-server "irc.libera.chat"
 
 * VIM PARITY
 ivy-restrict-to-matches S-<space>
-#+begin_src elisp
-(defun open-line-below ()
-  "Open a new line below the current line and move the cursor to it."
-  (interactive)
-  (end-of-line)
-  (newline-and-indent))
 
-(defun open-line-above ()
-  "Open a new line above the current line and move the cursor to it."
-  (interactive)
+#+begin_src elisp
+
+(defun open-line-below (&optional count)
+  "Open COUNT new lines below the current line and move the cursor to the first one."
+  (interactive "p")
+  (end-of-line)
+  (dotimes (_ (or count 1))
+    (newline-and-indent)))
+
+(defun open-line-above (&optional count)
+  "Open COUNT new lines above the current line and move the cursor to the first one."
+  (interactive "p")
   (beginning-of-line)
   (newline-and-indent)
   (forward-line -1)
-  (indent-according-to-mode))
+  (indent-according-to-mode)
+  (dotimes (_ (1- (or count 1)))
+    (newline-and-indent)))
 
 (with-eval-after-load 'evil-maps
 ;; doesn't work
   ;;(define-key evil-normal-state-map (kbd "d =") #'ediff-current-file)
+;; c-l diffupdate? automatically though?
+
   ;; terminal trick
  (define-key evil-insert-state-map (kbd "M-o") #'open-line-below)
  (define-key evil-insert-state-map (kbd "M-O") #'open-line-above)
 )
-;; c-l diffupdate? automatically though?
-
 #+end_src
 
 gj/gk org?
