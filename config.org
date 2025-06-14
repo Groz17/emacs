@@ -2399,3 +2399,6 @@ Wait a few months
               (interactive)
               (evil-textobj-tree-sitter-goto-textobj "function.outer" t t)))
 #+end_src
+#+begin_src elisp
+(use-package reddigg)
+#+end_src
