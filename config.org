@@ -5,6 +5,7 @@
 #+STARTUP: overview
 #+OPTIONS: toc:2
 #+property: header-args :tangle ~/.config/emacs/init.el
+
 maybe tangle org-babel-load in init.el?
 
 It would be nice to automatically fold just table of contents....
@@ -126,6 +127,7 @@ Sync toc? Like modify here and reflect changes and viceversa
 - [[#lsp][LSP]]
 - [[#tree-sitter][Tree-sitter]]
   - [[#text-objects][Text-objects]]
+- [[#socials][Socials]]
 
 * TODO TASK LIST
 ** Vim feature parity [2/10] [20%]
@@ -274,7 +276,7 @@ By default, Emacs creates automatic backups of files in their original directori
   :custom
   (company-begin-commands '(self-insert-command))
   (company-idle-delay .1)
-  (company-minimum-refix-length 2)
+  (company-minimum-prefix-length 2)
   (company-show-numbers t)
   (company-tooltip-align-annotations 't)
   (global-company-mode t)
@@ -285,6 +287,8 @@ By default, Emacs creates automatic backups of files in their original directori
     ("C-j" . company-select-next-or-abort)
     ("C-k" . company-select-previous-or-abort)
     ("C-l" . company-complete-selection))
+        (:map lsp-mode-map
+         ("<tab>" . company-indent-or-complete-common))
 
 
 ;; (define-key company-search-map (kbd "C-t") 'company-search-toggle-filtering)
@@ -748,7 +752,6 @@ Defining the various fonts that Emacs will use.
 
   ;;"SPC" '(counsel-M-x :wk "Counsel M-x")
   (gz/leader-keys
-    "." '(find-file :wk "Find file")
     ;;"=" '(perspective-map :wk "Perspective") ;; Lists all the perspective keybindings
     "u" '(universal-argument :wk "Universal argument")
     "V" '(lambda()(interactive)
@@ -1527,7 +1530,7 @@ Org-tempo is not a separate package but a module within org that can be enabled.
          ;;(scheme . t)
 ))
 (setq org-plantuml-jar-path (expand-file-name "/usr/share/java/plantuml/plantuml.jar"))
-(setq org-ditaa-jar-path (expand-file-name "/usr/share/java/ditaa/ditaa-0.11.jar"))
+(setq org-ditaa-jar-path (expand-file-name "/usr/share/java/ditaa.jar"))
 (add-to-list 'org-structure-template-alist '("ditaa" . "src ditaa :file ./images/.png :cmdline -E"))
 ;;(setq ob-mermaid-cli-cpath "/usr/bin/mmdc")
 
@@ -2451,5 +2454,8 @@ Wait a few months
 * Socials
 
 #+begin_src elisp
-(use-package reddigg)
+(use-package reddigg
+  :config
+(setq org-confirm-elisp-link-function nil)
+  )
 #+end_src
