@@ -128,6 +128,7 @@ Sync toc? Like modify here and reflect changes and viceversa
 - [[#tree-sitter][Tree-sitter]]
   - [[#text-objects][Text-objects]]
 - [[#socials][Socials]]
+- [[#snippets][Snippets]]
 
 * TODO TASK LIST
 ** Vim feature parity [2/10] [20%]
@@ -2459,3 +2460,14 @@ Wait a few months
 (setq org-confirm-elisp-link-function nil)
   )
 #+end_src
+
+
+* Snippets
+https://www.youtube.com/watch?v=W-bRZlseNm0
+#+begin_src elisp
+(use-package yasnippet
+:config
+(setq yas-snippet-dirs '("~/.config/emacs/snippets"))
+(yas-global-mode 1))
+#+end_src
+
