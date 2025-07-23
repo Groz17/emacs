@@ -21,6 +21,7 @@ Sync toc? Like modify here and reflect changes and viceversa
   - [[#adding-the-scripts-directory-to-path][Adding the scripts directory to path]]
   - [[#sourcing-the-scripts][Sourcing the scripts]]
 - [[#personal-information][Personal information]]
+- [[#multilingual-editing][MULTILINGUAL EDITING]]
 - [[#all-the-icons][ALL THE ICONS]]
 - [[#backup][BACKUP]]
 - [[#company][COMPANY]]
@@ -133,6 +134,7 @@ Sync toc? Like modify here and reflect changes and viceversa
 * TODO TASK LIST
 ** Vim feature parity [2/10] [20%]
   - [ ] :restart command/keybinding... (maybe C-x C-S-c?)
+  - [ ] orderless plugin is great (especially for beginners)
   - [ ] Alt+key should act as Esc key (trick terminal in insert mode?)
   - [ ] gf shows popup for some reason
   - [X] tabout w/ jl? just use c-f
@@ -151,6 +153,7 @@ Sync toc? Like modify here and reflect changes and viceversa
   - [ ] what is alist?
   - [ ] https://github.com/tarsius/keychain-environment/blob/main/keychain-environment.el#L27-L48
   - [ ] have auto revert turned on
+  - [ ] kanata chords don't work here?
   - [ ] dotfiles dirs in projects/bookmarks?
   - [ ] kill shell buffer with C-d if first char?
   - [ ] emmet?
@@ -247,7 +250,10 @@ To keep this =config.org= a reasonable length, I have moved a lot of code to ind
 (setq user-full-name "")
 (setq user-mail-address "")
 #+end_src
-
+* MULTILINGUAL EDITING 
+#+begin_src elisp
+(setq default-input-method "devanagari-itrans")
+#+end_src
 * ALL THE ICONS
 This is an icon set that can be used with dashboard, dired, ibuffer and other Emacs programs.
   
@@ -305,7 +311,7 @@ By default, Emacs creates automatic backups of files in their original directori
 * DASHBOARD
 Emacs Dashboard is an extensible startup screen showing you recent files, bookmarks, agenda items and an Emacs banner.
 
-#+begin_src elisp
+#+begin_src elisp :tangle no
   (use-package dashboard
     :ensure t
     :init
@@ -342,24 +348,44 @@ This package implements hiding or abbreviation of the modeline displays (lighter
 * DIRED
 Bookmarks like in mini.files?
 #+begin_src elisp
-(setq dired-dwim-target t)
 (use-package dired-open
+  :after dired
   :config
   (setq dired-open-extensions '(("gif" . "sxiv")
                                 ("jpg" . "sxiv")
                                 ("png" . "sxiv")
                                 ("mkv" . "mpv")
                                 ("mp4" . "mpv"))))
+                                ;; ("pdf" . "sioyek"))))
 
-(use-package peep-dired
-  :after dired
-  :hook (evil-normalize-keymaps . peep-dired-hook)
-  :config
-    (evil-define-key 'normal dired-mode-map (kbd "h") 'dired-up-directory)
-    (evil-define-key 'normal dired-mode-map (kbd "l") 'dired-open-file) ; use dired-find-file instead if not using dired-open package
-    (evil-define-key 'normal peep-dired-mode-map (kbd "j") 'peep-dired-next-file)
-    (evil-define-key 'normal peep-dired-mode-map (kbd "k") 'peep-dired-prev-file)
+(use-package dired
+  :after evil-collection
+  :ensure nil
+  ;; :commands (dired dired-jump)
+  :custom (
+;; (setq dired-dwim-target t)
+(dired-listing-switches "-agho --group-directories-first")
+;; (setq dired-listing-switches "-lhgoBF --group-directories-first")
+;; (setq diredp-toggle-find-file-reuse-dir t)
+
+
 )
+  :config
+  (evil-collection-define-key 'normal 'dired-mode-map
+    "h" 'dired-up-directory
+    "l" 'dired-find-file))
+
+					; (eval-after-load "dired" '(progn
+					;   (define-key dired-mode-map (kbd "q") 'kill-this-buffer)
+					;   (define-key dired-mode-map (kbd "h") 'dired-up-directory)
+					;   (define-key dired-mode-map (kbd "l") 'dired-open-file)
+					;   ; (define-key dired-mode-map (kbd "o") 'dired-sort-toggle-or-edit)
+					;   ; (define-key dired-mode-map (kbd "v") 'dired-toggle-marks)
+					;   ; (define-key dired-mode-map (kbd "m") 'dired-mark)
+					;   ; (define-key dired-mode-map (kbd "u") 'dired-unmark)
+					;   ; (define-key dired-mode-map (kbd "U") 'dired-unmark-all-marks)
+					; (define-key dired-mode-map (kbd "c") 'dired-create-directory)
+					; ))
 
 #+end_src
 
@@ -499,6 +525,7 @@ An RSS newsfeed reader for Emacs.  Move through the articles with 'j/k'.  Move t
    				(nrepl-mode . insert)
    				(pylookup-mode . emacs)
    				(comint-mode . normal)
+   				(pdf-view-mode . motion)
    				(shell-mode . insert)
    				(git-commit-mode . insert)
    				(git-rebase-mode . emacs)
@@ -608,7 +635,15 @@ An RSS newsfeed reader for Emacs.  Move through the articles with 'j/k'.  Move t
   ;; (define-key evil-emacs-state-map (kbd "C-h") 'backward-delete-char-untabify)
   ;; (define-key evil-ex-completion-map (kbd "C-h") 'backward-delete-char-untabify)
   ;; only if not in region?
-  (define-key evil-insert-state-map (kbd "C-w") 'backward-kill-word)
+
+; https://www.reddit.com/r/emacs/comments/6noffx/favorite_editing_tricks_or_keybindings/
+(defun kill-region-or-backward-word ()
+  (interactive)
+  (if (region-active-p)
+      (kill-region (region-beginning) (region-end))
+(backward-kill-word 1)))
+;;  (define-key evil-insert-state-map (kbd "C-w") 'backward-kill-word)
+  (define-key evil-insert-state-map (kbd "C-w") 'kill-region-or-backward-word)
   ;; (define-key evil-ex-search-keymap "\C-w" 'backward-kill-word)
   (define-key evil-ex-search-keymap "\C-w" #'evil-delete-backward-word)
   (define-key evil-ex-search-keymap "\C-h" #'backward-delete-char-untabify)
@@ -616,9 +651,9 @@ An RSS newsfeed reader for Emacs.  Move through the articles with 'j/k'.  Move t
   (define-key evil-outer-text-objects-map "j" 'subword)
 
   (define-key evil-outer-text-objects-map "r" 'evil-a-bracket)
-  (define-key evil-inner-text-objects-map "r" 'evil-a-bracket)
+  (define-key evil-inner-text-objects-map "r" 'evil-inner-bracket)
   (define-key evil-outer-text-objects-map "a" 'evil-an-angle)
-  (define-key evil-inner-text-objects-map "a" 'evil-an-angle)
+  (define-key evil-inner-text-objects-map "a" 'evil-inner-angle)
   ;; alias for multiple?
   (define-key evil-outer-text-objects-map "q" 'evil-a-double-quote)
   (define-key evil-inner-text-objects-map "q" 'evil-inner-double-quote)
@@ -630,9 +665,10 @@ An RSS newsfeed reader for Emacs.  Move through the articles with 'j/k'.  Move t
   (define-key evil-normal-state-map (kbd "<Launch7>") 'evil-window-map)
   (define-key evil-insert-state-map (kbd "<Launch7>") 'evil-window-map)
   
-  ;; these don't work...
-(evil-global-set-key 'motion "g j"  'evil-next-visual-line)
-(evil-global-set-key 'motion "g k"  'evil-previous-visual-line)
+ (evil-define-key 'normal org-mode-map (kbd "gj") 'evil-next-visual-line)
+ (evil-define-key 'normal org-mode-map (kbd "gk") 'evil-previous-visual-line)
+ (evil-define-key 'normal org-mode-map (kbd "zj") 'org-forward-heading-same-level)
+ (evil-define-key 'normal org-mode-map (kbd "zk") 'org-forward-heading-same-level)
 
   ;;(evil-normal-state)(setq unread-comand-events (listify-key-sequence (kbd "C-w")))))
 
@@ -666,6 +702,9 @@ Install =luacheck= from your Linux distro's repositories for flycheck to work co
   :diminish
   :init (global-flycheck-mode))
 
+;; (use-package flyover
+;;   :hook (flycheck-mode . flyover-mode)
+;;   )
 #+end_src
 
 * FONTS
@@ -773,40 +812,6 @@ Defining the various fonts that Emacs will use.
               (message "Current buffer is not visiting a file."))) :wk "Open in Emacs GUI"
     )
 
-
-  ;; (dt/leader-keys
-  ;;   "b" '(:ignore t :wk "Bookmarks/Buffers")
-  ;;   "b b" '(switch-to-buffer :wk "Switch to buffer")
-  ;;   "b c" '(clone-indirect-buffer :wk "Create indirect buffer copy in a split")
-  ;;   "b C" '(clone-indirect-buffer-other-window :wk "Clone indirect buffer in new window")
-  ;;   "b d" '(bookmark-delete :wk "Delete bookmark")
-  ;;   "b i" '(ibuffer :wk "Ibuffer")
-  ;;   "b k" '(kill-current-buffer :wk "Kill current buffer")
-  ;;   "b K" '(kill-some-buffers :wk "Kill multiple buffers")
-  ;;   "b l" '(list-bookmarks :wk "List bookmarks")
-  ;;   "b m" '(bookmark-set :wk "Set bookmark")
-  ;;   "b r" '(revert-buffer :wk "Reload buffer")
-  ;;   "b R" '(rename-buffer :wk "Rename buffer")
-  ;;   "b s" '(basic-save-buffer :wk "Save buffer")
-  ;;   "b w" '(bookmark-save :wk "Save current bookmarks to bookmark file"))
-
-  ;; (dt/leader-keys
-  ;;   "d" '(:ignore t :wk "Dired")
-  ;;   "d n" '(neotree-dir :wk "Open directory in neotree")
-  ;;   "d p" '(peep-dired :wk "Peep-dired"))
-
-  ;; (dt/leader-keys
-  ;;   "e" '(:ignore t :wk "Eshell/Evaluate")    
-  ;;   "e b" '(eval-buffer :wk "Evaluate elisp in buffer")
-  ;;   "e d" '(eval-defun :wk "Evaluate defun containing or after point")
-  ;;   "e e" '(eval-expression :wk "Evaluate and elisp expression")
-  ;;   "e h" '(counsel-esh-history :which-key "Eshell history")
-  ;;   "e l" '(eval-last-sexp :wk "Evaluate elisp expression before point")
-  ;;   "e r" '(eval-region :wk "Evaluate elisp in region")
-  ;;   "e R" '(eww-reload :which-key "Reload current page in EWW")
-  ;;   "e s" '(eshell :which-key "Eshell")
-  ;;   "e w" '(eww :which-key "EWW emacs web wowser"))
-
   ;; how to show the descriptions in c-h l (lossage)?
 ;; (directory-files "~/dotfiles" t "_[[:alpha:]]\\.org$")
   (gz/leader-keys
@@ -819,6 +824,7 @@ Defining the various fonts that Emacs will use.
     "e k" '((lambda () (interactive) (find-file "~/dotfiles/kanata.org")) :wk "kanata")
     "e v" '((lambda () (interactive) (find-file "~/.config/nvim/lua/config/keymaps.lua")) :wk "Neovim keymaps.lua")
     "e V" '((lambda () (interactive) (dired "~/.config/nvim/")) :wk "user-neovim-directory in dired")
+    "e i" '((lambda () (interactive) (find-file "~/dotfiles/inputrc.org")) :wk "inputrc")
     "e f" '((lambda () (interactive) (find-file "~/dotfiles/fzf.org")) :wk "fzf")
     "e m" '((lambda () (interactive) (find-file "~/dotfiles/mpv.org")) :wk "Mpv")
     "e r" '((lambda () (interactive) (find-file "~/dotfiles/reaper.org")) :wk "Reaper")
@@ -833,8 +839,8 @@ Defining the various fonts that Emacs will use.
 
     "e g" '((lambda () (interactive) (find-file (concat (magit-toplevel) ".gitconfig"))) :wk "Gitconfig")
     "e G" '((lambda () (interactive) (find-file "~/.gitconfig")) :wk "global Gitconfig")
-    "e i" '((lambda () (interactive) (find-file (concat (magit-toplevel) ".gitignore"))) :wk "Gitignore")
-    "e I" '((lambda () (interactive) (find-file "~/.gitignore")) :wk "global Gitignore")
+    ;; "e i" '((lambda () (interactive) (find-file (concat (magit-toplevel) ".gitignore"))) :wk "Gitignore")
+    ;; "e I" '((lambda () (interactive) (find-file "~/.gitignore")) :wk "global Gitignore")
     ;;
     ;; "e x" '((lambda () (interactive) (find-file (concat (magit-toplevel) ".git/info/exclude"))) :wk "Gitignore")
     ;; ;; "e X" '((lambda () (interactive) (find-file "~/.gitignore")) :wk "global Gitignore")
@@ -898,98 +904,6 @@ Defining the various fonts that Emacs will use.
     "g d" '(magit-diff-buffer-file :wk "Git diff file")
     "g D" '(magit-diff-unstaged :wk "Git diff repo"))
 
-
-
-
-  ;; (dt/leader-keys
-  ;;    "h" '(:ignore t :wk "Help")
-  ;;    "h a" '(counsel-apropos :wk "Apropos")
-  ;;    "h b" '(describe-bindings :wk "Describe bindings")
-  ;;    "h c" '(describe-char :wk "Describe character under cursor")
-  ;;    "h d" '(:ignore t :wk "Emacs documentation")
-  ;;    "h d a" '(about-emacs :wk "About Emacs")
-  ;;    "h d d" '(view-emacs-debugging :wk "View Emacs debugging")
-  ;;    "h d f" '(view-emacs-FAQ :wk "View Emacs FAQ")
-  ;;    "h d m" '(info-emacs-manual :wk "The Emacs manual")
-  ;;    "h d n" '(view-emacs-news :wk "View Emacs news")
-  ;;    "h d o" '(describe-distribution :wk "How to obtain Emacs")
-  ;;    "h d p" '(view-emacs-problems :wk "View Emacs problems")
-  ;;    "h d t" '(view-emacs-todo :wk "View Emacs todo")
-  ;;    "h d w" '(describe-no-warranty :wk "Describe no warranty")
-  ;;    "h e" '(view-echo-area-messages :wk "View echo area messages")
-  ;;    "h f" '(describe-function :wk "Describe function")
-  ;;    "h F" '(describe-face :wk "Describe face")
-  ;;    "h g" '(describe-gnu-project :wk "Describe GNU Project")
-  ;;    "h i" '(info :wk "Info")
-  ;;    "h I" '(describe-input-method :wk "Describe input method")
-  ;;    "h k" '(describe-key :wk "Describe key")
-  ;;    "h l" '(view-lossage :wk "Display recent keystrokes and the commands run")
-  ;;    "h L" '(describe-language-environment :wk "Describe language environment")
-  ;;    "h m" '(describe-mode :wk "Describe mode")
-  ;;    "h r" '(:ignore t :wk "Reload")
-  ;;    "h r r" '((lambda () (interactive)
-  ;;                (load-file "~/.config/emacs/init.el")
-  ;;                (ignore (elpaca-process-queues)))
-  ;;              :wk "Reload emacs config")
-  ;;    "h t" '(load-theme :wk "Load theme")
-  ;;    "h v" '(describe-variable :wk "Describe variable")
-  ;;    "h w" '(where-is :wk "Prints keybinding for command if set")
-  ;;    "h x" '(describe-command :wk "Display full documentation for command"))
-
-  ;; (dt/leader-keys
-  ;;   "m" '(:ignore t :wk "Org")
-  ;;   "m a" '(org-agenda :wk "Org agenda")
-  ;;   "m e" '(org-export-dispatch :wk "Org export dispatch")
-  ;;   "m i" '(org-toggle-item :wk "Org toggle item")
-  ;;   "m t" '(org-todo :wk "Org todo")
-  ;;   "m B" '(org-babel-tangle :wk "Org babel tangle")
-  ;;   "m T" '(org-todo-list :wk "Org todo list"))
-
-  ;; (dt/leader-keys
-  ;;   "m b" '(:ignore t :wk "Tables")
-  ;;   "m b -" '(org-table-insert-hline :wk "Insert hline in table"))
-
-  ;; (dt/leader-keys
-  ;;   "m d" '(:ignore t :wk "Date/deadline")
-  ;;   "m d t" '(org-time-stamp :wk "Org time stamp"))
-
-  ;; (dt/leader-keys
-  ;;   "o" '(:ignore t :wk "Open")
-  ;;   "o d" '(dashboard-open :wk "Dashboard")
-  ;;   "o e" '(elfeed :wk "Elfeed RSS")
-  ;;   "o f" '(make-frame :wk "Open buffer in new frame")
-  ;;   "o F" '(select-frame-by-name :wk "Select frame by name"))
-
-  ;; projectile-command-map already has a ton of bindings 
-  ;; set for us, so no need to specify each individually.
-  ;; (dt/leader-keys
-  ;;  "p" '(projectile-command-map :wk "Projectile"))
-
-  ;; (dt/leader-keys
-  ;;   "s" '(:ignore t :wk "Search")
-  ;;   "s d" '(dictionary-search :wk "Search dictionary")
-  ;;   "s m" '(man :wk "Man pages")
-  ;;   "s t" '(tldr :wk "Lookup TLDR docs for a command")
-  ;;   "s w" '(woman :wk "Similar to man but doesn't require man"))
-
-  ;;   (dt/leader-keys
-  ;;     "w" '(:ignore t :wk "Windows")
-  ;;     ;; Window splits
-  ;;     "w c" '(evil-window-delete :wk "Close window")
-  ;;     "w n" '(evil-window-new :wk "New window")
-  ;;     "w s" '(evil-window-split :wk "Horizontal split window")
-  ;;     "w v" '(evil-window-vsplit :wk "Vertical split window")
-  ;;     ;; Window motions
-  ;;     "w h" '(evil-window-left :wk "Window left")
-  ;;     "w j" '(evil-window-down :wk "Window down")
-  ;;     "w k" '(evil-window-up :wk "Window up")
-  ;;     "w l" '(evil-window-right :wk "Window right")
-  ;;     "w w" '(evil-window-next :wk "Goto next window")
-  ;;     ;; Move Windows
-  ;;     "w H" '(buf-move-left :wk "Buffer move left")
-  ;;     "w J" '(buf-move-down :wk "Buffer move down")
-  ;;     "w K" '(buf-move-up :wk "Buffer move up")
-  ;;     "w L" '(buf-move-right :wk "Buffer move right"))
   )
 
  #+end_src
@@ -1061,12 +975,9 @@ Adding highlights to TODO and related words.
 
 	 ;; o as omnibar (still a picker tecnically)
 ;; ("C-;" . counsel-M-x)		   ; so u can use it insert mode as well
-;; ("-" . counsel-M-x)
 :map evil-normal-state-map
 ; ("SPC SPC" . counsel-M-x)
   ;; so I can use spc spc as C-u C-u
-;; ("C-x l" . counsel-M-x)
-;; ("<clt-x> l" . counsel-M-x)
 ;; ("<return>" . counsel-M-x) terribably binding cr (like for dashboard and others)
 ;; ("<escape>" . counsel-M-x)
   ;; like c-m = cr
@@ -1146,6 +1057,8 @@ Adding highlights to TODO and related words.
 ;;  keybinding to toggle fuzzy/regex?
 ;; (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)) )
   (ivy-mode 1)
+(setq ivy-re-builders-alist '((t . orderless-ivy-re-builder)))
+(add-to-list 'ivy-highlight-functions-alist '(orderless-ivy-re-builder . orderless-ivy-highlight))
   )
 
 (use-package all-the-icons-ivy-rich
@@ -1162,6 +1075,11 @@ Adding highlights to TODO and related words.
   :config
    (ivy-rich-mode 1) ;; this gets us descriptions in M-x.
    )
+(use-package orderless
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
 
 #+end_src
 
@@ -1524,6 +1442,7 @@ Org-tempo is not a separate package but a module within org that can be enabled.
          (lua . t)
          (C . t)
          (java . t)
+         (js . t)
 ;; how does this work?
          (sed . t)
          (shell . t)
@@ -1558,7 +1477,8 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
   (add-to-list 'org-structure-template-alist '("py"  . "src python"))
   (add-to-list 'org-structure-template-alist '("pl"  . "src perl"))
   (add-to-list 'org-structure-template-alist '("lua" . "src lua"))
-  (add-to-list 'org-structure-template-alist '("conf" . "src conf")))
+  (add-to-list 'org-structure-template-alist '("conf" . "src conf"))
+  (add-to-list 'org-structure-template-alist '("js" . "src js")))
 #+end_src
 
 ** Auto-tangle
@@ -1625,6 +1545,20 @@ org-cheatsheet, org-reveal.js? mindmaps?
 (define-key global-map (kbd "C-c a") 'org-agenda)
 (define-key global-map (kbd "C-c c") 'org-capture)
 (define-key global-map (kbd "C-c c") 'org-capture)
+  ;;   "o e" '(elfeed :wk "Elfeed RSS")
+
+  ;;   "m i" '(org-toggle-item :wk "Org toggle item")
+  ;;   "m T" '(org-todo-list :wk "Org todo list"))
+  ;;   "m d t" '(org-time-stamp :wk "Org time stamp"))
+
+  ;;   "s d" '(dictionary-search :wk "Search dictionary")
+  ;;   "s m" '(man :wk "Man pages")
+  ;;   "s t" '(tldr :wk "Lookup TLDR docs for a command")
+  ;;   "s w" '(woman :wk "Similar to man but doesn't require man"))
+
+  ;;   "e s" '(eshell :which-key "Eshell")
+  ;;   "e w" '(eww :which-key "EWW emacs web wowser"))
+
 #+end_src
 
 ** org modern
@@ -1643,18 +1577,25 @@ invert colors?
   :defer t
   :commands (pdf-loader-install)
   :mode "\\.pdf\\'"
-  :bind (:map pdf-view-mode-map
-              ("j" . pdf-view-next-line-or-next-page)
-              ("k" . pdf-view-previous-line-or-previous-page)
-              ;; ("C-=" . pdf-view-enlarge)
-              ;; ("C--" . pdf-view-shrink))
-              ;; ("C-j" . nil)
-              ;; ("C-k" . nil)
-              ;; ("C-j" . pdf-view-shrink)
-              ;; ("C-k" . pdf-view-enlarge)
-	      )
+              ;; ("j" . pdf-view-next-line-or-next-page)
+              ;; ("k" . pdf-view-previous-line-or-previous-page)
+  ;; :general
+  ;; (general-define-key :states 'motion :keymaps 'pdf-view-mode-map
+  ;;                     "j" 'pdf-view-next-page
+  ;;                     "k" 'pdf-view-previous-page)
+
+  ;; (:keymaps '(pdf-view-mode-map)
+  ;;           "C-j" 'pdf-view-shrink
+  ;;           "C-k" 'pdf-view-enlarge)
+
   :init (pdf-loader-install)
-  :config (add-to-list 'revert-without-query ".pdf")
+  :config
+  (add-to-list 'revert-without-query ".pdf")
+  (general-define-key :states 'normal :keymaps 'pdf-view-mode-map
+                      ;; "j" 'pdf-view-next-page
+                      ;; "k" 'pdf-view-previous-page
+            "C-j" 'pdf-view-shrink
+            "C-k" 'pdf-view-enlarge)
 ;; :hook  (pdf-view-mode-hook . (lambda() 
 ;;  (display-line-numbers-mode -1)
 ;;  (blink-cursor-mode -1)
@@ -1665,7 +1606,7 @@ invert colors?
 
 (add-hook 'pdf-view-mode-hook #'(lambda () (interactive) (display-line-numbers-mode -1)
                                                          (blink-cursor-mode -1)
-                                                         (doom-modeline-mode -1)
+                                                         (doom-modeline-mode -1) ; revert when exiting?
 	  ; (define-key evil-normal-state-local-map (kbd "C-j")#'pdf-view-shrink)
 	  ;; (define-key evil-normal-state-map (kbd "C-j")#'pdf-view-shrink)
 	  ;; (define-key evil-normal-state-map (kbd "C-k")#'pdf-view-enlarge)
@@ -1681,12 +1622,10 @@ invert colors?
 #+end_src
 
 ** org-noter
-#+begin_src elisp :tangle no
+#+begin_src elisp
 (use-package org-noter
-  ;; what's this?
-  :load-path "~/notes/"
-  :ensure t
-  :demand t
+  ;; :load-path "~/notes/pdfs/"
+  ;; :ensure t
 ;;   :bind (:map evil-normal-state-map
 ;;  ("i" . #'org-noter-insert-note) ;; also works for org buffer ffs
 ;; )
@@ -1807,6 +1746,7 @@ The following settings are simple modes that are enabled (or disabled) so that E
 ;; (global-set-key [(control h)]  'delete-backward-char)
 ;; (keyboard-translate ?\C-h ?\s-m-h)
 (setq show-trailing-whitespace t)
+(setq initial-scratch-message "") 
 
 (setq use-short-answers t)
 
@@ -1886,10 +1826,7 @@ Vterm is a terminal emulator within Emacs.  The 'shell-file-name' setting sets t
 #+begin_src elisp
 (use-package vterm-toggle
   :after vterm
-  :bind (
-
-    ("C-`" . vterm-toggle)
-    )
+  ;; :bind (("C-`" . vterm-toggle))
   :config
   ;; When running programs in Vterm and in 'normal' mode, make sure that ESC
   ;; kills the program as it would in most standard terminal programs.
@@ -2054,7 +1991,6 @@ how to copy or put everything in the popup in a buffer?
  ;; (setq ivy-posframe-height 70)
   (defun my-ivy-posframe-get-size ()
     "Set the ivy-posframe size according to the current frame."
-    (let ((height (or ivy-posframe-height (or ivy-height 20)))
     (let ((height (+ 3(or ivy-posframe-height (or ivy-height 20))))
           (width (min (or ivy-posframe-width 200) (round (* .75 (frame-width))))))
       (list :height height :width width :min-height height :min-width width)))
@@ -2110,9 +2046,13 @@ for programming
 (with-eval-after-load 'evil-maps
   ;; would nice that it resptected v:count like 2gO to show only 2nd level header?
   (define-key evil-normal-state-map (kbd "g O") #'counsel-imenu )
+  (define-key evil-normal-state-map (kbd "g K") #'dictionary-lookup-definition)
   ;; (define-key evil-insert-state-map (kbd "M-g g") #'avy-goto-line )
   ;; (define-key evil-normal-state-map (kbd "M-g g") #'avy-goto-line )
 )
+
+(setq org-imenu-depth 3)
+(setq dictionary-server "dict.org")
 
 #+end_src
 
@@ -2310,16 +2250,19 @@ is this like gitsigns.nvim?
 
 * multiple cursors
 #+begin_src elisp
-  (use-package multiple-cursors
-      :bind (
+(use-package multiple-cursors
+  :bind (
+	 ;; maybe motion state can help here...
+	 :map evil-normal-state-map
+	 ("C-n" . 'mc/mark-next-like-this-word)
+	 ("M-n" . 'mc/mark-all-words-like-this)
+					; ( "C-x" . 'mc/skip-to-next-like-this)
+	 :map evil-visual-state-map
+	 ("C-n" . 'mc/mark-next-like-this-word)
+         )
+  :custom  (mc/always-repeat-command t) (mc/always-run-for-all t)
 
-:map evil-normal-state-map
-("C-n" . 'mc/mark-next-like-this-word)
-("M-n" . 'mc/mark-all-words-like-this)
-  ; ( "C-x" . 'mc/skip-to-next-like-this)
-:map evil-visual-state-map
-("C-n" . 'mc/mark-next-like-this-word)
-        ))
+  )
 #+end_src
 
 * docker
