@@ -988,6 +988,8 @@ Adding highlights to TODO and related words.
 ;; ("C-;" . counsel-M-x)		   ; so u can use it insert mode as well
 ("C-p" . counsel-fzf) ;; current cwd
 ("C-S-p" . counsel-fzf)		   ; project?
+("C-q" . counsel-rg) ;; current cwd
+("C-S-q" . counsel-git-grep) ;; current cwd
 ;; ("C-q" . counsel-grep like vim?)
 ;; ("C-l" . counsel-locate)
 ;; how to make this work?
