@@ -106,7 +106,6 @@ Sync toc? Like modify here and reflect changes and viceversa
 - [[#snacksnvim][Snacks.nvim]]
   - [[#recent-files][RECENT FILES]]
 - [[#universal-argument][Universal argument]]
-- [[#one-shot-mappings][One-shot mappings]]
 - [[#erc][ERC]]
 - [[#vim-parity][VIM PARITY]]
 - [[#quiz][QUIZ]]
@@ -115,7 +114,7 @@ Sync toc? Like modify here and reflect changes and viceversa
 - [[#anki-editor][anki editor]]
 - [[#emms][emms]]
 - [[#notes][notes?]]
-- [[#radio][radio]]
+- [[#radio][Radio]]
 - [[#info][info]]
 - [[#diff-hl][diff-hl]]
 - [[#multiple-cursors][multiple cursors]]
@@ -151,6 +150,7 @@ Sync toc? Like modify here and reflect changes and viceversa
     
 ** Emacs [6/62] [9%]
   - [ ] what is alist?
+  - [ ] git@github.com:ag91/moldable-emacs.git"))
   - [ ] https://github.com/tarsius/keychain-environment/blob/main/keychain-environment.el#L27-L48
   - [ ] have auto revert turned on
   - [ ] kanata chords don't work here?
@@ -222,7 +222,7 @@ Sync toc? Like modify here and reflect changes and viceversa
   - [ ] org mode headers colored like chakras
 ** Emacs/vim interaction (Evil Mode)
   - [ ] swap file or notify when working on the same file?
-  - [ ] zj and zk in evil?
+  - [X] zj and zk in evil?
   - [ ] set ft should work like for emacs modes
   - [ ] c-r and c-y comparison?
   - [ ] in emacs/insert mode, use c-x pressed as k and then x for vim insert, and l/s for emacs c-x
@@ -351,9 +351,10 @@ Bookmarks like in mini.files?
 (use-package dired-open
   :after dired
   :config
-  (setq dired-open-extensions '(("gif" . "sxiv")
-                                ("jpg" . "sxiv")
-                                ("png" . "sxiv")
+  (setq dired-open-extensions '(
+;; ("gif" . "sxiv")
+;;                                 ("jpg" . "sxiv")
+;;                                 ("png" . "sxiv")
                                 ("mkv" . "mpv")
                                 ("mp4" . "mpv"))))
                                 ;; ("pdf" . "sioyek"))))
@@ -796,7 +797,7 @@ Defining the various fonts that Emacs will use.
     "u" '(universal-argument :wk "Universal argument")
     "V" '(lambda()(interactive)
             (if buffer-file-name
-                (async-shell-command 
+                (async-shell-command
                  (format "ghostty -e 'nvim +%d %s'"
                          (line-number-at-pos)
                          (shell-quote-argument buffer-file-name)))
@@ -805,7 +806,7 @@ Defining the various fonts that Emacs will use.
 	      ;; doesn't work
     "E" '(lambda()(interactive)
             (if buffer-file-name
-                (async-shell-command 
+                (async-shell-command
                  (format "dbus-launch emacsclient -a emacs -n -c +%d %s"
                          (line-number-at-pos)
                          (shell-quote-argument buffer-file-name)))
@@ -1011,6 +1012,8 @@ Adding highlights to TODO and related words.
 )
   :config 
   (counsel-mode)
+(add-to-list 'ivy-more-chars-alist '(counsel-rg . 0))
+(add-to-list 'ivy-more-chars-alist '(counsel-git-grep . 0))
   (setq ivy-initial-inputs-alist nil)) ;; removes starting ^ regex in M-x
 
 (use-package swiper
@@ -1423,8 +1426,7 @@ Org-tempo is not a separate package but a module within org that can be enabled.
 
   (setq org-agenda-files
 	'("~/notes/Tasks.org"
-	  "~/notes/Habits.org"
-	  "~/notes/Birthdays.org"))
+	  "~/notes/Habits.org"))
 #+end_src
 
 ** ORG BABEL
@@ -1634,8 +1636,15 @@ invert colors?
 #+end_src
 
 ** org-noter
+https://github.com/novoid/Memacs
+https://github.com/novoid/extract_pdf_annotations_to_orgmode
 #+begin_src elisp
 (use-package org-noter
+  :custom
+; org-noter-highlight-selected-text to t
+(org-noter-always-create-frame nil)
+:bind (:map pdf-view-mode-map
+("C-c n" . #'org-noter))
   ;; :load-path "~/notes/pdfs/"
   ;; :ensure t
 ;;   :bind (:map evil-normal-state-map
@@ -2115,19 +2124,6 @@ lol, empty source blocks don't make emacs work...
 ;;#+begin_src elisp
 ;;#+end_src
 
-* One-shot mappings
-#+begin_src elisp
-;; find way to bind those in all states
-;; what about space + symbols excluding letters? also those are one shot...
-(with-eval-after-load 'evil-maps
-  ;; maybe use flycheck w/ kanata
-  ;; (define-key evil-insert-state-map (kbd "C-c c") #'compile)
-  ;; (define-key evil-normal-state-map (kbd "C-c c") #'compile)
-  ;; (define-key evil-normal-state-map (kbd "C-c c") #'save and exit)
-  ;; (define-key evil-normal-state-map (kbd "C-c 2") #'vterm-toggle)
-)
-#+end_src
-
 * ERC
 #+begin_src elisp
 (setq erc-prompt(lambda()(concat"["(buffer-name)"]"))
@@ -2169,15 +2165,14 @@ ivy-restrict-to-matches S-<space>
 )
 #+end_src
 
-gj/gk org?
 gcO equivalenent: O<M-j>
 gco equivalenent: o<M-j>
-screenshots?
+screenshots? https://github.com/tecosaur/screenshot
   bs visual mode remove duplicates
 
 * QUIZ
 #+begin_src elisp
-(use-package key-quiz)
+(use-package key-quiz :commands key-quiz)
 #+end_src
 
 * THEMES
@@ -2219,7 +2214,7 @@ can i use super key if emacs window not focused? if i used --daemon b4?
 
 * notes?
  css: #+setupfile: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
-* radio
+* Radio
 #+begin_src elisp
 (use-package eradio
   :init
@@ -2353,6 +2348,7 @@ use general leader keymaps
 #+end_src
 
 * Utility apps
+?
 ** Calendar
 ** Calc
 
@@ -2453,7 +2449,7 @@ Wait a few months
 #+end_src
 
 * Socials
-
+https://github.com/alphapapa/ement.el
 #+begin_src elisp
 (use-package reddigg
   :config
