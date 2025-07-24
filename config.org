@@ -1595,7 +1595,17 @@ invert colors?
                       ;; "j" 'pdf-view-next-page
                       ;; "k" 'pdf-view-previous-page
             "C-j" 'pdf-view-shrink
-            "C-k" 'pdf-view-enlarge)
+            "C-k" 'pdf-view-enlarge
+
+
+    "S" '(lambda()(interactive)
+                (async-shell-command 
+                 (format "ghostty -e 'sioyek --page %d %s'"
+                         (pdf-view-current-page) 
+                         (shell-quote-argument buffer-file-name)))
+) :wk "Open in sioyek"
+
+)
 ;; :hook  (pdf-view-mode-hook . (lambda() 
 ;;  (display-line-numbers-mode -1)
 ;;  (blink-cursor-mode -1)
