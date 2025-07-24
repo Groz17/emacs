@@ -2226,11 +2226,55 @@ can i use super key if emacs window not focused? if i used --daemon b4?
 
   ("C-c r" . eradio-toggle)
   :config
-(setq eradio-channels '(("def con - soma fm" . "https://somafm.com/defcon256.pls")          ;; electronica with defcon-speaker bumpers
-                        ("metal - soma fm"   . "https://somafm.com/metal130.pls")           ;; \m/
-                        ("cyberia - lainon"  . "https://lainon.life/radio/cyberia.ogg.m3u") ;; cyberpunk-esque electronica
-                        ("cafe - lainon"     . "https://lainon.life/radio/cafe.ogg.m3u")))  ;; boring ambient, but with lain
-)
+(setq eradio-channels '(
+("7soul - soma fm" . "https://somafm.com/7soul.pls")
+("beatblender - soma fm" . "https://somafm.com/beatblender.pls")
+("bootliquor - soma fm" . "https://somafm.com/bootliquor.pls")
+("bossa - soma fm" . "https://somafm.com/bossa.pls")
+("brfm - soma fm" . "https://somafm.com/brfm.pls")
+("chillits - soma fm" . "https://somafm.com/chillits.pls")
+("cliqhop - soma fm" . "https://somafm.com/cliqhop.pls")
+("covers - soma fm" . "https://somafm.com/covers.pls")
+("darkzone - soma fm" . "https://somafm.com/darkzone.pls")
+("deepspaceone - soma fm" . "https://somafm.com/deepspaceone.pls")
+("defcon - soma fm" . "https://somafm.com/defcon.pls")
+("digitalis - soma fm" . "https://somafm.com/digitalis.pls")
+("doomed - soma fm" . "https://somafm.com/doomed.pls")
+("dronezone - soma fm" . "https://somafm.com/dronezone.pls")
+("dubstep - soma fm" . "https://somafm.com/dubstep.pls")
+("fluid - soma fm" . "https://somafm.com/fluid.pls")
+("folkfwd - soma fm" . "https://somafm.com/folkfwd.pls")
+("groovesalad - soma fm" . "https://somafm.com/groovesalad.pls")
+("gsclassic - soma fm" . "https://somafm.com/gsclassic.pls")
+("illstreet - soma fm" . "https://somafm.com/illstreet.pls")
+("indiepop - soma fm" . "https://somafm.com/indiepop.pls")
+("insound - soma fm" . "https://somafm.com/insound.pls")
+("live - soma fm" . "https://somafm.com/live.pls")
+("lush - soma fm" . "https://somafm.com/lush.pls")
+("metal - soma fm" . "https://somafm.com/metal.pls")
+("missioncontrol - soma fm" . "https://somafm.com/missioncontrol.pls")
+("n5md - soma fm" . "https://somafm.com/n5md.pls")
+("poptron - soma fm" . "https://somafm.com/poptron.pls")
+("reggae - soma fm" . "https://somafm.com/reggae.pls")
+("scanner - soma fm" . "https://somafm.com/scanner.pls")
+("secretagent - soma fm" . "https://somafm.com/secretagent.pls")
+("seventies - soma fm" . "https://somafm.com/seventies.pls")
+("sf1033 - soma fm" . "https://somafm.com/sf1033.pls")
+("sfinsf - soma fm" . "https://somafm.com/sfinsf.pls")
+("sonicuniverse - soma fm" . "https://somafm.com/sonicuniverse.pls")
+("spacestation - soma fm" . "https://somafm.com/spacestation.pls")
+("specials - soma fm" . "https://somafm.com/specials.pls")
+("suburbsofgoa - soma fm" . "https://somafm.com/suburbsofgoa.pls")
+("synphaera - soma fm" . "https://somafm.com/synphaera.pls")
+("thetrip - soma fm" . "https://somafm.com/thetrip.pls")
+("thistle - soma fm" . "https://somafm.com/thistle.pls")
+("tikitime - soma fm" . "https://somafm.com/tikitime.pls")
+("u80s - soma fm" . "https://somafm.com/u80s.pls")
+("vaporwaves - soma fm" . "https://somafm.com/vaporwaves.pls")
+
+)))
+                        ;; ("cyberia - lainon"  . "https://lainon.life/radio/cyberia.ogg.m3u") ;; cyberpunk-esque electronica
+                        ;; ("cafe - lainon"     . "https://lainon.life/radio/cafe.ogg.m3u")))  ;; boring ambient, but with lain
 #+end_src
 
 * info
