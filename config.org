@@ -12,6 +12,8 @@ It would be nice to automatically fold just table of contents....
 
 Sync toc? Like modify here and reflect changes and viceversa
 
+:vc :url :rev :newest for not melpa
+
 * TABLE OF CONTENTS :toc:
 - [[#task-list][TASK LIST]]
   - [[#vim-feature-parity-210-20][Vim feature parity]]
@@ -68,9 +70,7 @@ Sync toc? Like modify here and reflect changes and viceversa
   - [[#images][IMAGES]]
   - [[#tables][TABLES]]
   - [[#vimscript][Vimscript]]
-  - [[#calc][CALC]]
   - [[#org-mpv-note][org-mpv-note]]
-  - [[#org-tempo][org-tempo]]
   - [[#org-autolist][org-autolist]]
   - [[#keybindings][keybindings]]
   - [[#org-modern][org modern]]
@@ -83,6 +83,7 @@ Sync toc? Like modify here and reflect changes and viceversa
 - [[#calc-mode][CALC MODE]]
 - [[#sane-defaults][SANE DEFAULTS]]
 - [[#shells-and-terminals][SHELLS AND TERMINALS]]
+  - [[#enhancements][Enhancements]]
   - [[#eshell][Eshell]]
   - [[#vterm][Vterm]]
   - [[#vterm-toggle][Vterm-Toggle]]
@@ -117,12 +118,11 @@ Sync toc? Like modify here and reflect changes and viceversa
 - [[#radio][Radio]]
 - [[#info][info]]
 - [[#diff-hl][diff-hl]]
-- [[#multiple-cursors][multiple cursors]]
 - [[#docker][docker]]
 - [[#ai][AI]]
 - [[#utility-apps][Utility apps]]
   - [[#calendar][Calendar]]
-  - [[#calc-1][Calc]]
+  - [[#calc][Calc]]
 - [[#eof][eof]]
 - [[#lsp][LSP]]
 - [[#tree-sitter][Tree-sitter]]
@@ -484,7 +484,6 @@ An RSS newsfeed reader for Emacs.  Move through the articles with 'j/k'.  Move t
 [[https://github.com/emacs-evil/evil][Evil]] is an extensible vi/vim layer for Emacs.  Because...let's face it.  The Vim keybindings are just plain better.
 
 #+begin_src elisp
-;; Expands to: (elpaca evil (use-package evil :demand t))
 (use-package evil
   :init      ;; tweak evil's configuration before loading it
 
@@ -576,8 +575,7 @@ An RSS newsfeed reader for Emacs.  Move through the articles with 'j/k'.  Move t
 	 ))
 (use-package evil-tutor)
 
-;; (define-key evil-normal-state-map (kbd "C-n") nil)
-;; (use-package evil-mc :ensure t :config (global-evil-mc-mode 1) )
+(use-package evil-mc :ensure t :config (global-evil-mc-mode 1) )
 (use-package evil-commentary :ensure t :config (evil-commentary-mode))
 (use-package goto-chg)
 ;; https://github.com/roman/evil-paredit
@@ -795,19 +793,25 @@ Defining the various fonts that Emacs will use.
   (gz/leader-keys
     ;;"=" '(perspective-map :wk "Perspective") ;; Lists all the perspective keybindings
     "u" '(universal-argument :wk "Universal argument")
-    "V" '(lambda()(interactive)
-            (if buffer-file-name
-                (async-shell-command
-                 (format "ghostty -e 'nvim +%d %s'"
-                         (line-number-at-pos)
-                         (shell-quote-argument buffer-file-name)))
-              (message "Current buffer is not visiting a file."))) :wk "Open in Neovim"
+"&"
+ (lambda ()
+   (interactive)
+   (if buffer-file-name
+       (if (buffer-modified-p)
+           (message "Buffer modified. Please save before opening in Neovim.")
+         (start-process
+          "open-in-nvim" nil
+          "ghostty" "-e" "nvim"
+          (format "+%d" (line-number-at-pos))
+          (shell-quote-argument buffer-file-name)))
+     (message "Current buffer is not visiting a file.")))
+ :wk "Open in Neovim"
 
 	      ;; doesn't work
     "E" '(lambda()(interactive)
             (if buffer-file-name
                 (async-shell-command
-                 (format "dbus-launch emacsclient -a emacs -n -c +%d %s"
+                 (format "dbus-launch emacsclient -a '' -c +%d %s"
                          (line-number-at-pos)
                          (shell-quote-argument buffer-file-name)))
               (message "Current buffer is not visiting a file."))) :wk "Open in Emacs GUI"
@@ -1083,7 +1087,7 @@ Adding highlights to TODO and related words.
 (use-package orderless
   :ensure t
   :custom
-  (completion-styles '(orderless basic))
+  (completion-styles '(orderless flex))
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
 #+end_src
@@ -1105,15 +1109,6 @@ By default, Emacs requires you to hit ESC three times to escape quit the minibuf
 #+begin_src elisp
 ;; mappa escape a c-g e c-g a original vim behaviour?
 (global-set-key [escape] 'keyboard-escape-quit)
-   ;;; esc quits
-   ;;(define-key evil-normal-state-map [escape] 'keyboard-quit)
-   ;;(define-key evil-visual-state-map [escape] 'keyboard-quit)
-   ;;(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
-   ;;(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
-   ;;(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
-   ;;(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
-   ;;(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
-
 #+end_src
 
 **  READLINE SANITY
@@ -1126,6 +1121,16 @@ By default, Emacs requires you to hit ESC three times to escape quit the minibuf
 
 (with-eval-after-load 'evil-maps
 (define-key evil-insert-state-map (kbd "<ctl-x> C-?") (lambda () (interactive)(kill-line 0)))
+;; (define-key evil-insert-state-map (kbd "<C-]>") (lambda () (interactive)(evil-execute-in-normal-state)(execute-kbd-macro (kbd "f"))))
+
+;; (define-key evil-insert-state-map (kbd "<C-M-]>")
+;;   (lambda ()
+;;     (interactive)
+;;     (evil-execute-in-normal-state
+;;      (lambda ()
+;;        (call-interactively #'evil-find-char-backward)))))
+
+
 )
 (define-key minibuffer-local-map (kbd "<ctl-x> C-?") (lambda () (interactive)(kill-line 0)))
 ; (define-key minibuffer-local-map (kbd "M-#") (lambda () (interactive)( 0)))
@@ -1441,6 +1446,7 @@ Org-tempo is not a separate package but a module within org that can be enabled.
          ; (typst . t)
          (ditaa . t)
          (python . t)
+         (sqlite . t)
          (perl . t)
          (calc . t)
          (lua . t)
@@ -1519,16 +1525,29 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
 (use-package vimrc-mode)
 #+end_src
 
-** CALC
-#+begin_src elisp
-;; (use-package literate-calc-mode :ensure t)
-#+end_src
-
 ** org-mpv-note
 usa with yt-dlp
-** org-tempo
-< emacs lisp?
+#+begin_src elisp
 
+
+(use-package smartrep
+  :ensure t
+  :demand t)
+
+(use-package org-mpv-notes
+  :ensure t
+  :commands (org-mpv-notes-mode org-mpv-notes-open)
+  :hook (org-mode . org-mpv-notes-setup-link)
+:config
+  (define-key org-mpv-notes-mode-map (kbd "M-n") (smartrep-map org-mpv-notes-key-bindings))
+  (add-to-list 'org-mpv-notes-mpv-args "--keep-open=yes")
+)
+
+
+;; https://github.com/isamert/empv.el
+(use-package mpv
+  :ensure t)
+#+end_src
 ** org-autolist
 #+begin_src elisp
 (use-package org-autolist :diminish :hook (org-mode . org-autolist-mode))
@@ -1549,6 +1568,8 @@ org-cheatsheet, org-reveal.js? mindmaps?
 (define-key global-map (kbd "C-c a") 'org-agenda)
 (define-key global-map (kbd "C-c c") 'org-capture)
 (define-key global-map (kbd "C-c c") 'org-capture)
+
+(define-key global-map (kbd "C-c w") 'webjump)
   ;;   "o e" '(elfeed :wk "Elfeed RSS")
 
   ;;   "m i" '(org-toggle-item :wk "Org toggle item")
@@ -1563,6 +1584,8 @@ org-cheatsheet, org-reveal.js? mindmaps?
   ;;   "e s" '(eshell :which-key "Eshell")
   ;;   "e w" '(eww :which-key "EWW emacs web wowser"))
 
+;; benchmark
+;; profiler-{start,stop}
 #+end_src
 
 ** org modern
@@ -1602,11 +1625,12 @@ invert colors?
             "C-k" 'pdf-view-enlarge
 
 
-    "S" '(lambda()(interactive)
-                (async-shell-command 
-                 (format "ghostty -e 'sioyek --page %d %s'"
-                         (pdf-view-current-page) 
-                         (shell-quote-argument buffer-file-name)))
+    "&" '(lambda()(interactive)
+         (start-process
+          "open-in-sioyek" nil
+          "ghostty" "-e" "sioyek"
+          (format "+%d" (line-number-at-pos))
+          (shell-quote-argument buffer-file-name))
 ) :wk "Open in sioyek"
 
 )
@@ -1795,11 +1819,22 @@ The following settings are simple modes that are enabled (or disabled) so that E
 ;; you can start Emacs from a terminal where ssh-agent is already running, or propagate the SSH_AUTH_SOCK env var to Emacs using:
 (setenv "SSH_AUTH_SOCK" (getenv "SSH_AUTH_SOCK"))
 
+;; (setq browse-url-browser-function 'eww-browse-url) ; use w/ webjump
+(setq webjump-use-internal-browser t)
 
 #+end_src
 
 * SHELLS AND TERMINALS
 In my configs, all of my shells (bash, fish, zsh and the ESHELL) require my shell-color-scripts-git package to be installed.  On Arch Linux, you can install it from the AUR.  Otherwise, go to my shell-color-scripts repository on GitLab to get it.
+
+** Enhancements
+#+begin_src elisp
+(use-package kkp
+  :ensure t
+  :config
+  ;; (setq kkp-alt-modifier 'alt) ;; use this if you want to map the Alt keyboard modifier to Alt in Emacs (and not to Meta)
+  (global-kkp-mode +1))
+#+end_src
 
 ** Eshell
 Eshell is an Emacs 'shell' that is written in Elisp.
@@ -1953,11 +1988,15 @@ how to copy or put everything in the popup in a buffer?
 
 * COMMAND-LOG
 #+begin_src elisp
-;;(use-package command-log-mode)
+(use-package command-log-mode)
 #+end_src
 
 * TODO [#B] KANATA SHEGANIGANS
 #+begin_src elisp
+; (use-package kanata-kbd-mode
+;   :vc (
+;   :url "https://github.com/chmouel/kanata-kbd-mode" :rev :newest)
+;   :mode ("\\.kbd\\'" . kanata-kbd-mode))
 
 ;; TODO: these don't work in terminal?
 ;;(define-key key-translation-map (kbd "<f13>") (kdb "C-h"))
@@ -2299,23 +2338,6 @@ is this like gitsigns.nvim?
 )
 #+end_src
 
-* multiple cursors
-#+begin_src elisp
-(use-package multiple-cursors
-  :bind (
-	 ;; maybe motion state can help here...
-	 :map evil-normal-state-map
-	 ("C-n" . 'mc/mark-next-like-this-word)
-	 ("M-n" . 'mc/mark-all-words-like-this)
-					; ( "C-x" . 'mc/skip-to-next-like-this)
-	 :map evil-visual-state-map
-	 ("C-n" . 'mc/mark-next-like-this-word)
-         )
-  :custom  (mc/always-repeat-command t) (mc/always-run-for-all t)
-
-  )
-#+end_src
-
 * docker
 #+begin_src elisp
 (use-package docker
@@ -2457,7 +2479,6 @@ https://github.com/alphapapa/ement.el
   )
 #+end_src
 
-
 * Snippets
 https://www.youtube.com/watch?v=W-bRZlseNm0
 #+begin_src elisp
@@ -2466,4 +2487,6 @@ https://www.youtube.com/watch?v=W-bRZlseNm0
 (setq yas-snippet-dirs '("~/.config/emacs/snippets"))
 (yas-global-mode 1))
 #+end_src
+
+
 
