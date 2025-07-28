@@ -136,17 +136,12 @@ Sync toc? Like modify here and reflect changes and viceversa
   - [ ] orderless plugin is great (especially for beginners)
   - [ ] Alt+key should act as Esc key (trick terminal in insert mode?)
   - [ ] gf shows popup for some reason
-  - [X] tabout w/ jl? just use c-f
-  - [ ] how to use default keybinding (like norm! in vim) for c-x c-f?
-  - [ ] create c-s-% to replace backwards and regex version(so u can use vim and emacs to cover all 3 cases)
   - [ ] from emacs mode to insert mode and viceversa? like for ctrl-r mappings...
   - [ ] emacs keybindins in command mode?
   - [ ] seamlessly switch between emacs and neovim? in a split also
   - [ ] v:count tab doesn't work in org mode tables? also how to make column same width?
-  - [ ] use vimscript function in emacs? process?
   - [ ] lazy ui for slowest plugins?
   - [X] C-j indents, C-m doesn't
-  - [X] {} in visual mode doesn't work?
     
 ** Emacs [6/62] [9%]
   - [ ] what is alist?
@@ -668,6 +663,14 @@ An RSS newsfeed reader for Emacs.  Move through the articles with 'j/k'.  Move t
  (evil-define-key 'normal org-mode-map (kbd "gk") 'evil-previous-visual-line)
  (evil-define-key 'normal org-mode-map (kbd "zj") 'org-forward-heading-same-level)
  (evil-define-key 'normal org-mode-map (kbd "zk") 'org-forward-heading-same-level)
+ (evil-define-key '(normal visual) org-mode-map (kbd "}") 'evil-forward-paragraph)
+ (evil-define-key '(normal visual) org-mode-map (kbd "{") 'evil-backward-paragraph)
+
+
+(define-key evil-ex-completion-map (kbd "C-a") 'move-beginning-of-line)
+(define-key evil-ex-completion-map (kbd "C-b") 'backward-char)
+(define-key evil-ex-completion-map (kbd "M-p") 'previous-complete-history-element)
+(define-key evil-ex-completion-map (kbd "M-n") 'next-complete-history-element)
 
   ;;(evil-normal-state)(setq unread-comand-events (listify-key-sequence (kbd "C-w")))))
 
@@ -686,8 +689,6 @@ An RSS newsfeed reader for Emacs.  Move through the articles with 'j/k'.  Move t
   ;; doesn't work in terminal?
   (define-key evil-motion-state-map (kbd "RET") nil)
   (define-key evil-motion-state-map (kbd "TAB") nil))
-;; Setting RETURN key in org-mode to follow links
-(setq org-return-follows-link  t)
 
 #+end_src
 
@@ -789,10 +790,21 @@ Defining the various fonts that Emacs will use.
     )
 
 
-  ;;"SPC" '(counsel-M-x :wk "Counsel M-x")
   (gz/leader-keys
+
+
     ;;"=" '(perspective-map :wk "Perspective") ;; Lists all the perspective keybindings
     "u" '(universal-argument :wk "Universal argument")
+
+; "SPC"
+;  (lambda ()
+;    (interactive)
+;          (start-process
+;           "send-clipboard" nil
+; "hyprctl" "dispatch" "exec" "ghostty"))
+;  :wk "Open in Neovim"
+
+
 "&"
  (lambda ()
    (interactive)
@@ -2102,17 +2114,21 @@ for programming
 
 * NICETIES
 #+begin_src elisp
-;; (with-eval-after-load 'evil-maps (define-key evil-insert-state-map (kbd "M-o") lambda() C-o o ))
 (with-eval-after-load 'evil-maps
   ;; would nice that it resptected v:count like 2gO to show only 2nd level header?
   (define-key evil-normal-state-map (kbd "g O") #'counsel-imenu )
+;;  region? C-u g K for <CWORD>?
   (define-key evil-normal-state-map (kbd "g K") #'dictionary-lookup-definition)
+
   ;; (define-key evil-insert-state-map (kbd "M-g g") #'avy-goto-line )
   ;; (define-key evil-normal-state-map (kbd "M-g g") #'avy-goto-line )
 )
 
 (setq org-imenu-depth 3)
 (setq dictionary-server "dict.org")
+
+;; Setting RETURN key in org-mode to follow links
+(setq org-return-follows-link  t)
 
 #+end_src
 
