@@ -134,30 +134,21 @@ Sync toc? Like modify here and reflect changes and viceversa
 ** Vim feature parity [2/10] [20%]
   - [ ] :restart command/keybinding... (maybe C-x C-S-c?)
   - [ ] orderless plugin is great (especially for beginners)
-  - [ ] Alt+key should act as Esc key (trick terminal in insert mode?)
   - [ ] gf shows popup for some reason
-  - [ ] from emacs mode to insert mode and viceversa? like for ctrl-r mappings...
-  - [ ] emacs keybindins in command mode?
-  - [ ] seamlessly switch between emacs and neovim? in a split also
   - [ ] v:count tab doesn't work in org mode tables? also how to make column same width?
   - [ ] lazy ui for slowest plugins?
   - [X] C-j indents, C-m doesn't
     
 ** Emacs [6/62] [9%]
-  - [ ] what is alist?
   - [ ] git@github.com:ag91/moldable-emacs.git"))
   - [ ] https://github.com/tarsius/keychain-environment/blob/main/keychain-environment.el#L27-L48
-  - [ ] have auto revert turned on
-  - [ ] kanata chords don't work here?
   - [ ] dotfiles dirs in projects/bookmarks?
   - [ ] kill shell buffer with C-d if first char?
   - [ ] emmet?
   - [ ] olivetti mode
-  - [ ] I still see asterisks in org mode?
   - [ ] automatically update percentage in todo list
   - [ ] make undo work like vim (u0?)
   - [ ] gz operator to narrow
-  - [ ] make c-] and c-m-] work like readline...
   - [ ] c-o in help buffers?
   - [ ] ts textobjects
   - [ ] reload pdf on save?
@@ -224,6 +215,7 @@ Sync toc? Like modify here and reflect changes and viceversa
   - [ ] use c/m for vim insert mode mappings?
   - [ ] syncronize shada/command history
   - [ ] from normal mode, go to insert mode after certain keybindings like M-; or M-RET
+
 * IMPORTANT PROGRAMS TO LOAD FIRST
 To keep this =config.org= a reasonable length, I have moved a lot of code to individual scripts that will be sourced by this config.  These scripts are found in "~/.config/emacs/scripts" and do not contain any code that most people are likely to need to edit.
 
@@ -418,6 +410,8 @@ automatically fold when moving j/k?
 * ELFEED
 An RSS newsfeed reader for Emacs.  Move through the articles with 'j/k'.  Move through the stories with 'CTRL j/k' when in other frame.
 
+https://github.com/remyhonig/elfeed-org
+
 #+begin_src elisp
 (use-package elfeed
   :config
@@ -440,7 +434,10 @@ An RSS newsfeed reader for Emacs.  Move through the articles with 'j/k'.  Move t
                         ("https://www.techrepublic.com/rssfeeds/topic/open-source/" techrepublic linux)
                         ("https://betanews.com/feed" betanews linux)
                         ("http://lxer.com/module/newswire/headlines.rss" lxer linux)
-                        ("https://distrowatch.com/news/dwd.xml" distrowatch linux)))))
+                        ("https://distrowatch.com/news/dwd.xml" distrowatch linux))))
+(with-eval-after-load 'evil-collection
+  (evil-collection-define-key 'normal 'elfeed-search-mode-map
+    "l" 'elfeed-search-show-entry)))
  
 
 (use-package elfeed-goodies
@@ -452,7 +449,6 @@ An RSS newsfeed reader for Emacs.  Move through the articles with 'j/k'.  Move t
 (use-package elfeed-tube
   :ensure t
   :after elfeed
-  :demand t
   :config
   ;; (setq elfeed-tube-auto-save-p nil) ; default value
   ;; (setq elfeed-tube-auto-fetch-p t)  ; default value
@@ -669,6 +665,7 @@ An RSS newsfeed reader for Emacs.  Move through the articles with 'j/k'.  Move t
 
 (define-key evil-ex-completion-map (kbd "C-a") 'move-beginning-of-line)
 (define-key evil-ex-completion-map (kbd "C-b") 'backward-char)
+(define-key evil-ex-completion-map (kbd "C-f") 'forward-char)
 (define-key evil-ex-completion-map (kbd "M-p") 'previous-complete-history-element)
 (define-key evil-ex-completion-map (kbd "M-n") 'next-complete-history-element)
 
@@ -1582,6 +1579,7 @@ org-cheatsheet, org-reveal.js? mindmaps?
 (define-key global-map (kbd "C-c c") 'org-capture)
 
 (define-key global-map (kbd "C-c w") 'webjump)
+(define-key global-map (kbd "C-c e") 'elfeed)
   ;;   "o e" '(elfeed :wk "Elfeed RSS")
 
   ;;   "m i" '(org-toggle-item :wk "Org toggle item")
@@ -2028,7 +2026,9 @@ how to copy or put everything in the popup in a buffer?
 ; (define-key key-translation-map (kbd "<Launch5>") [snacks])
 (define-key key-translation-map (kbd "<Launch6>") (kbd "C-c"))
 ;; (define-key key-translation-map (kbd "<Launch5>") (lambda()(interactive)(universal-argument 0))) ;; doesn't even work
-(define-key key-translation-map (kbd "<Launch5>") (kbd "M-0")) ;; basically u can use 0 for v:count now
+;; (define-key key-translation-map (kbd "<Launch5>") (kbd "M-0")) ;; basically u can use 0 for v:count now
+
+(define-key key-translation-map (kbd "<Launch5>") vc-prefix-map)
 
 
 ;; TODO: hide translated from...
@@ -2140,7 +2140,7 @@ for programming
 #+begin_src elisp
 (with-eval-after-load 'evil-maps
   (define-key evil-insert-state-map (kbd "<Launch8> m") #'man) (define-key evil-normal-state-map (kbd "<Launch8> m") #'man)
-  (define-key evil-normal-state-map (kbd "<Launch8> /") 'swiper)
+  (evil-define-key '(normal insert) global-map (kbd "<Launch8> /") 'swiper)
   ;; zen/zoom?
 (define-key evil-normal-state-map (kbd "<Launch8> r") 'counsel-recentf)
 (define-key evil-normal-state-map (kbd "<Launch8> c") 'counsel-load-theme) ; make this refresh theme?
