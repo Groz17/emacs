@@ -163,7 +163,7 @@ Sync toc? Like modify here and reflect changes and viceversa
   - [ ] reload pdf on save?
   - [ ] text object for orgmode block?
   - [ ] vip non comprende begin_src?
-  - [ ] make emacs same ts and lsp as mason? or just use guix ffs
+  - [ ] make emacs same ts and lsp as mason? or just use guix
   - [ ] whenever u put ^, use it as control vim prefix (for picker loclist, etc... and stuff like ^y in insert mode)
   - [ ] C-c C- ->localleader in normal mode?
   - [ ] fixa f keys terminal
@@ -682,7 +682,7 @@ An RSS newsfeed reader for Emacs.  Move through the articles with 'j/k'.  Move t
 
   ;; (define-key evil-normal-state-map (y c c) lambda() comment-line duplicate-line
 
-  ;; FFS doesn't work in minibuffer/find-file
+  ;; doesn't work in minibuffer/find-file
   ;; (evil-define-key 'insert 'global "\C-h" 'backward-delete-char-untabify)
 
   (define-key evil-motion-state-map (kbd "SPC") nil)
@@ -796,17 +796,17 @@ Defining the various fonts that Emacs will use.
     ;;"=" '(perspective-map :wk "Perspective") ;; Lists all the perspective keybindings
     "u" '(universal-argument :wk "Universal argument")
 
-; "SPC"
-;  (lambda ()
-;    (interactive)
-;          (start-process
-;           "send-clipboard" nil
-; "hyprctl" "dispatch" "exec" "ghostty"))
-;  :wk "Open in Neovim"
+"SPC"
+ '((lambda ()
+   (interactive)
+         (start-process
+          "send-clipboard" nil
+"hyprctl" "dispatch" "exec" "[float] ghostty -e nvim -c \"norm 1 Qd\""))
+ :wk "Send clipboard")
 
 
 "&"
- (lambda ()
+ '((lambda ()
    (interactive)
    (if buffer-file-name
        (if (buffer-modified-p)
@@ -817,7 +817,7 @@ Defining the various fonts that Emacs will use.
           (format "+%d" (line-number-at-pos))
           (shell-quote-argument buffer-file-name)))
      (message "Current buffer is not visiting a file.")))
- :wk "Open in Neovim"
+ :wk "Open in Neovim")
 
 	      ;; doesn't work
     "E" '(lambda()(interactive)
@@ -1684,7 +1684,7 @@ https://github.com/novoid/extract_pdf_annotations_to_orgmode
   ;; :load-path "~/notes/pdfs/"
   ;; :ensure t
 ;;   :bind (:map evil-normal-state-map
-;;  ("i" . #'org-noter-insert-note) ;; also works for org buffer ffs
+;;  ("i" . #'org-noter-insert-note) ;; also works for org buffer
 ;; )
   ;; :config
 )
