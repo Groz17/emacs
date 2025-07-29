@@ -129,6 +129,8 @@ Sync toc? Like modify here and reflect changes and viceversa
   - [[#text-objects][Text-objects]]
 - [[#socials][Socials]]
 - [[#snippets][Snippets]]
+- [[#password-management][Password management]]
+- [[#music][Music]]
 
 * TODO TASK LIST
 ** Vim feature parity [2/10] [20%]
@@ -1001,7 +1003,7 @@ Adding highlights to TODO and related words.
 
 ;; ("C-;" . counsel-M-x)		   ; so u can use it insert mode as well
 ("C-p" . counsel-fzf) ;; current cwd
-("C-S-p" . counsel-fzf)		   ; project?
+("C-S-p" . project-find-file)		   ; project?
 ("C-q" . counsel-rg) ;; current cwd
 ("C-S-q" . counsel-git-grep) ;; current cwd
 ;; ("C-q" . counsel-grep like vim?)
@@ -1041,7 +1043,7 @@ Adding highlights to TODO and related words.
   :bind
   ;; ivy-resume resumes the last Ivy-based completion.
   (
-   ;; ("C-c C-r" . ivy-resume)
+   ("C-c C-r" . ivy-resume)
    ;; ("C-x B" . ivy-switch-buffer-other-window)
    :map ivy-minibuffer-map
    ;; ("TAB" . ivy-alt-done)
@@ -1049,7 +1051,8 @@ Adding highlights to TODO and related words.
    ;; ("C-l" . ivy-alt-done)
    ("C-j" . ivy-next-line)
    ("C-k" . ivy-previous-line)
-   ("C-l" . ivy-done)
+   ("C-l" . ivy-alt-done)
+   ("C-'" . ivy-avy)
    ("C-h" . backward-delete-char-untabify)
    ("C-w" . backward-kill-word)
    :map ivy-switch-buffer-map
@@ -2049,6 +2052,7 @@ how to copy or put everything in the popup in a buffer?
 # (add-to-list 'default-frame-alist '(fullscreen . fullscreen))
 
 * NOICE :vim:
+toggle full screen binding?
 #+begin_src elisp
 ;;(use-package mini-frame
 ;;:init (mini-frame-mode)
@@ -2188,7 +2192,6 @@ erc-server "irc.libera.chat"
 #+end_src
 
 * VIM PARITY
-ivy-restrict-to-matches S-<space>
 
 #+begin_src elisp
 
@@ -2374,7 +2377,8 @@ use general leader keymaps
   ;; (gptel-make-ollama "Ollama" :host "localhost:11434" :stream t :models '(gemma3:12b))
   )
   :bind (
-         ("C-c g" . 'gptel)
+	 ;; C-c and f15 two different prefixes 😁
+         ("C-c A" . 'gptel)
          :map gptel-mode-map
          ;;("C-c C-c" . 'gptel-send)
          ("<return>" . 'gptel-send)
@@ -2506,3 +2510,45 @@ https://www.youtube.com/watch?v=W-bRZlseNm0
 
 
 
+* Password management
+
+https://github.com/ecraven/ivy-pass
+
+
+* Music
+#+begin_src elisp
+;; Emacs Multimedia System
+(use-package emms
+  :custom
+  (emms-browser-covers #'emms-browser-cache-thumbnail-async)
+  (emms-source-file-default-directory "~/Music")
+  :bind
+  (
+;;("C-c w m b" . emms-browser)
+   ;; ("C-c m" . emms)
+   ;; ("C-c w m p" . emms-play-playlist )
+   ;; ("<XF86AudioPrev>" . emms-previous)
+   ;; ("<XF86AudioNext>" . emms-next)
+   ;; ("<XF86AudioPlay>" . emms-pause)
+   ("C-c m" . (lambda()(interactive)(emms-play-directory "~/Music/")))
+
+
+)
+  :config
+  (require 'emms-setup)
+  (require 'emms-mpris)
+  (emms-all)
+  (emms-default-players)
+  (emms-mpris-enable)
+  ;; TODO: delete eradio now
+;; (define-sequence 'personal-music-map "\C-c r" 'emms-play-streamlist
+;;   '(("a" "http://stereoscenic.com/pls/pill-hi-mp3.pls") ;; Ambient
+;;     ("t" "http://www.1.fm/tunein/trance64k.pls")        ;; Trance
+;;     ("j" "http://thejazzgroove.com/itunes.pls")))       ;; Jazz
+
+(with-eval-after-load 'evil-collection
+  (evil-collection-define-key 'normal 'emms-playlist-mode-map
+    "l" 'emms-playlist-mode-play-smart))
+  )
+
+#+end_src
