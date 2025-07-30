@@ -1481,7 +1481,7 @@ Org-tempo is not a separate package but a module within org that can be enabled.
 (push '("conf-unix" . conf-unix) org-src-lang-modes)
 
 #+end_src
-*** Vimscript
+*** Neovim
 #+begin_src elisp
 (defun org-babel-execute:vimrc (body params)
   "Execute VimL BODY according to PARAMS."
@@ -1496,6 +1496,24 @@ Org-tempo is not a separate package but a module within org that can be enabled.
       (replace-regexp-in-string "\r" "" output))))
 
 (add-to-list 'org-babel-load-languages '(vimrc . t))
+(add-to-list 'org-structure-template-alist '("vim" . "src vimrc"))
+
+(defun org-babel-execute:nlua (body params)
+  "Execute Nlua BODY according to PARAMS."
+  (let ((script-file (org-babel-temp-file "nvim-script-" ".lua")))
+    (with-temp-file script-file
+      (insert body))
+    (let ((output (org-babel-eval
+                  (format "nvim -V1 -es -u NONE -i NONE -c \"luafile %s\" -c \"quit\" 2>&1" 
+                          (org-babel-process-file-name script-file))
+                  "")))
+      ;; Remove carriage returns
+      (replace-regexp-in-string "\r" "" output))))
+
+(add-to-list 'org-babel-load-languages '(nlua . t))
+(add-to-list 'org-structure-template-alist '("nlua" . "src nlua"))
+(add-to-list 'auto-mode-alist '("\\.nlua\\'" . lua-mode))
+(add-to-list 'org-src-lang-modes '("nlua" . lua))
 #+end_src
 
 ** Templates
