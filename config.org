@@ -497,6 +497,7 @@ https://github.com/remyhonig/elfeed-org
 
 	;;DISAMBIGUATE TAB and C-i
 	evil-want-C-i-jump t
+	evil-lookup-func (lambda () (man (thing-at-point 'word)))
         )  
   :config
   (evil-mode 1))
@@ -604,6 +605,8 @@ https://github.com/remyhonig/elfeed-org
 ;; Using RETURN to follow links in Org/Evil 
 ;; Unmap keys in 'evil-maps if not done, (setq org-return-follows-link t) will not work
 (with-eval-after-load 'evil-maps
+  ; (evil-define-key* 'normal help-mode-map (kbd "C-o") 'evil-jump-backward)
+  ; (evil-define-key* 'normal Info-mode-map (kbd "C-o") 'evil-jump-backward)
 
   (define-key evil-normal-state-map (kbd "C-i") 'evil-jump-forward)
 
@@ -611,21 +614,11 @@ https://github.com/remyhonig/elfeed-org
   ;; like snacks bindings
   ;;(define-key evil-normal-state-map (kbd "C-k") (kbd "C-x C-+"))
   ;;(define-key evil-normal-state-map (kbd "C-j") (kbd "C-x C--"))
-  ;; (define-key evil-normal-state-map (kbd "C-c k") (kbd "C-x C-+"))
-  ;; (define-key evil-normal-state-map (kbd "C-c j") (kbd "C-x C--"))
   ;; actually u can use viml
-  ;;(define-key evil-normal-state-map (kbd "ycc") (kbd "yygccp")
+  ;; (define-key evil-normal-state-map (kbd "ycc") (execute-kbd-macro "yygccp"))
   ;; usa native keybindings...
-  ;; (define-key evil-insert-state-map (kbd "S-SPC") 'save-buffer)
-  ;; (define-key evil-normal-state-map (kbd "S-SPC") 'save-buffer)
-  ;;(define-key evil-insert-state-map (kbd "C-h") 'backward-delete-char-untabify)
+
   ;; (define-key evil-insert-state-map (kbd "C-u") 'evil-delete-backward-char-and-join)
-  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
-  ;; (define-key evil-command-window-mode-map (kbd "C-h") 'backward-delete-char-untabify)
-  (define-key evil-ex-completion-map (kbd "C-h") 'backward-delete-char-untabify)
-  (define-key evil-ex-completion-map (kbd "C-d") 'delete-forward-char)
-  ;; (define-key evil-emacs-state-map (kbd "C-h") 'backward-delete-char-untabify)
-  ;; (define-key evil-ex-completion-map (kbd "C-h") 'backward-delete-char-untabify)
   ;; only if not in region?
 
 ; https://www.reddit.com/r/emacs/comments/6noffx/favorite_editing_tricks_or_keybindings/
@@ -665,11 +658,16 @@ https://github.com/remyhonig/elfeed-org
  (evil-define-key '(normal visual) org-mode-map (kbd "{") 'evil-backward-paragraph)
 
 
-(define-key evil-ex-completion-map (kbd "C-a") 'move-beginning-of-line)
-(define-key evil-ex-completion-map (kbd "C-b") 'backward-char)
-(define-key evil-ex-completion-map (kbd "C-f") 'forward-char)
-(define-key evil-ex-completion-map (kbd "M-p") 'previous-complete-history-element)
-(define-key evil-ex-completion-map (kbd "M-n") 'next-complete-history-element)
+(define-key evil-command-line-map (kbd "C-a") 'move-beginning-of-line)
+(define-key evil-command-line-map (kbd "C-b") 'backward-char)
+(define-key evil-command-line-map (kbd "C-f") 'forward-char)
+(define-key evil-command-line-map (kbd "M-p") 'previous-complete-history-element)
+(define-key evil-command-line-map (kbd "M-n") 'next-complete-history-element)
+(define-key evil-command-line-map (kbd "C-a") 'move-beginning-of-line)
+(define-key evil-command-line-map (kbd "C-b") 'backward-char)
+(define-key evil-command-line-map (kbd "C-f") 'forward-char)
+(define-key evil-command-line-map (kbd "M-p") 'previous-complete-history-element)
+(define-key evil-command-line-map (kbd "M-n") 'next-complete-history-element)
 
   ;;(evil-normal-state)(setq unread-comand-events (listify-key-sequence (kbd "C-w")))))
 
@@ -2155,7 +2153,8 @@ for programming
 #+begin_src elisp
 (with-eval-after-load 'evil-maps
   ;; would nice that it resptected v:count like 2gO to show only 2nd level header?
-  (define-key evil-normal-state-map (kbd "g O") #'counsel-imenu )
+  ;; (define-key evil-normal-state-map (kbd "g O") #'counsel-imenu )
+  (define-key evil-normal-state-map (kbd "g O") #'counsel-outline )
 ;;  region? C-u g K for <CWORD>?
   (define-key evil-normal-state-map (kbd "g K") #'dictionary-lookup-definition)
 
@@ -2413,10 +2412,10 @@ use general leader keymaps
   )
   :bind (
 	 ;; C-c and f15 two different prefixes 😁
-         ("C-c A" . 'gptel)
+         ;; ("C-c A" . 'gptel)
          :map gptel-mode-map
-         ;;("C-c C-c" . 'gptel-send)
          ("<return>" . 'gptel-send)
+         ("C-g" . 'gptel-abort)
          )
   :custom
   (gptel-default-mode #'org-mode)
