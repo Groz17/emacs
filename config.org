@@ -661,11 +661,7 @@ https://github.com/remyhonig/elfeed-org
 (define-key evil-command-line-map (kbd "C-a") 'move-beginning-of-line)
 (define-key evil-command-line-map (kbd "C-b") 'backward-char)
 (define-key evil-command-line-map (kbd "C-f") 'forward-char)
-(define-key evil-command-line-map (kbd "M-p") 'previous-complete-history-element)
-(define-key evil-command-line-map (kbd "M-n") 'next-complete-history-element)
-(define-key evil-command-line-map (kbd "C-a") 'move-beginning-of-line)
-(define-key evil-command-line-map (kbd "C-b") 'backward-char)
-(define-key evil-command-line-map (kbd "C-f") 'forward-char)
+(define-key evil-command-line-map (kbd "C-d") 'delete-char)
 (define-key evil-command-line-map (kbd "M-p") 'previous-complete-history-element)
 (define-key evil-command-line-map (kbd "M-n") 'next-complete-history-element)
 
