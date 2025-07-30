@@ -800,7 +800,7 @@ Defining the various fonts that Emacs will use.
    (interactive)
          (start-process
           "send-clipboard" nil
-"hyprctl" "dispatch" "exec" "[float] ghostty -e nvim -c \"norm 1 Qd\""))
+"hyprctl" "dispatch" "exec" "[float;size 30% 30%] ghostty -e nvim -c \"norm 1 Qd\""))
  :wk "Send clipboard")
 
 
@@ -1029,7 +1029,8 @@ Adding highlights to TODO and related words.
   (counsel-mode)
 (add-to-list 'ivy-more-chars-alist '(counsel-rg . 0))
 (add-to-list 'ivy-more-chars-alist '(counsel-git-grep . 0))
-  (setq ivy-initial-inputs-alist nil)) ;; removes starting ^ regex in M-x
+  (setq ivy-initial-inputs-alist nil) ;; removes starting ^ regex in M-x
+  (setq ivy-auto-select-single-candidate t)) ;; useful for gptel
 
 (use-package swiper
     :after ivy
@@ -1479,6 +1480,22 @@ Org-tempo is not a separate package but a module within org that can be enabled.
 ;; Highlight Conf Files
 (push '("conf-unix" . conf-unix) org-src-lang-modes)
 
+#+end_src
+*** Vimscript
+#+begin_src elisp
+(defun org-babel-execute:viml (body params)
+  "Execute VimL BODY according to PARAMS."
+  (let ((script-file (org-babel-temp-file "nvim-script-" ".vim")))
+    (with-temp-file script-file
+      (insert body))
+    (let ((output (org-babel-eval
+                  (format "nvim -V1 -es -u NONE -i NONE -c \"source %s\" -c \"quit\" 2>&1" 
+                          (org-babel-process-file-name script-file))
+                  "")))
+      ;; Remove carriage returns
+      (replace-regexp-in-string "\r" "" output))))
+
+(add-to-list 'org-babel-load-languages '(viml . t))
 #+end_src
 
 ** Templates
@@ -2518,10 +2535,13 @@ https://github.com/ecraven/ivy-pass
 * Music
 #+begin_src elisp
 ;; Emacs Multimedia System
+;; tags?
 (use-package emms
   :custom
   (emms-browser-covers #'emms-browser-cache-thumbnail-async)
-  (emms-source-file-default-directory "~/Music")
+  (emms-source-file-default-directory "~/Music") ; hide dir in browser?
+
+  (emms-player-mpv-ipc-socket "/tmp/mpvsocket")
   :bind
   (
 ;;("C-c w m b" . emms-browser)
@@ -2530,7 +2550,8 @@ https://github.com/ecraven/ivy-pass
    ;; ("<XF86AudioPrev>" . emms-previous)
    ;; ("<XF86AudioNext>" . emms-next)
    ;; ("<XF86AudioPlay>" . emms-pause)
-   ("C-c m" . (lambda()(interactive)(emms-play-directory "~/Music/")))
+   ("C-c m" . emms)
+;;   ("s-m" . emms)			 same binding as WM/hyprland?
 
 
 )
@@ -2549,6 +2570,10 @@ https://github.com/ecraven/ivy-pass
 (with-eval-after-load 'evil-collection
   (evil-collection-define-key 'normal 'emms-playlist-mode-map
     "l" 'emms-playlist-mode-play-smart))
+;;also seek if playing
+
+  (emms-insert-directory "~/Music")
+  ;; (add-to-list 'emms-player-mpv-parameters "--input-ipc-server=/tmp/mpvsocket")
   )
 
 #+end_src
