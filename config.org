@@ -1483,7 +1483,7 @@ Org-tempo is not a separate package but a module within org that can be enabled.
 #+end_src
 *** Vimscript
 #+begin_src elisp
-(defun org-babel-execute:viml (body params)
+(defun org-babel-execute:vimrc (body params)
   "Execute VimL BODY according to PARAMS."
   (let ((script-file (org-babel-temp-file "nvim-script-" ".vim")))
     (with-temp-file script-file
@@ -1495,7 +1495,7 @@ Org-tempo is not a separate package but a module within org that can be enabled.
       ;; Remove carriage returns
       (replace-regexp-in-string "\r" "" output))))
 
-(add-to-list 'org-babel-load-languages '(viml . t))
+(add-to-list 'org-babel-load-languages '(vimrc . t))
 #+end_src
 
 ** Templates
