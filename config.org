@@ -758,6 +758,7 @@ Defining the various fonts that Emacs will use.
     ;; this isnt wrap though
     ;;"w" '(visual-line-mode :wk "Toggle truncated lines"))
     "w" '(toggle-truncate-lines :wk "Toggle truncated lines")
+    "e" '(visible-mode :wk "Toggle conceal")
     ;;"SPC" '(whitespace-mode :wk "Toggle whitespace-mode"))
     "l" '(whitespace-mode :wk "Toggle whitespace-mode"))
 
