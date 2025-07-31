@@ -2071,12 +2071,6 @@ how to copy or put everything in the popup in a buffer?
 ;; can i make so it send the original C-h?
  ;;(define-key key-translation-map (kbd "<Launch7>") (kbd "C-h"))
 ;;(keymap-global-set "<Launch5>" ctl-x-map)
-;; esplora input-method tho
-;;(define-key evil-insert-state-map (kbd "C-\\ C-n") 'evil-normal-state)
-;;(define-key evil-insert-state-map (kbd "<Launch5>") 'evil-normal-state)
- ; (define-key key-translation-map (kbd "<Launch5>") (kbd "<Escape> C-w"))
-; (define-key evil-insert-state-map (kbd "<Launch5>") (lambda()
-;    (evil-normal-state)(setq unread-comand-events (listify-key-sequence (kbd "C-w")))))
 #+end_src
 
 * FULL SCREEN
