@@ -2036,6 +2036,13 @@ how to copy or put everything in the popup in a buffer?
 ;   :url "https://github.com/chmouel/kanata-kbd-mode" :rev :newest)
 ;   :mode ("\\.kbd\\'" . kanata-kbd-mode))
 
+(use-package kanata-kbd-mode
+  :ensure (:host github :repo "chmouel/kanata-kbd-mode")
+  :mode ("\\.kbd\\'" . kanata-kbd-mode))
+
+(add-to-list 'org-src-lang-modes '("kbd" . kanata-kbd))
+; would be cool (add-to-list 'org-babel-load-languages '(kanata . t))
+
 ;; TODO: these don't work in terminal?
 ;;(define-key key-translation-map (kbd "<f13>") (kdb "C-h"))
 ;;(global-set-key  (kbd "<f13>") 'help-command)
