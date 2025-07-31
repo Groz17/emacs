@@ -113,7 +113,6 @@ Sync toc? Like modify here and reflect changes and viceversa
 - [[#themes][THEMES]]
 - [[#docs][DOCS]]
 - [[#anki-editor][anki editor]]
-- [[#emms][emms]]
 - [[#notes][notes?]]
 - [[#radio][Radio]]
 - [[#info][info]]
@@ -619,6 +618,9 @@ https://github.com/remyhonig/elfeed-org
   ;; usa native keybindings...
 
   ;; (define-key evil-insert-state-map (kbd "C-u") 'evil-delete-backward-char-and-join)
+
+ (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+ ;; (define-key isearch-mode-map (kbd "C-h") 'evil-delete-backward-char-and-join)
   ;; only if not in region?
 
 ; https://www.reddit.com/r/emacs/comments/6noffx/favorite_editing_tricks_or_keybindings/
@@ -793,7 +795,8 @@ Defining the various fonts that Emacs will use.
 "hyprctl" "dispatch" "exec" "[float;size 30% 30%] ghostty -e nvim -c \"norm 1 Qd\""))
  :wk "Send clipboard")
 
-
+;; would be cool if worked in visual mode ala narrowing
+ ;; also match modes (if insert stays in insert) in both editors
 "&"
  '((lambda ()
    (interactive)
@@ -936,12 +939,14 @@ how to go from diff to file w/ line num?
 (use-package magit-todos
   :after magit
   :config (magit-todos-mode 1))
-
+(use-package magit-delta
+  :hook (magit-mode . magit-delta-mode))
 #+end_src
 
 ** Forge
 #+begin_src elisp
-;; (use-package forge)
+; (use-package forge
+;   :after magit)
 #+end_src
 
 * HIGHLIGHT TODO
@@ -1064,7 +1069,7 @@ Adding highlights to TODO and related words.
   (ivy-use-virtual-buffers t)
   (ivy-count-format "(%d/%d) ")
   (enable-recursive-minibuffers t)
-  (ivy-wrap t)
+  (ivy-wrap t) ;; doesn't work for C-v et al
   :config
 ;;  keybinding to toggle fuzzy/regex?
 ;; (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)) )
@@ -1197,6 +1202,7 @@ it looks bad
 * ORG MODE
 ** Make more appealing
 #+begin_src elisp
+;; https://github.com/A7R7/org-popup-posframe
 ;; (use-package org
 ;; :defer t
 ;; :config
@@ -1449,6 +1455,7 @@ Org-tempo is not a separate package but a module within org that can be enabled.
          ; (typst . t)
          (ditaa . t)
          (python . t)
+         ; (php . t)
          (sqlite . t)
          (perl . t)
          (calc . t)
@@ -1471,6 +1478,7 @@ Org-tempo is not a separate package but a module within org that can be enabled.
 (push '("conf-unix" . conf-unix) org-src-lang-modes)
 
 #+end_src
+https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892d569f19fd66a/contrib/lisp/ob-php.el
 *** Neovim
 #+begin_src elisp
 (defun org-babel-execute:vimrc (body params)
@@ -1534,6 +1542,7 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
 (defun efs/org-babel-tangle-config ()
   (when (or
 	 (string-prefix-p (expand-file-name "~/dotfiles/") (buffer-file-name))
+	 ; (string-equal (concat user-emacs-directory "config.org") (buffer-file-name)))
 	 (string-equal (expand-file-name "~/.config/emacs/config.org") (buffer-file-name)))
 
     ;; Dynamic scoping to the rescue
@@ -1835,6 +1844,8 @@ The following settings are simple modes that are enabled (or disabled) so that E
 
 (setq disabled-command-function nil)
 
+; (setq desktop-dirname (concat user-emacs-directory "sessions")
+
 ;; https://www.reddit.com/r/emacs/comments/osscfd/pgtk_emacswaylandgnome_no_shiftspace/
 (setq pgtk-use-im-context nil)
 (setq pgtk-use-im-context-on-new-connection nil)
@@ -2063,6 +2074,7 @@ how to copy or put everything in the popup in a buffer?
 ;; (define-key key-translation-map (kbd "<Launch5>") (lambda()(interactive)(universal-argument 0))) ;; doesn't even work
 ;; (define-key key-translation-map (kbd "<Launch5>") (kbd "M-0")) ;; basically u can use 0 for v:count now
 
+;; delta side by side?
 (define-key key-translation-map (kbd "<Launch5>") vc-prefix-map)
 
 
@@ -2254,6 +2266,7 @@ gcO equivalenent: O<M-j>
 gco equivalenent: o<M-j>
 screenshots? https://github.com/tecosaur/screenshot
   bs visual mode remove duplicates
+*** Invert comments
 #+begin_src elisp
 ;; (defun evil-invert-comment-region ()
 ;;   "Comment uncommented lines and uncomment commented lines in the selected region.
@@ -2319,17 +2332,11 @@ https://www.reddit.com/r/emacs/comments/1kr94v4/automagic_dark_mode_automaticall
 #+end_src
 
 * anki editor
-* emms
-can i use super key if emacs window not focused? if i used --daemon b4?
-#+begin_src elisp
-;; (use-package emms
-;; :ensure t
-;; :config (require 'emms-setup) :bind ("s-n" . emms))
-#+end_src
-
 * notes?
  css: #+setupfile: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
-* Radio
+https://github.com/chenyanming/paw?tab=readme-ov-file
+* TODO Radio
+integrate w/ emms?
 #+begin_src elisp
 (use-package eradio
   :init
@@ -2426,24 +2433,77 @@ is this like gitsigns.nvim?
 use general leader keymaps
 #+begin_src elisp
 (use-package gptel ;; :bind ("C-c RET" . 'gptel)
-  :config
-  (setq gptel-model 'claude-3.7-sonnet
-  ;; (setq gptel-model 'gemma3:12b
-  gptel-backend
-  (gptel-make-gh-copilot "Copilot")
-  ;; (gptel-make-ollama "Ollama" :host "localhost:11434" :stream t :models '(gemma3:12b))
-  )
   :bind (
 	 ;; C-c and f15 two different prefixes 😁
-         ;; ("C-c A" . 'gptel)
-         :map gptel-mode-map
-         ("<return>" . 'gptel-send)
-         ("C-g" . 'gptel-abort)
-         )
-  :custom
-  (gptel-default-mode #'org-mode)
-  )
+	 ;; ("C-c A" . 'gptel)
+	 :map gptel-mode-map
+	 ("<return>" . 'gptel-send)
+	 ("C-g" . 'gptel-abort)
+	 )
 
+  ;; :bind (:map gptel-mode-map
+  ;;        ("C-c t" . gptel-insert-template)
+  ;;        ("C-c s" . gptel-send)
+  ;;        ("C-c m" . gptel-toggle-model)
+  ;;        ("C-c r" . gptel-retry))
+  ;; :bind-keymap ("C-c g" . gptel-prefix-map))
+
+  :custom
+  ;; Basic settings
+;; gptel-api-key (auth-source-pass-get 'secret "openai/api-key")
+  (gptel-default-mode #'org-mode)
+  (gptel-model 'claude-3.7-sonnet)
+  ;; (setq gptel-model 'gemma3:12b
+  (gptel-backend (gptel-make-gh-copilot "Copilot"))
+  ;; (gptel-make-ollama "Ollama" :host "localhost:11434" :stream t :models '(gemma3:12b))
+)
+        ;; gptel-max-tokens 4096)
+
+  ;; Custom UI enhancements
+  ;; (gptel-display-buffer-action
+  ;;  '((display-buffer-in-side-window)
+  ;;    (side . right)
+  ;;    (window-width . 0.4)))
+
+  ;; Prompt templates for different tasks
+  ;; (gptel-prompt-templates
+  ;;       '(("code-review" . "Review this code for bugs, improvements, and best practices:\n\n=\n{{text}}\n=")
+  ;;         ("explain" . "Explain the following concept in simple terms:\n\n{{text}}")
+  ;;         ("translate" . "Translate this text to {{language}}:\n\n{{text}}") 
+  ;;         ("improve" . "Improve this text for clarity and conciseness:\n\n{{text}}")))
+
+  ;; )
+;; :config
+  ;; Quick template application
+  ; (defun gptel-insert-template (template-key)
+  ;   (interactive (list (completing-read "Template: " (mapcar #'car gptel-prompt-templates))))
+  ;   (let ((template (cdr (assoc template-key gptel-prompt-templates))))
+  ;     (when template
+  ;       (let ((text (if (region-active-p)
+  ;                       (buffer-substring-no-properties (region-beginning) (region-end))
+  ;                     ""))
+  ;             (language (when (string= template-key "translate")
+  ;                         (read-string "Target language: "))))
+  ;         (gptel (replace-regexp-in-string "{{text}}" text 
+  ;                  (replace-regexp-in-string "{{language}}" (or language "") template)))))))
+  
+  ;; Auto-save conversations
+  ; (defun gptel-auto-save ()
+  ;   (when (eq major-mode 'gptel-mode)
+  ;     (let ((dir "~/gptel-conversations/"))
+  ;       (unless (file-exists-p dir) (make-directory dir t))
+  ;       (write-file (format "%s%s.org" dir (format-time-string "%Y%m%d-%H%M%S"))))))
+  ;
+  ; (add-hook 'gptel-post-response-functions 'gptel-auto-save)
+  
+  ;; Jump to prompt after response
+  ;; (defun gptel-jump-to-prompt ()
+  ;;   (when (eq major-mode 'gptel-mode)
+  ;;     (goto-char (point-max))
+  ;;     (recenter)))
+  ;; (add-hook 'gptel-post-response-functions 'gptel-jump-to-prompt)
+
+  ;; )
 #+end_src
 
 * Utility apps
@@ -2552,8 +2612,8 @@ https://github.com/alphapapa/ement.el
 #+begin_src elisp
 (use-package reddigg
   :config
-(setq org-confirm-elisp-link-function nil)
-  )
+  (setq org-confirm-elisp-link-function nil)
+)
 #+end_src
 
 * Snippets
