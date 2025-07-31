@@ -643,12 +643,7 @@ https://github.com/remyhonig/elfeed-org
   (define-key evil-outer-text-objects-map "q" 'evil-a-double-quote)
   (define-key evil-inner-text-objects-map "q" 'evil-inner-double-quote)
 
-  ;; (define-key evil-insert-state-map (kbd "<Launch5>") (kbd "D"))
-  ;; (define-key evil-insert-state-map (kbd "<Launch5>") (kbd "C-o C-w"))
-  ;;(define-key evil-normal-state-map (kbd "<Launch5>") (kbd "C-w"))
-  ;;(define-key evil-normal-state-map (kbd "<Launch5>") (lookup-key global-map(kbd"C-w")))
-  (define-key evil-normal-state-map (kbd "<Launch7>") 'evil-window-map)
-  (define-key evil-insert-state-map (kbd "<Launch7>") 'evil-window-map)
+  (global-set-key (kbd "<Launch7>") 'evil-window-map)
   
  (evil-define-key 'normal org-mode-map (kbd "gj") 'evil-next-visual-line)
  (evil-define-key 'normal org-mode-map (kbd "gk") 'evil-previous-visual-line)
@@ -2257,6 +2252,36 @@ gcO equivalenent: O<M-j>
 gco equivalenent: o<M-j>
 screenshots? https://github.com/tecosaur/screenshot
   bs visual mode remove duplicates
+#+begin_src elisp
+;; (defun evil-invert-comment-region ()
+;;   "Comment uncommented lines and uncomment commented lines in the selected region.
+;;   Uses the proper comment syntax for the current major mode."
+;;   (interactive)
+;;   (let* ((beg (region-beginning))
+;;          (end (region-end))
+;;          (commented-lines 0)
+;;          (total-lines 0))
+
+;;     ;; Count commented lines using the mode's comment syntax
+;;     (save-excursion
+;;       (goto-char beg)
+;;       (while (< (point) end)
+;;         (beginning-of-line)
+;;         (setq total-lines (1+ total-lines))
+;;         (when (comment-only-p (line-beginning-position) 
+;;                               (line-end-position))
+;;           (setq commented-lines (1+ commented-lines)))
+;;         (forward-line 1)))
+
+;;     ;; If more than half of lines are commented, uncomment the region
+;;     ;; Otherwise, comment the region
+;;     (if (>= commented-lines (/ total-lines 2))
+;;         (uncomment-region beg end)
+;;       (comment-region beg end))))
+
+;; ;; Bind it to a key in evil visual mode
+;; (evil-define-key '(visual) 'global (kbd "gi") 'evil-invert-comment-region)
+#+end_src
 
 * QUIZ
 #+begin_src elisp
