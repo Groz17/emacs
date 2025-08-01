@@ -6,13 +6,7 @@
 #+OPTIONS: toc:2
 #+property: header-args :tangle ~/.config/emacs/init.el
 
-maybe tangle org-babel-load in init.el?
-
-It would be nice to automatically fold just table of contents....
-
 Sync toc? Like modify here and reflect changes and viceversa
-
-:vc :url :rev :newest for not melpa
 
 * TABLE OF CONTENTS :toc:
 - [[#task-list][TASK LIST]]
@@ -80,7 +74,6 @@ Sync toc? Like modify here and reflect changes and viceversa
 - [[#rainbow-delimiters][RAINBOW DELIMITERS]]
 - [[#rainbow-mode][RAINBOW MODE]]
 - [[#subword-mode][SUBWORD MODE]]
-- [[#calc-mode][CALC MODE]]
 - [[#sane-defaults][SANE DEFAULTS]]
 - [[#shells-and-terminals][SHELLS AND TERMINALS]]
   - [[#enhancements][Enhancements]]
@@ -119,9 +112,8 @@ Sync toc? Like modify here and reflect changes and viceversa
 - [[#diff-hl][diff-hl]]
 - [[#docker][docker]]
 - [[#ai][AI]]
-- [[#utility-apps][Utility apps]]
-  - [[#calendar][Calendar]]
-  - [[#calc][Calc]]
+  - [[#llm][LLM]]
+  - [[#mcp][MCP]]
 - [[#eof][eof]]
 - [[#lsp][LSP]]
 - [[#tree-sitter][Tree-sitter]]
@@ -130,6 +122,7 @@ Sync toc? Like modify here and reflect changes and viceversa
 - [[#snippets][Snippets]]
 - [[#password-management][Password management]]
 - [[#music][Music]]
+- [[#authinfo][Authinfo]]
 
 * TODO TASK LIST
 ** Vim feature parity [2/10] [20%]
@@ -145,6 +138,7 @@ Sync toc? Like modify here and reflect changes and viceversa
   - [ ] https://github.com/tarsius/keychain-environment/blob/main/keychain-environment.el#L27-L48
   - [ ] dotfiles dirs in projects/bookmarks?
   - [ ] kill shell buffer with C-d if first char?
+  - [ ] https://github.com/SqrtMinusOne/pomm.el?tab=readme-ov-file
   - [ ] emmet?
   - [ ] olivetti mode
   - [ ] automatically update percentage in todo list
@@ -228,7 +222,6 @@ To keep this =config.org= a reasonable length, I have moved a lot of code to ind
 ** Sourcing the scripts
 #+begin_src elisp
 (require 'elpaca-setup)  ;; The Elpaca Package Manager
-(require 'buffer-move)   ;; Buffer-move for better window management
 (require 'app-launchers) ;; Use emacs as a run launcher like dmenu (experimental)
 #+end_src
 
@@ -275,20 +268,20 @@ By default, Emacs creates automatic backups of files in their original directori
   (company-show-numbers t)
   (company-tooltip-align-annotations 't)
   (global-company-mode t)
-:bind(
-;; :map evil-insert-state-map
-:map company-active-map
+  :bind(
+	;; :map evil-insert-state-map
+	:map company-active-map
 
-    ("C-j" . company-select-next-or-abort)
-    ("C-k" . company-select-previous-or-abort)
-    ("C-l" . company-complete-selection))
-        (:map lsp-mode-map
-         ("<tab>" . company-indent-or-complete-common))
+	("C-j" . company-select-next-or-abort)
+	("C-k" . company-select-previous-or-abort)
+	("C-l" . company-complete-selection))
+  (:map lsp-mode-map
+        ("<tab>" . company-indent-or-complete-common))
 
 
-;; (define-key company-search-map (kbd "C-t") 'company-search-toggle-filtering)
+  ;; (define-key company-search-map (kbd "C-t") 'company-search-toggle-filtering)
 
-)
+  )
 
 (use-package company-box
   :after company
@@ -300,29 +293,29 @@ By default, Emacs creates automatic backups of files in their original directori
 Emacs Dashboard is an extensible startup screen showing you recent files, bookmarks, agenda items and an Emacs banner.
 
 #+begin_src elisp :tangle no
-  (use-package dashboard
-    :ensure t
-    :init
-    (setq initial-buffer-choice 'dashboard-open)
-    (setq dashboard-set-heading-icons t)
-    (setq dashboard-set-file-icons t)
-    (setq dashboard-banner-logo-title "Emacs Is More Than A Text Editor!")
-    ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
+(use-package dashboard
+  :ensure t
+  :init
+  (setq initial-buffer-choice 'dashboard-open)
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
+  (setq dashboard-banner-logo-title "Emacs Is More Than A Text Editor!")
+  ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
   ;; TODO: make transparent
-    ;; https://www.reddit.com/r/emacs/comments/1f068oi/i_have_commissioned_an_artist_to_draw_an_emacs/
+  ;; https://www.reddit.com/r/emacs/comments/1f068oi/i_have_commissioned_an_artist_to_draw_an_emacs/
 
-    (setq dashboard-startup-banner "~/.config/emacs/images/emacs-dragon-small.png")  ;; use custom image as banner
-    (setq dashboard-center-content t) ;; set to 't' for centered content
-    (setq dashboard-items '((recents . 5)
-                            (agenda . 5 )
-                            (bookmarks . 3)
-                            (projects . 3)
-                            (registers . 3)))
-    :custom 
-    (dashboard-modify-heading-icons '((recents . "file-text")
-                (bookmarks . "book")))
-    :config
-    (dashboard-setup-startup-hook))
+  (setq dashboard-startup-banner "~/.config/emacs/images/emacs-dragon-small.png")  ;; use custom image as banner
+  (setq dashboard-center-content t) ;; set to 't' for centered content
+  (setq dashboard-items '((recents . 5)
+                          (agenda . 5 )
+                          (bookmarks . 3)
+                          (projects . 3)
+                          (registers . 3)))
+  :custom 
+  (dashboard-modify-heading-icons '((recents . "file-text")
+				    (bookmarks . "book")))
+  :config
+  (dashboard-setup-startup-hook))
 
 #+end_src
 
@@ -340,25 +333,25 @@ Bookmarks like in mini.files?
   :after dired
   :config
   (setq dired-open-extensions '(
-;; ("gif" . "sxiv")
-;;                                 ("jpg" . "sxiv")
-;;                                 ("png" . "sxiv")
+				;; ("gif" . "sxiv")
+				;;                                 ("jpg" . "sxiv")
+				;;                                 ("png" . "sxiv")
                                 ("mkv" . "mpv")
                                 ("mp4" . "mpv"))))
-                                ;; ("pdf" . "sioyek"))))
+;; ("pdf" . "sioyek"))))
 
 (use-package dired
   :after evil-collection
   :ensure nil
   ;; :commands (dired dired-jump)
   :custom (
-;; (setq dired-dwim-target t)
-(dired-listing-switches "-agho --group-directories-first")
-;; (setq dired-listing-switches "-lhgoBF --group-directories-first")
-;; (setq diredp-toggle-find-file-reuse-dir t)
+	   ;; (setq dired-dwim-target t)
+	   (dired-listing-switches "-agho --group-directories-first")
+	   ;; (setq dired-listing-switches "-lhgoBF --group-directories-first")
+	   ;; (setq diredp-toggle-find-file-reuse-dir t)
 
 
-)
+	   )
   :config
   (evil-collection-define-key 'normal 'dired-mode-map
     "h" 'dired-up-directory
@@ -418,28 +411,28 @@ https://github.com/remyhonig/elfeed-org
   :config
   (setq elfeed-search-feed-face ":foreground #ffffff :weight bold"
         elfeed-feeds (quote
-                       (("https://www.reddit.com/r/linux.rss" reddit linux)
-                        ("https://www.reddit.com/r/commandline.rss" reddit commandline)
-                        ("https://www.reddit.com/r/distrotube.rss" reddit distrotube)
-                        ("https://www.reddit.com/r/emacs.rss" reddit emacs)
-                        ("https://www.gamingonlinux.com/article_rss.php" gaming linux)
-                        ("https://hackaday.com/blog/feed/" hackaday linux)
-                        ("https://opensource.com/feed" opensource linux)
-                        ("https://linux.softpedia.com/backend.xml" softpedia linux)
-                        ("https://itsfoss.com/feed/" itsfoss linux)
-                        ("https://www.zdnet.com/topic/linux/rss.xml" zdnet linux)
-                        ("https://www.phoronix.com/rss.php" phoronix linux)
-                        ("http://feeds.feedburner.com/d0od" omgubuntu linux)
-                        ("https://www.computerworld.com/index.rss" computerworld linux)
-                        ("https://www.networkworld.com/category/linux/index.rss" networkworld linux)
-                        ("https://www.techrepublic.com/rssfeeds/topic/open-source/" techrepublic linux)
-                        ("https://betanews.com/feed" betanews linux)
-                        ("http://lxer.com/module/newswire/headlines.rss" lxer linux)
-                        ("https://distrowatch.com/news/dwd.xml" distrowatch linux))))
-(with-eval-after-load 'evil-collection
-  (evil-collection-define-key 'normal 'elfeed-search-mode-map
-    "l" 'elfeed-search-show-entry)))
- 
+                      (("https://www.reddit.com/r/linux.rss" reddit linux)
+                       ("https://www.reddit.com/r/commandline.rss" reddit commandline)
+                       ("https://www.reddit.com/r/distrotube.rss" reddit distrotube)
+                       ("https://www.reddit.com/r/emacs.rss" reddit emacs)
+                       ("https://www.gamingonlinux.com/article_rss.php" gaming linux)
+                       ("https://hackaday.com/blog/feed/" hackaday linux)
+                       ("https://opensource.com/feed" opensource linux)
+                       ("https://linux.softpedia.com/backend.xml" softpedia linux)
+                       ("https://itsfoss.com/feed/" itsfoss linux)
+                       ("https://www.zdnet.com/topic/linux/rss.xml" zdnet linux)
+                       ("https://www.phoronix.com/rss.php" phoronix linux)
+                       ("http://feeds.feedburner.com/d0od" omgubuntu linux)
+                       ("https://www.computerworld.com/index.rss" computerworld linux)
+                       ("https://www.networkworld.com/category/linux/index.rss" networkworld linux)
+                       ("https://www.techrepublic.com/rssfeeds/topic/open-source/" techrepublic linux)
+                       ("https://betanews.com/feed" betanews linux)
+                       ("http://lxer.com/module/newswire/headlines.rss" lxer linux)
+                       ("https://distrowatch.com/news/dwd.xml" distrowatch linux))))
+  (with-eval-after-load 'evil-collection
+    (evil-collection-define-key 'normal 'elfeed-search-mode-map
+      "l" 'elfeed-search-show-entry)))
+
 
 (use-package elfeed-goodies
   :init
@@ -456,11 +449,11 @@ https://github.com/remyhonig/elfeed-org
   (elfeed-tube-setup)
 
   :bind (:map elfeed-show-mode-map
-         ("F" . elfeed-tube-fetch)
-         ([remap save-buffer] . elfeed-tube-save)
-         :map elfeed-search-mode-map
-         ("F" . elfeed-tube-fetch)
-         ([remap save-buffer] . elfeed-tube-save)))
+              ("F" . elfeed-tube-fetch)
+              ([remap save-buffer] . elfeed-tube-save)
+              :map elfeed-search-mode-map
+              ("F" . elfeed-tube-fetch)
+              ([remap save-buffer] . elfeed-tube-save)))
 
 (use-package elfeed-tube-mpv
   :ensure t
@@ -514,24 +507,24 @@ https://github.com/remyhonig/elfeed-org
   (evil-select-search-module 'evil-search-module 'evil-search)
 
   (add-hook 'git-commit-setup-hook 'evil-insert-state)
-   (dolist (mode-map '((inferior-emacs-lisp-mode . emacs)
-   				(nrepl-mode . insert)
-   				(pylookup-mode . emacs)
-   				(comint-mode . normal)
-   				(pdf-view-mode . motion)
-   				(shell-mode . insert)
-   				(git-commit-mode . insert)
-   				(git-rebase-mode . emacs)
-   				(term-mode . emacs)
-   				(help-mode . normal)
-   				(helm-grep-mode . emacs)
-   				(grep-mode . emacs)
-   				(bc-menu-mode . emacs)
-   				(magit-branch-manager-mode . emacs)
-   				(rdictcc-buffer-mode . emacs)
-   				;; (dired-mode . emacs)
-   				(wdired-mode . normal)))
-(evil-set-initial-state `,(car mode-map) `,(cdr mode-map)))
+  (dolist (mode-map '((inferior-emacs-lisp-mode . emacs)
+   		      (nrepl-mode . insert)
+   		      (pylookup-mode . emacs)
+   		      (comint-mode . normal)
+   		      (pdf-view-mode . motion)
+   		      (shell-mode . insert)
+   		      (git-commit-mode . insert)
+   		      (git-rebase-mode . emacs)
+   		      (term-mode . emacs)
+   		      (help-mode . normal)
+   		      (helm-grep-mode . emacs)
+   		      (grep-mode . emacs)
+   		      (bc-menu-mode . emacs)
+   		      (magit-branch-manager-mode . emacs)
+   		      (rdictcc-buffer-mode . emacs)
+   		      ;; (dired-mode . emacs)
+   		      (wdired-mode . normal)))
+    (evil-set-initial-state `,(car mode-map) `,(cdr mode-map)))
 
   )
 
@@ -558,6 +551,24 @@ https://github.com/remyhonig/elfeed-org
   ;; :custom (evil-surround-pairs-alist
   ;;          '((?r . ("[" . "]"))
   ;;            (?a . ("<" . ">"))))
+  ;; this macro was copied from here: https://stackoverflow.com/a/22418983/4921402
+  (defmacro define-and-bind-quoted-text-object (name key start-regex end-regex)
+    (let ((inner-name (make-symbol (concat "evil-inner-" name)))
+	  (outer-name (make-symbol (concat "evil-a-" name))))
+      `(progn
+	 (evil-define-text-object ,inner-name (count &optional beg end type)
+	   (evil-select-paren ,start-regex ,end-regex beg end type count nil))
+	 (evil-define-text-object ,outer-name (count &optional beg end type)
+	   (evil-select-paren ,start-regex ,end-regex beg end type count t))
+	 (define-key evil-inner-text-objects-map ,key #',inner-name)
+	 (define-key evil-outer-text-objects-map ,key #',outer-name))))
+
+  (define-and-bind-quoted-text-object "pipe" "|" "|" "|")
+  (define-and-bind-quoted-text-object "slash" "/" "/" "/")
+  (define-and-bind-quoted-text-object "asterisk" "*" "*" "*")
+  (define-and-bind-quoted-text-object "dollar" "$" "\\$" "\\$") ;; sometimes your have to escape the regex
+
+
   )
 (use-package evil-numbers
   :bind (
@@ -574,22 +585,22 @@ https://github.com/remyhonig/elfeed-org
 ;; https://github.com/roman/evil-paredit
 
 (use-package evil-exchange
-:ensure t
-:config
-;; change default key bindings (if you want) HERE
-;; (setq evil-exchange-key (kbd "c x"))
-(evil-exchange-cx-install)
-)
+  :ensure t
+  :config
+  ;; change default key bindings (if you want) HERE
+  ;; (setq evil-exchange-key (kbd "c x"))
+  (evil-exchange-cx-install)
+  )
 (use-package evil-goggles
-:ensure t
-:custom
-(evil-goggles-pulse t)
-(evil-goggles-duration 0.100)
-:config
-(evil-goggles-mode)
-(evil-goggles-use-diff-faces)
+  :ensure t
+  :custom
+  (evil-goggles-pulse t)
+  (evil-goggles-duration 0.100)
+  :config
+  (evil-goggles-mode)
+  (evil-goggles-use-diff-faces)
 
-)
+  )
 ;; also add evil-markdown and check out similar plugins
 ;; (use-package evil-org
 ;; :ensure t
@@ -604,8 +615,8 @@ https://github.com/remyhonig/elfeed-org
 ;; Using RETURN to follow links in Org/Evil 
 ;; Unmap keys in 'evil-maps if not done, (setq org-return-follows-link t) will not work
 (with-eval-after-load 'evil-maps
-  ; (evil-define-key* 'normal help-mode-map (kbd "C-o") 'evil-jump-backward)
-  ; (evil-define-key* 'normal Info-mode-map (kbd "C-o") 'evil-jump-backward)
+					; (evil-define-key* 'normal help-mode-map (kbd "C-o") 'evil-jump-backward)
+					; (evil-define-key* 'normal Info-mode-map (kbd "C-o") 'evil-jump-backward)
 
   (define-key evil-normal-state-map (kbd "C-i") 'evil-jump-forward)
 
@@ -619,17 +630,17 @@ https://github.com/remyhonig/elfeed-org
 
   ;; (define-key evil-insert-state-map (kbd "C-u") 'evil-delete-backward-char-and-join)
 
- (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
- ;; (define-key isearch-mode-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+  ;; (define-key isearch-mode-map (kbd "C-h") 'evil-delete-backward-char-and-join)
   ;; only if not in region?
 
 ; https://www.reddit.com/r/emacs/comments/6noffx/favorite_editing_tricks_or_keybindings/
-(defun kill-region-or-backward-word ()
-  (interactive)
-  (if (region-active-p)
-      (kill-region (region-beginning) (region-end))
-(backward-kill-word 1)))
-;;  (define-key evil-insert-state-map (kbd "C-w") 'backward-kill-word)
+  (defun kill-region-or-backward-word ()
+    (interactive)
+    (if (region-active-p)
+	(kill-region (region-beginning) (region-end))
+      (backward-kill-word 1)))
+  ;;  (define-key evil-insert-state-map (kbd "C-w") 'backward-kill-word)
   (define-key evil-insert-state-map (kbd "C-w") 'kill-region-or-backward-word)
   ;; (define-key evil-ex-search-keymap "\C-w" 'backward-kill-word)
   (define-key evil-ex-search-keymap "\C-w" #'evil-delete-backward-word)
@@ -647,26 +658,26 @@ https://github.com/remyhonig/elfeed-org
 
   (global-set-key (kbd "<Launch7>") 'evil-window-map)
   
- (evil-define-key 'normal org-mode-map (kbd "gj") 'evil-next-visual-line)
- (evil-define-key 'normal org-mode-map (kbd "gk") 'evil-previous-visual-line)
- (evil-define-key 'normal org-mode-map (kbd "zj") 'org-forward-heading-same-level)
- (evil-define-key 'normal org-mode-map (kbd "zk") 'org-forward-heading-same-level)
- (evil-define-key '(normal visual) org-mode-map (kbd "}") 'evil-forward-paragraph)
- (evil-define-key '(normal visual) org-mode-map (kbd "{") 'evil-backward-paragraph)
+  (evil-define-key 'normal org-mode-map (kbd "gj") 'evil-next-visual-line)
+  (evil-define-key 'normal org-mode-map (kbd "gk") 'evil-previous-visual-line)
+  (evil-define-key 'normal org-mode-map (kbd "zj") 'org-forward-heading-same-level)
+  (evil-define-key 'normal org-mode-map (kbd "zk") 'org-forward-heading-same-level)
+  (evil-define-key '(normal visual) org-mode-map (kbd "}") 'evil-forward-paragraph)
+  (evil-define-key '(normal visual) org-mode-map (kbd "{") 'evil-backward-paragraph)
 
 
-(define-key evil-command-line-map (kbd "C-a") 'move-beginning-of-line)
-(define-key evil-command-line-map (kbd "C-b") 'backward-char)
-(define-key evil-command-line-map (kbd "C-f") 'forward-char)
-(define-key evil-command-line-map (kbd "C-d") 'delete-char)
-(define-key evil-command-line-map (kbd "M-p") 'previous-complete-history-element)
-(define-key evil-command-line-map (kbd "M-n") 'next-complete-history-element)
+  (define-key evil-command-line-map (kbd "C-a") 'move-beginning-of-line)
+  (define-key evil-command-line-map (kbd "C-b") 'backward-char)
+  (define-key evil-command-line-map (kbd "C-f") 'forward-char)
+  (define-key evil-command-line-map (kbd "C-d") 'delete-char)
+  (define-key evil-command-line-map (kbd "M-p") 'previous-complete-history-element)
+  (define-key evil-command-line-map (kbd "M-n") 'next-complete-history-element)
 
   ;;(evil-normal-state)(setq unread-comand-events (listify-key-sequence (kbd "C-w")))))
 
   ;; so i can use C-h as backspace and C-h as help
   ;; (global-set-key (kbd "<Launch7>")#'help-command)
-;; <help> translation?
+  ;; <help> translation?
   (define-key global-map (kbd "<Launch9>") #'help-command)
   ;; also want this in ivy/command... basially everywhere (use remap?)
 
@@ -702,27 +713,27 @@ Defining the various fonts that Emacs will use.
 
 ** Setting the Font Face
 #+begin_src elisp
- (set-face-attribute 'default nil
-   ;; :font "JetBrains Mono"
-   ;; :font "Iosevka Term Curly-regular-normal"
-   :font "Aporetic Sans"
-   :height 110
-   :weight 'medium)
- (set-face-attribute 'variable-pitch nil
-   :font "Aporetic Sans"
-   :height 120
-   :weight 'medium)
- (set-face-attribute 'fixed-pitch nil
-   :font "Aporetic Sans Mono"
-   :height 110
-   :weight 'medium)
+(set-face-attribute 'default nil
+		    ;; :font "JetBrains Mono"
+		    ;; :font "Iosevka Term Curly-regular-normal"
+		    :font "Aporetic Sans"
+		    :height 110
+		    :weight 'medium)
+(set-face-attribute 'variable-pitch nil
+		    :font "Aporetic Sans"
+		    :height 120
+		    :weight 'medium)
+(set-face-attribute 'fixed-pitch nil
+		    :font "Aporetic Sans Mono"
+		    :height 110
+		    :weight 'medium)
 ;; Makes commented text and keywords italics.
 ;; This is working in emacsclient but not emacs.
 ;; Your font must have an italic face available.
 (set-face-attribute 'font-lock-comment-face nil
-  :slant 'italic)
+		    :slant 'italic)
 (set-face-attribute 'font-lock-keyword-face nil
-  :slant 'italic)
+		    :slant 'italic)
 
 ;; This sets the default font on all graphical frames created after restarting Emacs.
 ;; Does the same thing as 'set-face-attribute default' above, but emacsclient fonts
@@ -737,8 +748,8 @@ Defining the various fonts that Emacs will use.
 
 #+begin_src elisp :tangle no
 (use-package expand-region :bind("C-=" . er/expand-region)
-;; ("C-=" . er/contract-region)
-)
+  ;; ("C-=" . er/contract-region)
+  )
 #+end_src
 
 * GENERAL KEYBINDINGS
@@ -787,42 +798,42 @@ Defining the various fonts that Emacs will use.
     ;;"=" '(perspective-map :wk "Perspective") ;; Lists all the perspective keybindings
     "u" '(universal-argument :wk "Universal argument")
 
-"SPC"
- '((lambda ()
-   (interactive)
-         (start-process
-          "send-clipboard" nil
-"hyprctl" "dispatch" "exec" "[float;size 30% 30%] ghostty -e nvim -c \"norm 1 Qd\""))
- :wk "Send clipboard")
+    "SPC"
+    '((lambda ()
+	(interactive)
+        (start-process
+         "send-clipboard" nil
+	 "hyprctl" "dispatch" "exec" "[float;size 30% 30%] ghostty -e nvim -c \"norm 1 Qd\""))
+      :wk "Send clipboard")
 
-;; would be cool if worked in visual mode ala narrowing
- ;; also match modes (if insert stays in insert) in both editors
-"&"
- '((lambda ()
-   (interactive)
-   (if buffer-file-name
-       (if (buffer-modified-p)
-           (message "Buffer modified. Please save before opening in Neovim.")
-         (start-process
-          "open-in-nvim" nil
-          "ghostty" "-e" "nvim"
-          (format "+%d" (line-number-at-pos))
-          (shell-quote-argument buffer-file-name)))
-     (message "Current buffer is not visiting a file.")))
- :wk "Open in Neovim")
+    ;; would be cool if worked in visual mode ala narrowing
+    ;; also match modes (if insert stays in insert) in both editors
+    "&"
+    '((lambda ()
+	(interactive)
+	(if buffer-file-name
+	    (if (buffer-modified-p)
+		(message "Buffer modified. Please save before opening in Neovim.")
+              (start-process
+               "open-in-nvim" nil
+               "ghostty" "-e" "nvim"
+               (format "+%d" (line-number-at-pos))
+               (shell-quote-argument buffer-file-name)))
+	  (message "Current buffer is not visiting a file.")))
+      :wk "Open in Neovim")
 
-	      ;; doesn't work
+    ;; doesn't work
     "E" '(lambda()(interactive)
-            (if buffer-file-name
-                (async-shell-command
-                 (format "dbus-launch emacsclient -a '' -c +%d %s"
-                         (line-number-at-pos)
-                         (shell-quote-argument buffer-file-name)))
-              (message "Current buffer is not visiting a file."))) :wk "Open in Emacs GUI"
+           (if buffer-file-name
+               (async-shell-command
+                (format "dbus-launch emacsclient -a '' -c +%d %s"
+                        (line-number-at-pos)
+                        (shell-quote-argument buffer-file-name)))
+             (message "Current buffer is not visiting a file."))) :wk "Open in Emacs GUI"
     )
 
   ;; how to show the descriptions in c-h l (lossage)?
-;; (directory-files "~/dotfiles" t "_[[:alpha:]]\\.org$")
+  ;; (directory-files "~/dotfiles" t "_[[:alpha:]]\\.org$")
   (gz/leader-keys
     ;; use bookmarks?
     "e" '(:ignore t :wk "Edit")    
@@ -874,9 +885,10 @@ Defining the various fonts that Emacs will use.
   ;; how to put these in use-package?
   (gz/leader-keys
     "a" '(:ignore t :wk "AI")    
-    ;; automatically select if only 1 entry?
     "a a" '(gptel :wk "gptel")
     "a m" '(gptel-menu :wk "gptel menu")
+    "a c" '(gptel-add :wk "gptel add context")
+    "a r" '(gptel-rewrite :wk "gptel rewrite")
     )
 
   (gz/leader-keys
@@ -930,12 +942,12 @@ how to go from diff to file w/ line num?
 (use-package transient)
 (setq magit-define-global-key-bindings 'recommended)
 (use-package magit :after transient
-;; using just keys without fn like in lazy?
-;; :bind ()
+  ;; using just keys without fn like in lazy?
+  ;; :bind ()
   :custom
- (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
 
-)
+  )
 (use-package magit-todos
   :after magit
   :config (magit-todos-mode 1))
@@ -945,8 +957,8 @@ how to go from diff to file w/ line num?
 
 ** Forge
 #+begin_src elisp
-; (use-package forge
-;   :after magit)
+;; (use-package forge
+;;   :after magit)
 #+end_src
 
 * HIGHLIGHT TODO
@@ -975,65 +987,41 @@ Adding highlights to TODO and related words.
 
   M-v doesn't work if first item...
   does wk work?
-
 ;;("SPC SPC" .counsel-M-x :wk "Counsel M-x")
+  open in other window action?
+
 #+begin_src elisp
 (use-package counsel
   :after ivy
   :diminish
   :bind (
-;; :map evil-visual-state-map
+	 :map evil-normal-state-map
+	 ("C-p" . counsel-fzf) ;; current cwd
+	 ("C-S-p" . project-find-file)		   ; project?
+	 ("C-q" . counsel-rg) ;; current cwd
+	 ("C-S-q" . counsel-git-grep) ;; current cwd
+	 ;; ("C-q" . counsel-grep like vim?)
+	 ;; ("C-l" . counsel-locate)
+	 ;; ("C-x b" . counsel-ibuffer)
+	 ;; ([ctl-x] "b" . counsel-ibuffer)
 
-	 ;; o as omnibar (still a picker tecnically)
-;; ("C-;" . counsel-M-x)		   ; so u can use it insert mode as well
-:map evil-normal-state-map
-; ("SPC SPC" . counsel-M-x)
-  ;; so I can use spc spc as C-u C-u
-;; ("<return>" . counsel-M-x) terribably binding cr (like for dashboard and others)
-;; ("<escape>" . counsel-M-x)
-  ;; like c-m = cr
-;; ("C-c m" . counsel-M-x)
-;; ("-" . counsel-M-x)		   ; Right under x in M-x
-;; ("C-l" . counsel-M-x)
+	 ;; ("<clt-x> b" . counsel-ibuffer)
 
-;; ("C-;" . counsel-M-x)		   ; so u can use it insert mode as well
-("C-p" . counsel-fzf) ;; current cwd
-("C-S-p" . project-find-file)		   ; project?
-("C-q" . counsel-rg) ;; current cwd
-("C-S-q" . counsel-git-grep) ;; current cwd
-;; ("C-q" . counsel-grep like vim?)
-;; ("C-l" . counsel-locate)
-;; how to make this work?
-;; ("C-x d" . counsel-dired)
-;; ([ctl-x] "d" . counsel-dired)
-;; ("C-x b" . counsel-ibuffer)
-;; ([ctl-x] "b" . counsel-ibuffer)
-
-;; :prefix [ctl-x]
-;; :prefix-map "lol"
-;; :prefix "<clt-x>"
-;; ("b" . counsel-ibuffer)
-;; ("d" . counsel-dired)
-
-;; per il momento faccio cosi
-("<clt-x> d" . counsel-dired)
-;; ("<clt-x> b" . counsel-ibuffer)
-
-)
+	 )
   :config 
   (counsel-mode)
-(add-to-list 'ivy-more-chars-alist '(counsel-rg . 0))
-(add-to-list 'ivy-more-chars-alist '(counsel-git-grep . 0))
+  (add-to-list 'ivy-more-chars-alist '(counsel-rg . 0))
+  (add-to-list 'ivy-more-chars-alist '(counsel-git-grep . 0))
   (setq ivy-initial-inputs-alist nil) ;; removes starting ^ regex in M-x
   (setq ivy-auto-select-single-candidate t)) ;; useful for gptel
 
 (use-package swiper
-    :after ivy
+  :after ivy
   :bind (
-  :map swiper-map			; void?
-  ("C-l" . ivy-done)
-      )
-        )
+	 :map swiper-map			; void?
+	 ("C-l" . ivy-done)
+	 )
+  )
 
 (use-package ivy
   :bind
@@ -1063,7 +1051,7 @@ Adding highlights to TODO and related words.
    ("C-d" . ivy-reverse-i-search-kill)
    ("C-h" . backward-delete-char-untabify)
    ("C-w" . backward-kill-word)
-)
+   )
   :diminish
   :custom
   (ivy-use-virtual-buffers t)
@@ -1071,11 +1059,11 @@ Adding highlights to TODO and related words.
   (enable-recursive-minibuffers t)
   (ivy-wrap t) ;; doesn't work for C-v et al
   :config
-;;  keybinding to toggle fuzzy/regex?
-;; (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)) )
+  ;;  keybinding to toggle fuzzy/regex?
+  ;; (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)) )
   (ivy-mode 1)
-(setq ivy-re-builders-alist '((t . orderless-ivy-re-builder)))
-(add-to-list 'ivy-highlight-functions-alist '(orderless-ivy-re-builder . orderless-ivy-highlight))
+  (setq ivy-re-builders-alist '((t . orderless-ivy-re-builder)))
+  (add-to-list 'ivy-highlight-functions-alist '(orderless-ivy-re-builder . orderless-ivy-highlight))
   )
 
 (use-package all-the-icons-ivy-rich
@@ -1090,8 +1078,8 @@ Adding highlights to TODO and related words.
 			  ivy-rich-switch-buffer-align-virtual-buffer t
 			  ivy-rich-path-style 'abbrev)
   :config
-   (ivy-rich-mode 1) ;; this gets us descriptions in M-x.
-   )
+  (ivy-rich-mode 1) ;; this gets us descriptions in M-x.
+  )
 (use-package orderless
   :ensure t
   :custom
@@ -1128,20 +1116,20 @@ By default, Emacs requires you to hit ESC three times to escape quit the minibuf
 ;; is interactive necessary here?
 
 (with-eval-after-load 'evil-maps
-(define-key evil-insert-state-map (kbd "<ctl-x> C-?") (lambda () (interactive)(kill-line 0)))
-;; (define-key evil-insert-state-map (kbd "<C-]>") (lambda () (interactive)(evil-execute-in-normal-state)(execute-kbd-macro (kbd "f"))))
+  (define-key evil-insert-state-map (kbd "<ctl-x> C-?") (lambda () (interactive)(kill-line 0)))
+  ;; (define-key evil-insert-state-map (kbd "<C-]>") (lambda () (interactive)(evil-execute-in-normal-state)(execute-kbd-macro (kbd "f"))))
 
-;; (define-key evil-insert-state-map (kbd "<C-M-]>")
-;;   (lambda ()
-;;     (interactive)
-;;     (evil-execute-in-normal-state
-;;      (lambda ()
-;;        (call-interactively #'evil-find-char-backward)))))
+  ;; (define-key evil-insert-state-map (kbd "<C-M-]>")
+  ;;   (lambda ()
+  ;;     (interactive)
+  ;;     (evil-execute-in-normal-state
+  ;;      (lambda ()
+  ;;        (call-interactively #'evil-find-char-backward)))))
 
 
-)
+  )
 (define-key minibuffer-local-map (kbd "<ctl-x> C-?") (lambda () (interactive)(kill-line 0)))
-; (define-key minibuffer-local-map (kbd "M-#") (lambda () (interactive)( 0)))
+;; (define-key minibuffer-local-map (kbd "M-#") (lambda () (interactive)( 0)))
 #+end_src
 
 * MODELINE
@@ -1151,19 +1139,19 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
 (use-package doom-modeline
   :ensure t
   :init
- (doom-modeline-mode 1)
-;; change mode-line to the top (put on the left?)
-;; (setq-default mode-line-format nil)
-;; (setq-default header-line-format (doom-modeline-set-main-modeline))
-;; :config
+  (doom-modeline-mode 1)
+  ;; change mode-line to the top (put on the left?)
+  ;; (setq-default mode-line-format nil)
+  ;; (setq-default header-line-format (doom-modeline-set-main-modeline))
+  ;; :config
   :custom
   (doom-modeline-height 35      ;; sets modeline height
-        doom-modeline-bar-width 5    ;; sets right bar width
-        ;;doom-modeline-persp-name t   ;; adds perspective name to modeline
-        doom-modeline-persp-icon t ;; adds folder icon next to persp name
- doom-modeline-buffer-file-name-style 'relative-to-project)
+			doom-modeline-bar-width 5    ;; sets right bar width
+			;;doom-modeline-persp-name t   ;; adds perspective name to modeline
+			doom-modeline-persp-icon t ;; adds folder icon next to persp name
+			doom-modeline-buffer-file-name-style 'relative-to-project)
   (doom-modeline-lsp t)
-)
+  )
 
 (use-package spacious-padding :ensure t :if (display-graphic-p) :config (spacious-padding-mode))
 
@@ -1188,14 +1176,14 @@ it looks bad
         neo-window-fixed-size nil
         inhibit-compacting-font-caches t
         projectile-switch-project-action 'neotree-projectile-action) 
-        ;; truncate long file names in neotree
-        (add-hook 'neo-after-create-hook
-           #'(lambda (_)
-               (with-current-buffer (get-buffer neo-buffer-name)
-                 (setq truncate-lines t)
-                 (setq word-wrap nil)
-                 (make-local-variable 'auto-hscroll-mode)
-                 (setq auto-hscroll-mode nil)))))
+  ;; truncate long file names in neotree
+  (add-hook 'neo-after-create-hook
+            #'(lambda (_)
+		(with-current-buffer (get-buffer neo-buffer-name)
+                  (setq truncate-lines t)
+                  (setq word-wrap nil)
+                  (make-local-variable 'auto-hscroll-mode)
+                  (setq auto-hscroll-mode nil)))))
 
 #+end_src
 
@@ -1207,7 +1195,7 @@ it looks bad
 ;; :defer t
 ;; :config
 (setq org-ellipsis " ▼"
-org-hide-emphasis-markers t)
+      org-hide-emphasis-markers t)
 ;; Replace list hyphen with dot
 ;; (font-lock-add-keywords 'org-mode
 ;; '(("^ *\\([-]\\) "
@@ -1248,135 +1236,135 @@ org-hide-emphasis-markers t)
 ** States
 
 #+begin_src elisp
-  (setq org-todo-keywords
-    '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-      (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
+(setq org-todo-keywords
+      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+	(sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
 
 #+end_src
 
 ** Configure custom agenda views
 #+begin_src elisp
-  (setq org-agenda-custom-commands
-   '(("d" "Dashboard"
-     ((agenda "" ((org-deadline-warning-days 7)))
-      (todo "NEXT"
-        ((org-agenda-overriding-header "Next Tasks")))
-      (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
+(setq org-agenda-custom-commands
+      '(("d" "Dashboard"
+	 ((agenda "" ((org-deadline-warning-days 7)))
+	  (todo "NEXT"
+		((org-agenda-overriding-header "Next Tasks")))
+	  (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
 
-    ("n" "Next Tasks"
-     ((todo "NEXT"
-        ((org-agenda-overriding-header "Next Tasks")))))
+	("n" "Next Tasks"
+	 ((todo "NEXT"
+		((org-agenda-overriding-header "Next Tasks")))))
 
-    ("W" "Work Tasks" tags-todo "+work-email")
+	("W" "Work Tasks" tags-todo "+work-email")
 
-    ;; Low-effort next actions
-    ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
-     ((org-agenda-overriding-header "Low Effort Tasks")
-      (org-agenda-max-todos 20)
-      (org-agenda-files org-agenda-files)))
+	;; Low-effort next actions
+	("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
+	 ((org-agenda-overriding-header "Low Effort Tasks")
+	  (org-agenda-max-todos 20)
+	  (org-agenda-files org-agenda-files)))
 
-    ("w" "Workflow Status"
-     ((todo "WAIT"
-            ((org-agenda-overriding-header "Waiting on External")
-             (org-agenda-files org-agenda-files)))
-      (todo "REVIEW"
-            ((org-agenda-overriding-header "In Review")
-             (org-agenda-files org-agenda-files)))
-      (todo "PLAN"
-            ((org-agenda-overriding-header "In Planning")
-             (org-agenda-todo-list-sublevels nil)
-             (org-agenda-files org-agenda-files)))
-      (todo "BACKLOG"
-            ((org-agenda-overriding-header "Project Backlog")
-             (org-agenda-todo-list-sublevels nil)
-             (org-agenda-files org-agenda-files)))
-      (todo "READY"
-            ((org-agenda-overriding-header "Ready for Work")
-             (org-agenda-files org-agenda-files)))
-      (todo "ACTIVE"
-            ((org-agenda-overriding-header "Active Projects")
-             (org-agenda-files org-agenda-files)))
-      (todo "COMPLETED"
-            ((org-agenda-overriding-header "Completed Projects")
-             (org-agenda-files org-agenda-files)))
-      (todo "CANC"
-            ((org-agenda-overriding-header "Cancelled Projects")
-             (org-agenda-files org-agenda-files)))))))
+	("w" "Workflow Status"
+	 ((todo "WAIT"
+		((org-agenda-overriding-header "Waiting on External")
+		 (org-agenda-files org-agenda-files)))
+	  (todo "REVIEW"
+		((org-agenda-overriding-header "In Review")
+		 (org-agenda-files org-agenda-files)))
+	  (todo "PLAN"
+		((org-agenda-overriding-header "In Planning")
+		 (org-agenda-todo-list-sublevels nil)
+		 (org-agenda-files org-agenda-files)))
+	  (todo "BACKLOG"
+		((org-agenda-overriding-header "Project Backlog")
+		 (org-agenda-todo-list-sublevels nil)
+		 (org-agenda-files org-agenda-files)))
+	  (todo "READY"
+		((org-agenda-overriding-header "Ready for Work")
+		 (org-agenda-files org-agenda-files)))
+	  (todo "ACTIVE"
+		((org-agenda-overriding-header "Active Projects")
+		 (org-agenda-files org-agenda-files)))
+	  (todo "COMPLETED"
+		((org-agenda-overriding-header "Completed Projects")
+		 (org-agenda-files org-agenda-files)))
+	  (todo "CANC"
+		((org-agenda-overriding-header "Cancelled Projects")
+		 (org-agenda-files org-agenda-files)))))))
 #+end_src
 ** Set of commonly known tags
 #+begin_src elisp
-  (setq org-tag-alist
-    '((:startgroup)
-       ; Put mutually exclusive tags here
-       (:endgroup)
-       ("@errand" . ?E)
-       ("@home" . ?H)
-       ("@work" . ?W)
-       ("agenda" . ?a)
-       ("planning" . ?p)
-       ("publish" . ?P)
-       ("batch" . ?b)
-       ("note" . ?n)
-       ("idea" . ?i)
-   ("thinking" . ?t)
-   ("recurring" . ?r)))
+(setq org-tag-alist
+      '((:startgroup)
+					; Put mutually exclusive tags here
+	(:endgroup)
+	("@errand" . ?E)
+	("@home" . ?H)
+	("@work" . ?W)
+	("agenda" . ?a)
+	("planning" . ?p)
+	("publish" . ?P)
+	("batch" . ?b)
+	("note" . ?n)
+	("idea" . ?i)
+	("thinking" . ?t)
+	("recurring" . ?r)))
 #+end_src
 
 ** Refiling
 #+begin_src elisp
-  (setq org-refile-targets
-    '(("Archive.org" :maxlevel . 1)
-      ("Tasks.org" :maxlevel . 1)))
+(setq org-refile-targets
+      '(("Archive.org" :maxlevel . 1)
+	("Tasks.org" :maxlevel . 1)))
 
-  ;; Save Org buffers after refiling!
-  (advice-add 'org-refile :after 'org-save-all-org-buffers)
+;; Save Org buffers after refiling!
+(advice-add 'org-refile :after 'org-save-all-org-buffers)
 #+end_src
 
 ** Capture templates
 #+begin_src elisp
 
-  (setq org-capture-templates
-    `(("t" "Tasks / Projects")
-      ("tt" "Task" entry (file+olp "~/notes/Tasks.org" "Inbox")
-           "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
- ("ts" "Clocked Entry Subtask" entry (clock)
-       "* TODO %?\n %U\n %a\n %i" :empty-lines 1)
+(setq org-capture-templates
+      `(("t" "Tasks / Projects")
+	("tt" "Task" entry (file+olp "~/notes/Tasks.org" "Inbox")
+         "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+	("ts" "Clocked Entry Subtask" entry (clock)
+	 "* TODO %?\n %U\n %a\n %i" :empty-lines 1)
 
-      ("j" "Journal Entries")
-      ("jj" "Journal" entry
-           (file+olp+datetree "~/notes/Journal.org")
-           "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
-           ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
-           :clock-in :clock-resume
-           :empty-lines 1)
-      ("jm" "Meeting" entry
-           (file+olp+datetree "~/notes/Journal.org")
-           "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
-           :clock-in :clock-resume
-           :empty-lines 1)
+	("j" "Journal Entries")
+	("jj" "Journal" entry
+         (file+olp+datetree "~/notes/Journal.org")
+         "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
+         ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
+         :clock-in :clock-resume
+         :empty-lines 1)
+	("jm" "Meeting" entry
+         (file+olp+datetree "~/notes/Journal.org")
+         "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
+         :clock-in :clock-resume
+         :empty-lines 1)
 
-      ("w" "Workflows")
-      ("we" "Checking Email" entry (file+olp+datetree "~/notes/Journal.org")
-           "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
+	("w" "Workflows")
+	("we" "Checking Email" entry (file+olp+datetree "~/notes/Journal.org")
+         "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
 
-      ("m" "Metrics Capture")
-      ("mw" "Weight" table-line (file+headline "~/notes/Metrics.org" "Weight")
-       "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
+	("m" "Metrics Capture")
+	("mw" "Weight" table-line (file+headline "~/notes/Metrics.org" "Weight")
+	 "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
 
 #+end_src
 
 ** Habit tracking
 #+begin_src elisp
-  (require 'org-habit)
-  (add-to-list 'org-modules 'org-habit)
-  (setq org-habit-graph-column 60)
+(require 'org-habit)
+(add-to-list 'org-modules 'org-habit)
+(setq org-habit-graph-column 60)
 #+end_src
 
 ** Enabling Table of Contents
 #+begin_src elisp
 (use-package toc-org
-    :commands toc-org-enable
-    :init (add-hook 'org-mode-hook 'toc-org-enable))
+  :commands toc-org-enable
+  :init (add-hook 'org-mode-hook 'toc-org-enable))
 #+end_src
 
 ** Enabling Org Bullets
@@ -1398,14 +1386,14 @@ Removes "Ind" from showing in the modeline.
 
 ** Org Level Headers
 #+begin_src elisp
-  (custom-set-faces
-   '(org-level-1 ((t (:inherit outline-1 :height 1.7))))
-   '(org-level-2 ((t (:inherit outline-2 :height 1.6))))
-   '(org-level-3 ((t (:inherit outline-3 :height 1.5))))
-   '(org-level-4 ((t (:inherit outline-4 :height 1.4))))
-   '(org-level-5 ((t (:inherit outline-5 :height 1.3))))
-   '(org-level-6 ((t (:inherit outline-5 :height 1.2))))
-   '(org-level-7 ((t (:inherit outline-5 :height 1.1)))))
+(custom-set-faces
+ '(org-level-1 ((t (:inherit outline-1 :height 1.7))))
+ '(org-level-2 ((t (:inherit outline-2 :height 1.6))))
+ '(org-level-3 ((t (:inherit outline-3 :height 1.5))))
+ '(org-level-4 ((t (:inherit outline-4 :height 1.4))))
+ '(org-level-5 ((t (:inherit outline-5 :height 1.3))))
+ '(org-level-6 ((t (:inherit outline-5 :height 1.2))))
+ '(org-level-7 ((t (:inherit outline-5 :height 1.1)))))
 #+end_src
 
 ** Source Code Block Tag Expansion
@@ -1431,44 +1419,44 @@ Org-tempo is not a separate package but a module within org that can be enabled.
 
 ** ORG AGENDA
 #+begin_src elisp 
-; (setq org-directory "~/notes")
+;; (setq org-directory "~/notes")
 ;; (setq org-agenda-files "~/notes/agenda.org")
-; (setq org-agenda-files (list org-directory))
+;; (setq org-agenda-files (list org-directory))
 ;; (setq org-log-done 'note)
 (setq org-support-shift-select t) 	;; always?
 ;; https://github.com/legalnonsense/elgantt
 
-  (setq org-agenda-files
-	'("~/notes/Tasks.org"
-	  "~/notes/Habits.org"))
+(setq org-agenda-files
+      '("~/notes/Tasks.org"
+	"~/notes/Habits.org"))
 #+end_src
 
 ** ORG BABEL
 #+begin_src elisp
 (setq org-confirm-babel-evaluate nil)
 ;;(use-package ob-mermaid)
-   (org-babel-do-load-languages
-      'org-babel-load-languages
-      ;; how To make all langs true?
-         '(;; other Babel languages
-         (plantuml . t)
-         ; (typst . t)
-         (ditaa . t)
-         (python . t)
-         ; (php . t)
-         (sqlite . t)
-         (perl . t)
-         (calc . t)
-         (lua . t)
-         (C . t)
-         (java . t)
-         (js . t)
-;; how does this work?
-         (sed . t)
-         (shell . t)
-         ;;(mermaid . t)
-         ;;(scheme . t)
-))
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ ;; how To make all langs true?
+ '(;; other Babel languages
+   (plantuml . t)
+					; (typst . t)
+   (ditaa . t)
+   (python . t)
+					; (php . t)
+   (sqlite . t)
+   (perl . t)
+   (calc . t)
+   (lua . t)
+   (C . t)
+   (java . t)
+   (js . t)
+   ;; how does this work?
+   (sed . t)
+   (shell . t)
+   ;;(mermaid . t)
+   ;;(scheme . t)
+   ))
 (setq org-plantuml-jar-path (expand-file-name "/usr/share/java/plantuml/plantuml.jar"))
 (setq org-ditaa-jar-path (expand-file-name "/usr/share/java/ditaa.jar"))
 (add-to-list 'org-structure-template-alist '("ditaa" . "src ditaa :file ./images/.png :cmdline -E"))
@@ -1487,9 +1475,9 @@ https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892
     (with-temp-file script-file
       (insert body))
     (let ((output (org-babel-eval
-                  (format "nvim -V1 -es -u NONE -i NONE -c \"source %s\" -c \"quit\" 2>&1" 
-                          (org-babel-process-file-name script-file))
-                  "")))
+                   (format "nvim -V1 -es -u NONE -i NONE -c \"source %s\" -c \"quit\" 2>&1" 
+                           (org-babel-process-file-name script-file))
+                   "")))
       ;; Remove carriage returns
       (replace-regexp-in-string "\r" "" output))))
 
@@ -1502,9 +1490,9 @@ https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892
     (with-temp-file script-file
       (insert body))
     (let ((output (org-babel-eval
-                  (format "nvim -V1 -es -u NONE -i NONE -c \"luafile %s\" -c \"quit\" 2>&1" 
-                          (org-babel-process-file-name script-file))
-                  "")))
+                   (format "nvim -V1 -es -u NONE -i NONE -c \"luafile %s\" -c \"quit\" 2>&1" 
+                           (org-babel-process-file-name script-file))
+                   "")))
       ;; Remove carriage returns
       (replace-regexp-in-string "\r" "" output))))
 
@@ -1542,7 +1530,7 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
 (defun efs/org-babel-tangle-config ()
   (when (or
 	 (string-prefix-p (expand-file-name "~/dotfiles/") (buffer-file-name))
-	 ; (string-equal (concat user-emacs-directory "config.org") (buffer-file-name)))
+	 ;; (string-equal (concat user-emacs-directory "config.org") (buffer-file-name)))
 	 (string-equal (expand-file-name "~/.config/emacs/config.org") (buffer-file-name)))
 
     ;; Dynamic scoping to the rescue
@@ -1584,10 +1572,10 @@ usa with yt-dlp
   :ensure t
   :commands (org-mpv-notes-mode org-mpv-notes-open)
   :hook (org-mode . org-mpv-notes-setup-link)
-:config
+  :config
   (define-key org-mpv-notes-mode-map (kbd "M-n") (smartrep-map org-mpv-notes-key-bindings))
   (add-to-list 'org-mpv-notes-mpv-args "--keep-open=yes")
-)
+  )
 
 
 ;; https://github.com/isamert/empv.el
@@ -1617,19 +1605,19 @@ org-cheatsheet, org-reveal.js? mindmaps?
 
 (define-key global-map (kbd "C-c w") 'webjump)
 (define-key global-map (kbd "C-c e") 'elfeed)
-  ;;   "o e" '(elfeed :wk "Elfeed RSS")
+;;   "o e" '(elfeed :wk "Elfeed RSS")
 
-  ;;   "m i" '(org-toggle-item :wk "Org toggle item")
-  ;;   "m T" '(org-todo-list :wk "Org todo list"))
-  ;;   "m d t" '(org-time-stamp :wk "Org time stamp"))
+;;   "m i" '(org-toggle-item :wk "Org toggle item")
+;;   "m T" '(org-todo-list :wk "Org todo list"))
+;;   "m d t" '(org-time-stamp :wk "Org time stamp"))
 
-  ;;   "s d" '(dictionary-search :wk "Search dictionary")
-  ;;   "s m" '(man :wk "Man pages")
-  ;;   "s t" '(tldr :wk "Lookup TLDR docs for a command")
-  ;;   "s w" '(woman :wk "Similar to man but doesn't require man"))
+;;   "s d" '(dictionary-search :wk "Search dictionary")
+;;   "s m" '(man :wk "Man pages")
+;;   "s t" '(tldr :wk "Lookup TLDR docs for a command")
+;;   "s w" '(woman :wk "Similar to man but doesn't require man"))
 
-  ;;   "e s" '(eshell :which-key "Eshell")
-  ;;   "e w" '(eww :which-key "EWW emacs web wowser"))
+;;   "e s" '(eshell :which-key "Eshell")
+;;   "e w" '(eww :which-key "EWW emacs web wowser"))
 
 ;; benchmark
 ;; profiler-{start,stop}
@@ -1638,7 +1626,7 @@ org-cheatsheet, org-reveal.js? mindmaps?
 ** org modern
 #+begin_src elisp
 (use-package org-modern
-:hook (org-mode . org-modern-mode))
+  :hook (org-mode . org-modern-mode))
 #+end_src
 
 * PDFs
@@ -1651,8 +1639,8 @@ invert colors?
   :defer t
   :commands (pdf-loader-install)
   :mode "\\.pdf\\'"
-              ;; ("j" . pdf-view-next-line-or-next-page)
-              ;; ("k" . pdf-view-previous-line-or-previous-page)
+  ;; ("j" . pdf-view-next-line-or-next-page)
+  ;; ("k" . pdf-view-previous-line-or-previous-page)
   ;; :general
   ;; (general-define-key :states 'motion :keymaps 'pdf-view-mode-map
   ;;                     "j" 'pdf-view-next-page
@@ -1668,35 +1656,35 @@ invert colors?
   (general-define-key :states 'normal :keymaps 'pdf-view-mode-map
                       ;; "j" 'pdf-view-next-page
                       ;; "k" 'pdf-view-previous-page
-            "C-j" 'pdf-view-shrink
-            "C-k" 'pdf-view-enlarge
+		      "C-j" 'pdf-view-shrink
+		      "C-k" 'pdf-view-enlarge
 
 
-    "&" '(lambda()(interactive)
-         (start-process
-          "open-in-sioyek" nil
-          "ghostty" "-e" "sioyek"
-          (format "+%d" (line-number-at-pos))
-          (shell-quote-argument buffer-file-name))
-) :wk "Open in sioyek"
+		      "&" '(lambda()(interactive)
+			     (start-process
+			      "open-in-sioyek" nil
+			      "ghostty" "-e" "sioyek"
+			      (format "+%d" (line-number-at-pos))
+			      (shell-quote-argument buffer-file-name))
+			     ) :wk "Open in sioyek"
 
-)
-;; :hook  (pdf-view-mode-hook . (lambda() 
-;;  (display-line-numbers-mode -1)
-;;  (blink-cursor-mode -1)
-;;  (doom-modeline-mode -1)     )
- ;; (define-key pdf-view-mode-map (kbd "C-j")#'pdf-view-shrink)
-;; (define-key evil-normal-state-local-map (kbd "C-k")#'pdf-view-enlarge)
-)
+		      )
+  ;; :hook  (pdf-view-mode-hook . (lambda() 
+  ;;  (display-line-numbers-mode -1)
+  ;;  (blink-cursor-mode -1)
+  ;;  (doom-modeline-mode -1)     )
+  ;; (define-key pdf-view-mode-map (kbd "C-j")#'pdf-view-shrink)
+  ;; (define-key evil-normal-state-local-map (kbd "C-k")#'pdf-view-enlarge)
+  )
 
 (add-hook 'pdf-view-mode-hook #'(lambda () (interactive) (display-line-numbers-mode -1)
-                                                         (blink-cursor-mode -1)
-                                                         (doom-modeline-mode -1) ; revert when exiting?
-	  ; (define-key evil-normal-state-local-map (kbd "C-j")#'pdf-view-shrink)
-	  ;; (define-key evil-normal-state-map (kbd "C-j")#'pdf-view-shrink)
-	  ;; (define-key evil-normal-state-map (kbd "C-k")#'pdf-view-enlarge)
-)
-)
+                                  (blink-cursor-mode -1)
+                                  (doom-modeline-mode -1) ; revert when exiting?
+					; (define-key evil-normal-state-local-map (kbd "C-j")#'pdf-view-shrink)
+				  ;; (define-key evil-normal-state-map (kbd "C-j")#'pdf-view-shrink)
+				  ;; (define-key evil-normal-state-map (kbd "C-k")#'pdf-view-enlarge)
+				  )
+	  )
 (add-hook 'pdf-view-mode-hook 'auto-revert-mode)
 
 ;; difference above and below hook?
@@ -1712,22 +1700,22 @@ https://github.com/novoid/extract_pdf_annotations_to_orgmode
 #+begin_src elisp
 (use-package org-noter
   :custom
-; org-noter-highlight-selected-text to t
-(org-noter-always-create-frame nil)
-:bind (:map pdf-view-mode-map
-("C-c n" . #'org-noter))
+  ;; org-noter-highlight-selected-text to t
+  (org-noter-always-create-frame nil)
+  :bind (:map pdf-view-mode-map
+	      ("C-c n" . #'org-noter))
   ;; :load-path "~/notes/pdfs/"
   ;; :ensure t
-;;   :bind (:map evil-normal-state-map
-;;  ("i" . #'org-noter-insert-note) ;; also works for org buffer
-;; )
+  ;;   :bind (:map evil-normal-state-map
+  ;;  ("i" . #'org-noter-insert-note) ;; also works for org buffer
+  ;; )
   ;; :config
-)
-    (with-eval-after-load 'org-noter
-       (define-key org-noter-doc-mode-map (kbd "i")   'org-noter-insert-precise-note)
-       (define-key org-noter-doc-mode-map (kbd "C-i") 'org-noter-insert-note)
-       (define-key org-noter-doc-mode-map (kbd "I")   'org-noter-insert-precise-note-toggle-no-questions)
-       (define-key org-noter-doc-mode-map (kbd "M-i") 'org-noter-insert-note-toggle-no-questions))
+  )
+(with-eval-after-load 'org-noter
+  (define-key org-noter-doc-mode-map (kbd "i")   'org-noter-insert-precise-note)
+  (define-key org-noter-doc-mode-map (kbd "C-i") 'org-noter-insert-note)
+  (define-key org-noter-doc-mode-map (kbd "I")   'org-noter-insert-precise-note-toggle-no-questions)
+  (define-key org-noter-doc-mode-map (kbd "M-i") 'org-noter-insert-note-toggle-no-questions))
 #+end_src
 
 * PERSPECTIVE
@@ -1739,7 +1727,7 @@ https://github.com/novoid/extract_pdf_annotations_to_orgmode
   ;; NOTE! I have also set 'SCP =' to open the perspective menu.
   ;; I'm only setting the additional binding because setting it
   ;; helps suppress an annoying warning message.
- (persp-mode-prefix-key (kbd "C-c M-p"))
+  (persp-mode-prefix-key (kbd "C-c M-p"))
   :init 
   (persp-mode)
   :config
@@ -1804,12 +1792,6 @@ use ij/aj for this?
 (add-hook 'prog-mode-hook #'subword-mode)
 #+end_src
 
-* CALC MODE
-#+begin_src elisp
-    ;; otherwise many keymaps are shadowed
-  ;;(add-hook 'calc-mode-hook #'evil-emacs-state)
-#+end_src
-
 * SANE DEFAULTS
 The following settings are simple modes that are enabled (or disabled) so that Emacs functions more like you would expect a proper editor/IDE to function.
 
@@ -1820,9 +1802,9 @@ The following settings are simple modes that are enabled (or disabled) so that E
 ;; The following prevents <> from auto-pairing when electric-pair-mode is on.
 ;; Otherwise, org-tempo is broken when you try to <s TAB...
 (add-hook 'org-mode-hook (lambda ()
-           (setq-local electric-pair-inhibit-predicate
-                   `(lambda (c)
-                  (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
+			   (setq-local electric-pair-inhibit-predicate
+				       `(lambda (c)
+					  (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
 (global-auto-revert-mode t)  ;; Automatically show changes if the file has changed
 (column-number-mode)
 ;; t and 1 difference here?
@@ -1844,7 +1826,7 @@ The following settings are simple modes that are enabled (or disabled) so that E
 
 (setq disabled-command-function nil)
 
-; (setq desktop-dirname (concat user-emacs-directory "sessions")
+;; (setq desktop-dirname (concat user-emacs-directory "sessions")
 
 ;; https://www.reddit.com/r/emacs/comments/osscfd/pgtk_emacswaylandgnome_no_shiftspace/
 (setq pgtk-use-im-context nil)
@@ -1896,23 +1878,23 @@ Eshell is an Emacs 'shell' that is written in Elisp.
   (eshell-toggle-run-command nil)
   (eshell-toggle-init-function #'eshell-toggle-init-ansi-term))
 
-  (use-package eshell-syntax-highlighting
-    :after esh-mode
-    :config
-    (eshell-syntax-highlighting-global-mode +1))
+(use-package eshell-syntax-highlighting
+  :after esh-mode
+  :config
+  (eshell-syntax-highlighting-global-mode +1))
 
-  ;; eshell-syntax-highlighting -- adds fish/zsh-like syntax highlighting.
-  ;; eshell-rc-script -- your profile for eshell; like a bashrc for eshell.
-  ;; eshell-aliases-file -- sets an aliases file for the eshell.
+;; eshell-syntax-highlighting -- adds fish/zsh-like syntax highlighting.
+;; eshell-rc-script -- your profile for eshell; like a bashrc for eshell.
+;; eshell-aliases-file -- sets an aliases file for the eshell.
 
-  (setq eshell-rc-script (concat user-emacs-directory "eshell/profile")
-        eshell-aliases-file (concat user-emacs-directory "eshell/aliases")
-        eshell-history-size 5000
-        eshell-buffer-maximum-lines 5000
-        eshell-hist-ignoredups t
-        eshell-scroll-to-bottom-on-input t
-        eshell-destroy-buffer-when-process-dies t
-        eshell-visual-commands'("bash" "fish" "htop" "ssh" "top" "zsh"))
+(setq eshell-rc-script (concat user-emacs-directory "eshell/profile")
+      eshell-aliases-file (concat user-emacs-directory "eshell/aliases")
+      eshell-history-size 5000
+      eshell-buffer-maximum-lines 5000
+      eshell-hist-ignoredups t
+      eshell-scroll-to-bottom-on-input t
+      eshell-destroy-buffer-when-process-dies t
+      eshell-visual-commands'("bash" "fish" "htop" "ssh" "top" "zsh"))
 #+end_src
 
 ** Vterm
@@ -1920,9 +1902,9 @@ Vterm is a terminal emulator within Emacs.  The 'shell-file-name' setting sets t
 
 #+begin_src elisp
 (use-package vterm
-:config
-(setq shell-file-name "/bin/sh"
-      vterm-max-scrollback 5000))
+  :config
+  (setq shell-file-name "/bin/sh"
+	vterm-max-scrollback 5000))
 #+end_src
 
 ** Vterm-Toggle 
@@ -1940,17 +1922,17 @@ Vterm is a terminal emulator within Emacs.  The 'shell-file-name' setting sets t
   (setq vterm-toggle-scope 'project)
   (add-to-list 'display-buffer-alist
                '((lambda (buffer-or-name _)
-                     (let ((buffer (get-buffer buffer-or-name)))
-                       (with-current-buffer buffer
-                         (or (equal major-mode 'vterm-mode)
-                             (string-prefix-p vterm-buffer-name (buffer-name buffer))))))
-                  (display-buffer-reuse-window display-buffer-at-bottom)
-                  ;;(display-buffer-reuse-window display-buffer-in-direction)
-                  ;;display-buffer-in-direction/direction/dedicated is added in emacs27
-                  ;; (direction . right)
-                  ;;(dedicated . t) ;dedicated is supported in emacs27
-                  (reusable-frames . visible)
-                  (window-height . 0.4))))
+                   (let ((buffer (get-buffer buffer-or-name)))
+                     (with-current-buffer buffer
+                       (or (equal major-mode 'vterm-mode)
+                           (string-prefix-p vterm-buffer-name (buffer-name buffer))))))
+                 (display-buffer-reuse-window display-buffer-at-bottom)
+                 ;;(display-buffer-reuse-window display-buffer-in-direction)
+                 ;;display-buffer-in-direction/direction/dedicated is added in emacs27
+                 ;; (direction . right)
+                 ;;(dedicated . t) ;dedicated is supported in emacs27
+                 (reusable-frames . visible)
+                 (window-height . 0.4))))
 
 #+end_src
 
@@ -2009,30 +1991,33 @@ how to copy or put everything in the popup in a buffer?
 #+begin_src elisp
 (use-package which-key
   :init
-    (which-key-mode 1)
+  (which-key-mode 1)
   :diminish
   :config
   (setq which-key-side-window-location 'top
-	  which-key-sort-order #'which-key-key-order-alpha
-	  which-key-allow-imprecise-window-fit nil
-	  which-key-sort-uppercase-first nil
-	  which-key-add-column-padding 1
-	  which-key-max-display-columns nil
-	  which-key-min-display-lines 6
-	  which-key-side-window-slot -10
-	  which-key-side-window-max-height 0.33
-	  which-key-idle-delay 0.8
-	  which-key-max-description-length 25
-	  which-key-allow-imprecise-window-fit nil
-	  which-key-separator " → " ))
+	which-key-sort-order #'which-key-key-order-alpha
+	which-key-allow-imprecise-window-fit nil
+	which-key-sort-uppercase-first nil
+	which-key-add-column-padding 1
+	which-key-max-display-columns nil
+	which-key-min-display-lines 6
+	which-key-side-window-slot -10
+	which-key-side-window-max-height 0.33
+	which-key-idle-delay 0.8
+	which-key-max-description-length 25
+	which-key-allow-imprecise-window-fit nil
+	which-key-separator " → " ))
 ;; height? how to align?
 (use-package which-key-posframe
-:after which-key
-:diminish t
-:ensure t
-:config (which-key-posframe-mode)
-(setq which-key-posframe-poshandler 'posframe-poshandler-frame-center)
-)
+  :custom (which-key-posframe-parameters '((border-width . 2)
+                                           (internal-border-width . 1)))
+  ;; (left-fringe . 20)
+  :after which-key
+  :diminish t
+  :ensure t
+  :config (which-key-posframe-mode)
+  (setq which-key-posframe-poshandler 'posframe-poshandler-frame-center)
+  )
 #+end_src
 
 * COMMAND-LOG
@@ -2042,34 +2027,29 @@ how to copy or put everything in the popup in a buffer?
 
 * TODO [#B] KANATA SHEGANIGANS
 #+begin_src elisp
-; (use-package kanata-kbd-mode
-;   :vc (
-;   :url "https://github.com/chmouel/kanata-kbd-mode" :rev :newest)
-;   :mode ("\\.kbd\\'" . kanata-kbd-mode))
-
 (use-package kanata-kbd-mode
   :ensure (:host github :repo "chmouel/kanata-kbd-mode")
   :mode ("\\.kbd\\'" . kanata-kbd-mode))
 
 (add-to-list 'org-src-lang-modes '("kbd" . kanata-kbd))
-; would be cool (add-to-list 'org-babel-load-languages '(kanata . t))
+;; would be cool (add-to-list 'org-babel-load-languages '(kanata . t))
 
 ;; TODO: these don't work in terminal?
 ;;(define-key key-translation-map (kbd "<f13>") (kdb "C-h"))
 ;;(global-set-key  (kbd "<f13>") 'help-command)
 ;;(general-define-key  :keymaps 'override "<f13>" 'help-command)
- ;;(keyboard-translate ?\C-h ?\s-m-h)
+;;(keyboard-translate ?\C-h ?\s-m-h)
 ;; (define-key key-translation-map (kbd "<Launch5>") (kdb "C-h"))
 ;; now get rid of c-x and c-c in normal mode?
- ; (define-key key-translation-map (kbd "<Launch6>") (kbd "C-x"))
- ;; (define-key key-translation-map (kbd "<clt-x>") (kbd "C-x"))
- ;; (define-key global-map (kbd "<clt-x>") ctl-x-map)
+;; (define-key key-translation-map (kbd "<Launch6>") (kbd "C-x"))
+;; (define-key key-translation-map (kbd "<clt-x>") (kbd "C-x"))
+;; (define-key global-map (kbd "<clt-x>") ctl-x-map)
 ;; now i can use C-x behaviour in normal mode!
 ;; press f12 to show which-key i guess, u cannot do the same with modifiers or f13-f24 since they're not on the kbd
 ;; TODO: make c-c c-x work
 (define-key key-translation-map (kbd "<f12>") [ctl-x]) ; hide translation in help files? don't really care
 (define-key global-map [ctl-x] ctl-x-map)
-; (define-key key-translation-map (kbd "<Launch5>") [snacks])
+;; (define-key key-translation-map (kbd "<Launch5>") [snacks])
 (define-key key-translation-map (kbd "<Launch6>") (kbd "C-c"))
 ;; (define-key key-translation-map (kbd "<Launch5>") (lambda()(interactive)(universal-argument 0))) ;; doesn't even work
 ;; (define-key key-translation-map (kbd "<Launch5>") (kbd "M-0")) ;; basically u can use 0 for v:count now
@@ -2081,7 +2061,7 @@ how to copy or put everything in the popup in a buffer?
 ;; TODO: hide translated from...
 ;;(define-key key-translation-map (kbd "<Launch5>") (kbd "C-c"))
 ;; can i make so it send the original C-h?
- ;;(define-key key-translation-map (kbd "<Launch7>") (kbd "C-h"))
+;;(define-key key-translation-map (kbd "<Launch7>") (kbd "C-h"))
 ;;(keymap-global-set "<Launch5>" ctl-x-map)
 #+end_src
 
@@ -2098,11 +2078,11 @@ toggle full screen binding?
 ;; at cursor in insert mode and at center in normal mode
 ;; can't see last line though
 (use-package ivy-posframe
-:ensure t
-:after ivy
-:config
- (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
- ;; (setq ivy-posframe-height 70)
+  :ensure t
+  :after ivy
+  :config
+  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
+  ;; (setq ivy-posframe-height 70)
   (defun my-ivy-posframe-get-size ()
     "Set the ivy-posframe size according to the current frame."
     (let ((height (+ 3(or ivy-posframe-height (or ivy-height 20))))
@@ -2110,12 +2090,12 @@ toggle full screen binding?
       (list :height height :width width :min-height height :min-width width)))
 
   (setq ivy-posframe-size-function 'my-ivy-posframe-get-size)
-(ivy-posframe-mode 1))
+  (ivy-posframe-mode 1))
 #+end_src
 
 * ARTIST MODE
 #+begin_src elisp
-  ;; https://stackoverflow.com/questions/46513910/emacs-evil-mode-binding-mouse-event
+;; https://stackoverflow.com/questions/46513910/emacs-evil-mode-binding-mouse-event
 (with-eval-after-load 'evil-maps (define-key evil-motion-state-map [down-mouse-1] nil))
 #+end_src
 
@@ -2156,16 +2136,17 @@ for programming
 
 * NICETIES
 #+begin_src elisp
+
 (with-eval-after-load 'evil-maps
   ;; would nice that it resptected v:count like 2gO to show only 2nd level header?
   ;; (define-key evil-normal-state-map (kbd "g O") #'counsel-imenu )
   (define-key evil-normal-state-map (kbd "g O") #'counsel-outline )
-;;  region? C-u g K for <CWORD>?
+  ;;  region? C-u g K for <CWORD>?
   (define-key evil-normal-state-map (kbd "g K") #'dictionary-lookup-definition)
 
   ;; (define-key evil-insert-state-map (kbd "M-g g") #'avy-goto-line )
   ;; (define-key evil-normal-state-map (kbd "M-g g") #'avy-goto-line )
-)
+  )
 
 (setq org-imenu-depth 3)
 (setq dictionary-server "dict.org")
@@ -2185,11 +2166,11 @@ for programming
   (define-key evil-insert-state-map (kbd "<Launch8> m") #'man) (define-key evil-normal-state-map (kbd "<Launch8> m") #'man)
   (evil-define-key '(normal insert) global-map (kbd "<Launch8> /") 'swiper)
   ;; zen/zoom?
-(define-key evil-normal-state-map (kbd "<Launch8> r") 'counsel-recentf)
-(define-key evil-normal-state-map (kbd "<Launch8> c") 'counsel-load-theme) ; make this refresh theme?
-;; library and packages difference?
-(define-key evil-normal-state-map (kbd "<Launch8> p") 'counsel-find-library) ; make this refresh theme?
-)
+  (define-key evil-normal-state-map (kbd "<Launch8> r") 'counsel-recentf)
+  (define-key evil-normal-state-map (kbd "<Launch8> c") 'counsel-load-theme) ; make this refresh theme?
+  ;; library and packages difference?
+  (define-key evil-normal-state-map (kbd "<Launch8> p") 'counsel-find-library) ; make this refresh theme?
+  )
 #+end_src
 
 counsel rhytmbox stop current song?
@@ -2205,7 +2186,7 @@ counsel rhytmbox stop current song?
 ;; enable recent files mode.
 (recentf-mode t)
 
-; 50 files ought to be enough.
+;; 50 files ought to be enough.
 (setq recentf-max-saved-items 50)
 
 ;; (defun ido-recentf-open ()
@@ -2225,8 +2206,8 @@ lol, empty source blocks don't make emacs work...
 * ERC
 #+begin_src elisp
 (setq erc-prompt(lambda()(concat"["(buffer-name)"]"))
-erc-server "irc.libera.chat"
-)
+      erc-server "irc.libera.chat"
+      )
 ;; hide IP?
 #+end_src
 
@@ -2252,14 +2233,14 @@ erc-server "irc.libera.chat"
     (newline-and-indent)))
 
 (with-eval-after-load 'evil-maps
-;; doesn't work
+  ;; doesn't work
   ;;(define-key evil-normal-state-map (kbd "d =") #'ediff-current-file)
-;; c-l diffupdate? automatically though?
+  ;; c-l diffupdate? automatically though?
 
   ;; terminal trick
- (define-key evil-insert-state-map (kbd "M-o") #'open-line-below)
- (define-key evil-insert-state-map (kbd "M-O") #'open-line-above)
-)
+  (define-key evil-insert-state-map (kbd "M-o") #'open-line-below)
+  (define-key evil-insert-state-map (kbd "M-O") #'open-line-above)
+  )
 #+end_src
 
 gcO equivalenent: O<M-j>
@@ -2345,80 +2326,80 @@ integrate w/ emms?
 
   ("C-c r" . eradio-toggle)
   :config
-(setq eradio-channels '(
-("7soul - soma fm" . "https://somafm.com/7soul.pls")
-("beatblender - soma fm" . "https://somafm.com/beatblender.pls")
-("bootliquor - soma fm" . "https://somafm.com/bootliquor.pls")
-("bossa - soma fm" . "https://somafm.com/bossa.pls")
-("brfm - soma fm" . "https://somafm.com/brfm.pls")
-("chillits - soma fm" . "https://somafm.com/chillits.pls")
-("cliqhop - soma fm" . "https://somafm.com/cliqhop.pls")
-("covers - soma fm" . "https://somafm.com/covers.pls")
-("darkzone - soma fm" . "https://somafm.com/darkzone.pls")
-("deepspaceone - soma fm" . "https://somafm.com/deepspaceone.pls")
-("defcon - soma fm" . "https://somafm.com/defcon.pls")
-("digitalis - soma fm" . "https://somafm.com/digitalis.pls")
-("doomed - soma fm" . "https://somafm.com/doomed.pls")
-("dronezone - soma fm" . "https://somafm.com/dronezone.pls")
-("dubstep - soma fm" . "https://somafm.com/dubstep.pls")
-("fluid - soma fm" . "https://somafm.com/fluid.pls")
-("folkfwd - soma fm" . "https://somafm.com/folkfwd.pls")
-("groovesalad - soma fm" . "https://somafm.com/groovesalad.pls")
-("gsclassic - soma fm" . "https://somafm.com/gsclassic.pls")
-("illstreet - soma fm" . "https://somafm.com/illstreet.pls")
-("indiepop - soma fm" . "https://somafm.com/indiepop.pls")
-("insound - soma fm" . "https://somafm.com/insound.pls")
-("live - soma fm" . "https://somafm.com/live.pls")
-("lush - soma fm" . "https://somafm.com/lush.pls")
-("metal - soma fm" . "https://somafm.com/metal.pls")
-("missioncontrol - soma fm" . "https://somafm.com/missioncontrol.pls")
-("n5md - soma fm" . "https://somafm.com/n5md.pls")
-("poptron - soma fm" . "https://somafm.com/poptron.pls")
-("reggae - soma fm" . "https://somafm.com/reggae.pls")
-("scanner - soma fm" . "https://somafm.com/scanner.pls")
-("secretagent - soma fm" . "https://somafm.com/secretagent.pls")
-("seventies - soma fm" . "https://somafm.com/seventies.pls")
-("sf1033 - soma fm" . "https://somafm.com/sf1033.pls")
-("sfinsf - soma fm" . "https://somafm.com/sfinsf.pls")
-("sonicuniverse - soma fm" . "https://somafm.com/sonicuniverse.pls")
-("spacestation - soma fm" . "https://somafm.com/spacestation.pls")
-("specials - soma fm" . "https://somafm.com/specials.pls")
-("suburbsofgoa - soma fm" . "https://somafm.com/suburbsofgoa.pls")
-("synphaera - soma fm" . "https://somafm.com/synphaera.pls")
-("thetrip - soma fm" . "https://somafm.com/thetrip.pls")
-("thistle - soma fm" . "https://somafm.com/thistle.pls")
-("tikitime - soma fm" . "https://somafm.com/tikitime.pls")
-("u80s - soma fm" . "https://somafm.com/u80s.pls")
-("vaporwaves - soma fm" . "https://somafm.com/vaporwaves.pls")
+  (setq eradio-channels '(
+			  ("7soul - soma fm" . "https://somafm.com/7soul.pls")
+			  ("beatblender - soma fm" . "https://somafm.com/beatblender.pls")
+			  ("bootliquor - soma fm" . "https://somafm.com/bootliquor.pls")
+			  ("bossa - soma fm" . "https://somafm.com/bossa.pls")
+			  ("brfm - soma fm" . "https://somafm.com/brfm.pls")
+			  ("chillits - soma fm" . "https://somafm.com/chillits.pls")
+			  ("cliqhop - soma fm" . "https://somafm.com/cliqhop.pls")
+			  ("covers - soma fm" . "https://somafm.com/covers.pls")
+			  ("darkzone - soma fm" . "https://somafm.com/darkzone.pls")
+			  ("deepspaceone - soma fm" . "https://somafm.com/deepspaceone.pls")
+			  ("defcon - soma fm" . "https://somafm.com/defcon.pls")
+			  ("digitalis - soma fm" . "https://somafm.com/digitalis.pls")
+			  ("doomed - soma fm" . "https://somafm.com/doomed.pls")
+			  ("dronezone - soma fm" . "https://somafm.com/dronezone.pls")
+			  ("dubstep - soma fm" . "https://somafm.com/dubstep.pls")
+			  ("fluid - soma fm" . "https://somafm.com/fluid.pls")
+			  ("folkfwd - soma fm" . "https://somafm.com/folkfwd.pls")
+			  ("groovesalad - soma fm" . "https://somafm.com/groovesalad.pls")
+			  ("gsclassic - soma fm" . "https://somafm.com/gsclassic.pls")
+			  ("illstreet - soma fm" . "https://somafm.com/illstreet.pls")
+			  ("indiepop - soma fm" . "https://somafm.com/indiepop.pls")
+			  ("insound - soma fm" . "https://somafm.com/insound.pls")
+			  ("live - soma fm" . "https://somafm.com/live.pls")
+			  ("lush - soma fm" . "https://somafm.com/lush.pls")
+			  ("metal - soma fm" . "https://somafm.com/metal.pls")
+			  ("missioncontrol - soma fm" . "https://somafm.com/missioncontrol.pls")
+			  ("n5md - soma fm" . "https://somafm.com/n5md.pls")
+			  ("poptron - soma fm" . "https://somafm.com/poptron.pls")
+			  ("reggae - soma fm" . "https://somafm.com/reggae.pls")
+			  ("scanner - soma fm" . "https://somafm.com/scanner.pls")
+			  ("secretagent - soma fm" . "https://somafm.com/secretagent.pls")
+			  ("seventies - soma fm" . "https://somafm.com/seventies.pls")
+			  ("sf1033 - soma fm" . "https://somafm.com/sf1033.pls")
+			  ("sfinsf - soma fm" . "https://somafm.com/sfinsf.pls")
+			  ("sonicuniverse - soma fm" . "https://somafm.com/sonicuniverse.pls")
+			  ("spacestation - soma fm" . "https://somafm.com/spacestation.pls")
+			  ("specials - soma fm" . "https://somafm.com/specials.pls")
+			  ("suburbsofgoa - soma fm" . "https://somafm.com/suburbsofgoa.pls")
+			  ("synphaera - soma fm" . "https://somafm.com/synphaera.pls")
+			  ("thetrip - soma fm" . "https://somafm.com/thetrip.pls")
+			  ("thistle - soma fm" . "https://somafm.com/thistle.pls")
+			  ("tikitime - soma fm" . "https://somafm.com/tikitime.pls")
+			  ("u80s - soma fm" . "https://somafm.com/u80s.pls")
+			  ("vaporwaves - soma fm" . "https://somafm.com/vaporwaves.pls")
 
-)))
-                        ;; ("cyberia - lainon"  . "https://lainon.life/radio/cyberia.ogg.m3u") ;; cyberpunk-esque electronica
-                        ;; ("cafe - lainon"     . "https://lainon.life/radio/cafe.ogg.m3u")))  ;; boring ambient, but with lain
+			  )))
+;; ("cyberia - lainon"  . "https://lainon.life/radio/cyberia.ogg.m3u") ;; cyberpunk-esque electronica
+;; ("cafe - lainon"     . "https://lainon.life/radio/cafe.ogg.m3u")))  ;; boring ambient, but with lain
 #+end_src
 
 * info
 #+begin_src elisp
 (use-package info-colors
   :hook (Info-selection . info-colors-fontify-node)
-)
+  )
 #+end_src
 
 * diff-hl
 is this like gitsigns.nvim?
 #+begin_src elisp
 (use-package diff-hl
-   :bind
-(
-:map evil-normal-state-map
-("[g" . diff-hl-previous-hunk)
-("]g" . diff-hl-next-hunk)
-:map evil-visual-state-map
-("[g" . diff-hl-previous-hunk)
-("]g" . diff-hl-next-hunk)
+  :bind
+  (
+   :map evil-normal-state-map
+   ("[g" . diff-hl-previous-hunk)
+   ("]g" . diff-hl-next-hunk)
+   :map evil-visual-state-map
+   ("[g" . diff-hl-previous-hunk)
+   ("]g" . diff-hl-next-hunk)
 
-)
+   )
   :config (global-diff-hl-mode)
-)
+  )
 #+end_src
 
 * docker
@@ -2431,11 +2412,13 @@ is this like gitsigns.nvim?
 
 * AI
 use general leader keymaps
+** LLM
 #+begin_src elisp
 (use-package gptel ;; :bind ("C-c RET" . 'gptel)
   :bind (
 	 ;; C-c and f15 two different prefixes 😁
 	 ;; ("C-c A" . 'gptel)
+	 ("C-c s" . 'gptel-send)
 	 :map gptel-mode-map
 	 ("<return>" . 'gptel-send)
 	 ("C-g" . 'gptel-abort)
@@ -2448,23 +2431,21 @@ use general leader keymaps
   ;;        ("C-c r" . gptel-retry))
   ;; :bind-keymap ("C-c g" . gptel-prefix-map))
 
-  :custom
   ;; Basic settings
-;; gptel-api-key (auth-source-pass-get 'secret "openai/api-key")
+  :custom
+  ;; gptel-api-key (auth-source-pass-get 'secret "openai/api-key")
   (gptel-default-mode #'org-mode)
-  (gptel-model 'claude-3.7-sonnet)
   ;; (setq gptel-model 'gemma3:12b
-  (gptel-backend (gptel-make-gh-copilot "Copilot"))
-  ;; (gptel-make-ollama "Ollama" :host "localhost:11434" :stream t :models '(gemma3:12b))
-)
-        ;; gptel-max-tokens 4096)
+  (gptel-model 'claude-3.7-sonnet)
 
+
+
+  ;; gptel-max-tokens 4096)
   ;; Custom UI enhancements
   ;; (gptel-display-buffer-action
   ;;  '((display-buffer-in-side-window)
   ;;    (side . right)
   ;;    (window-width . 0.4)))
-
   ;; Prompt templates for different tasks
   ;; (gptel-prompt-templates
   ;;       '(("code-review" . "Review this code for bugs, improvements, and best practices:\n\n=\n{{text}}\n=")
@@ -2472,49 +2453,67 @@ use general leader keymaps
   ;;         ("translate" . "Translate this text to {{language}}:\n\n{{text}}") 
   ;;         ("improve" . "Improve this text for clarity and conciseness:\n\n{{text}}")))
 
-  ;; )
+  :config
+  (setq gptel-backend (gptel-make-gh-copilot "Copilot")) ;; BUG: non funge in :custom
+  ;; (gptel-make-ollama "Ollama" :host "localhost:11434" :stream t :models '(gemma3:12b))
+  )
 ;; :config
-  ;; Quick template application
-  ; (defun gptel-insert-template (template-key)
-  ;   (interactive (list (completing-read "Template: " (mapcar #'car gptel-prompt-templates))))
-  ;   (let ((template (cdr (assoc template-key gptel-prompt-templates))))
-  ;     (when template
-  ;       (let ((text (if (region-active-p)
-  ;                       (buffer-substring-no-properties (region-beginning) (region-end))
-  ;                     ""))
-  ;             (language (when (string= template-key "translate")
-  ;                         (read-string "Target language: "))))
-  ;         (gptel (replace-regexp-in-string "{{text}}" text 
-  ;                  (replace-regexp-in-string "{{language}}" (or language "") template)))))))
-  
-  ;; Auto-save conversations
-  ; (defun gptel-auto-save ()
-  ;   (when (eq major-mode 'gptel-mode)
-  ;     (let ((dir "~/gptel-conversations/"))
-  ;       (unless (file-exists-p dir) (make-directory dir t))
-  ;       (write-file (format "%s%s.org" dir (format-time-string "%Y%m%d-%H%M%S"))))))
-  ;
-  ; (add-hook 'gptel-post-response-functions 'gptel-auto-save)
-  
-  ;; Jump to prompt after response
-  ;; (defun gptel-jump-to-prompt ()
-  ;;   (when (eq major-mode 'gptel-mode)
-  ;;     (goto-char (point-max))
-  ;;     (recenter)))
-  ;; (add-hook 'gptel-post-response-functions 'gptel-jump-to-prompt)
+;; Quick template application
+					; (defun gptel-insert-template (template-key)
+					;   (interactive (list (completing-read "Template: " (mapcar #'car gptel-prompt-templates))))
+					;   (let ((template (cdr (assoc template-key gptel-prompt-templates))))
+					;     (when template
+					;       (let ((text (if (region-active-p)
+					;                       (buffer-substring-no-properties (region-beginning) (region-end))
+					;                     ""))
+					;             (language (when (string= template-key "translate")
+					;                         (read-string "Target language: "))))
+					;         (gptel (replace-regexp-in-string "{{text}}" text 
+					;                  (replace-regexp-in-string "{{language}}" (or language "") template)))))))
 
-  ;; )
+;; Auto-save conversations
+					; (defun gptel-auto-save ()
+					;   (when (eq major-mode 'gptel-mode)
+					;     (let ((dir "~/gptel-conversations/"))
+					;       (unless (file-exists-p dir) (make-directory dir t))
+					;       (write-file (format "%s%s.org" dir (format-time-string "%Y%m%d-%H%M%S"))))))
+					;
+					; (add-hook 'gptel-post-response-functions 'gptel-auto-save)
+
+;; Jump to prompt after response
+;; (defun gptel-jump-to-prompt ()
+;;   (when (eq major-mode 'gptel-mode)
+;;     (goto-char (point-max))
+;;     (recenter)))
+;; (add-hook 'gptel-post-response-functions 'gptel-jump-to-prompt)
+
+;; )
 #+end_src
 
-* Utility apps
-?
-** Calendar
-** Calc
-
+** MCP
+https://github.com/lizqwerscott/gptel-mcp.el
+#+begin_src elisp :tangle no
+(use-package mcp
+  :ensure t
+  :after gptel
+  :custom (mcp-hub-servers
+           `(("filesystem" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-filesystem" "/home/lizqwer/MyProject/")))
+             ("fetch" . (:command "uvx" :args ("mcp-server-fetch")))
+             ("qdrant" . (:url "http://localhost:8000/sse"))
+             ("graphlit" . (
+                            :command "npx"
+                            :args ("-y" "graphlit-mcp-server")
+                            :env (
+                                  :GRAPHLIT_ORGANIZATION_ID "your-organization-id"
+                                  :GRAPHLIT_ENVIRONMENT_ID "your-environment-id"
+                                  :GRAPHLIT_JWT_SECRET "your-jwt-secret")))))
+  :config (require 'mcp-hub)
+  :hook (after-init . mcp-hub-start-all-server))
+#+end_src
 * eof
 
 #+begin_src elisp
-; (use-package vi-tilde-fringe-mode)
+;; (use-package vi-tilde-fringe-mode)
 #+end_src
 
 * LSP
@@ -2536,10 +2535,10 @@ use general leader keymaps
   :custom
   (lsp-ui-doc-position 'bottom))
 
-; (use-package lsp-treemacs
-;   :after (lsp treemacs)
-;  :config
-;   (lsp-treemacs-sync-mode 1))
+;;(use-package lsp-treemacs
+;;:after (lsp treemacs)
+;;:config
+;;(lsp-treemacs-sync-mode 1))
 
 (use-package lsp-ivy)
 
@@ -2557,13 +2556,13 @@ use general leader keymaps
 Wait a few months
 #+begin_src elisp :tangle no
 (use-package evil-textobj-tree-sitter :ensure t
-:after evil
-:config
-;; bind `function.outer`(entire function block) to `f` for use in things like `vaf`, `yaf`
-(define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
-(define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner"))
-(define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer")))
-)
+  :after evil
+  :config
+  ;; bind `function.outer`(entire function block) to `f` for use in things like `vaf`, `yaf`
+  (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
+  (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner"))
+  (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer")))
+  )
 ;; Goto start of next function
 (define-key evil-normal-state-map
             (kbd "]f")
@@ -2613,16 +2612,20 @@ https://github.com/alphapapa/ement.el
 (use-package reddigg
   :config
   (setq org-confirm-elisp-link-function nil)
-)
+  )
 #+end_src
 
 * Snippets
 https://www.youtube.com/watch?v=W-bRZlseNm0
 #+begin_src elisp
+(use-package yasnippet-snippets
+  ;; :disabled
+  :ensure t)
+
 (use-package yasnippet
-:config
-(setq yas-snippet-dirs '("~/.config/emacs/snippets"))
-(yas-global-mode 1))
+  :config
+  (setq yas-snippet-dirs '("~/.config/emacs/snippets"))
+  (yas-global-mode 1))
 #+end_src
 
 
@@ -2644,17 +2647,17 @@ https://github.com/ecraven/ivy-pass
   (emms-player-mpv-ipc-socket "/tmp/mpvsocket")
   :bind
   (
-;;("C-c w m b" . emms-browser)
+   ;;("C-c w m b" . emms-browser)
    ;; ("C-c m" . emms)
    ;; ("C-c w m p" . emms-play-playlist )
    ;; ("<XF86AudioPrev>" . emms-previous)
    ;; ("<XF86AudioNext>" . emms-next)
    ;; ("<XF86AudioPlay>" . emms-pause)
    ("C-c m" . emms)
-;;   ("s-m" . emms)			 same binding as WM/hyprland?
+   ;;   ("s-m" . emms)			 same binding as WM/hyprland?
 
 
-)
+   )
   :config
   (require 'emms-setup)
   (require 'emms-mpris)
@@ -2662,18 +2665,27 @@ https://github.com/ecraven/ivy-pass
   (emms-default-players)
   (emms-mpris-enable)
   ;; TODO: delete eradio now
-;; (define-sequence 'personal-music-map "\C-c r" 'emms-play-streamlist
-;;   '(("a" "http://stereoscenic.com/pls/pill-hi-mp3.pls") ;; Ambient
-;;     ("t" "http://www.1.fm/tunein/trance64k.pls")        ;; Trance
-;;     ("j" "http://thejazzgroove.com/itunes.pls")))       ;; Jazz
+  ;; (define-sequence 'personal-music-map "\C-c r" 'emms-play-streamlist
+  ;;   '(("a" "http://stereoscenic.com/pls/pill-hi-mp3.pls") ;; Ambient
+  ;;     ("t" "http://www.1.fm/tunein/trance64k.pls")        ;; Trance
+  ;;     ("j" "http://thejazzgroove.com/itunes.pls")))       ;; Jazz
 
-(with-eval-after-load 'evil-collection
-  (evil-collection-define-key 'normal 'emms-playlist-mode-map
-    "l" 'emms-playlist-mode-play-smart))
-;;also seek if playing
+  (with-eval-after-load 'evil-collection
+    (evil-collection-define-key 'normal 'emms-playlist-mode-map
+      "l" 'emms-playlist-mode-play-smart))
+  ;;also seek if playing
 
   (emms-insert-directory "~/Music")
   ;; (add-to-list 'emms-player-mpv-parameters "--input-ipc-server=/tmp/mpvsocket")
   )
 
 #+end_src
+
+* Authinfo
+Use only the gpg-encrypted version of the file.
+
+#+begin_src elisp :tangle no
+(setq auth-source-debug nil)
+(setq auth-sources '("~/.authinfo.gpg"))
+#+end_src
+
