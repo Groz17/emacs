@@ -470,26 +470,26 @@ https://github.com/remyhonig/elfeed-org
 
 #+begin_src elisp
 (use-package evil
-  :init      ;; tweak evil's configuration before loading it
-
-  ;;  :custom
-
-  (setq evil-want-integration t  ;; This is optional since it's already set to t by default.
-        evil-want-keybinding nil
+  :init      ; tweak evil's configuration before loading it
+(message "Evil loaded at %s" (current-time-string))
+   :custom
+  (evil-want-integration t) ;; This is optional since it's already set to t by default.
+        (evil-want-keybinding nil)
 	;; this way i can learn emacs
 	;; still want a way/keybinding to use one-shot insert mode keybinding tho (C-z)?
-        evil-disable-insert-state-bindings t ;; also wanna disable command-state-bindings?
-        evil-vsplit-window-right t
-        evil-split-window-below t
-        evil-undo-system 'undo-redo;; Adds vim-like C-r redo functionality
+        (evil-disable-insert-state-bindings t) ;; also wanna disable command-state-bindings?
+        (evil-vsplit-window-right t)
+        (evil-split-window-below nil)
+        (evil-undo-system 'undo-redo) ;; Adds vim-like C-r redo functionality
         ;; evil-want-C-h-delete t
-        evil-want-C-u-scroll t
-        evil-want-Y-yank-to-eol t
+        (evil-want-C-u-scroll t)
+        (evil-want-Y-yank-to-eol t)
+	(evil-undo-system 'undo-redo) ;; C-r to redo
         ;;evil-want-C-w-delete t
 
 	;;DISAMBIGUATE TAB and C-i
-	evil-want-C-i-jump t
-	evil-lookup-func (lambda () (man (thing-at-point 'word)))
+	(evil-want-C-i-jump t)
+	(evil-lookup-func (lambda () (man (thing-at-point 'word)))
         )  
   :config
   (evil-mode 1))
@@ -564,6 +564,9 @@ https://github.com/remyhonig/elfeed-org
 	 (define-key evil-outer-text-objects-map ,key #',outer-name))))
 
   (define-and-bind-quoted-text-object "pipe" "|" "|" "|")
+  (define-and-bind-quoted-text-object "colon" ":" ":" ":")
+  (define-and-bind-quoted-text-object "underscore" "_" "_" "_")
+  (define-and-bind-quoted-text-object "dash" "-" "-" "-")
   (define-and-bind-quoted-text-object "slash" "/" "/" "/")
   (define-and-bind-quoted-text-object "asterisk" "*" "*" "*")
   (define-and-bind-quoted-text-object "dollar" "$" "\\$" "\\$") ;; sometimes your have to escape the regex
@@ -580,7 +583,13 @@ https://github.com/remyhonig/elfeed-org
 (use-package evil-tutor)
 
 (use-package evil-mc :ensure t :config (global-evil-mc-mode 1) )
-(use-package evil-commentary :ensure t :config (evil-commentary-mode))
+(use-package evil-commentary :ensure t
+  :bind (
+	 :map evil-normal-state-map
+	 ("gc" . evil-commentary)
+	 :map evil-visual-state-map
+	 ("gc" . evil-commentary)))
+
 (use-package goto-chg)
 ;; https://github.com/roman/evil-paredit
 
@@ -634,7 +643,7 @@ https://github.com/remyhonig/elfeed-org
   ;; (define-key isearch-mode-map (kbd "C-h") 'evil-delete-backward-char-and-join)
   ;; only if not in region?
 
-; https://www.reddit.com/r/emacs/comments/6noffx/favorite_editing_tricks_or_keybindings/
+					; https://www.reddit.com/r/emacs/comments/6noffx/favorite_editing_tricks_or_keybindings/
   (defun kill-region-or-backward-word ()
     (interactive)
     (if (region-active-p)
@@ -2413,6 +2422,7 @@ is this like gitsigns.nvim?
 * AI
 use general leader keymaps
 ** LLM
+*** GPTEL
 #+begin_src elisp
 (use-package gptel ;; :bind ("C-c RET" . 'gptel)
   :bind (
@@ -2456,6 +2466,23 @@ use general leader keymaps
   :config
   (setq gptel-backend (gptel-make-gh-copilot "Copilot")) ;; BUG: non funge in :custom
   ;; (gptel-make-ollama "Ollama" :host "localhost:11434" :stream t :models '(gemma3:12b))
+
+(add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
+(add-hook 'gptel-post-response-functions 'gptel-end-of-response)
+
+#+end_src
+**** Presets
+#+begin_src elisp
+(gptel-make-preset 'explain
+  :system "Explain what this code does to a novice programmer.")
+#+end_src
+**** Tools
+#+begin_src elisp
+;;
+#+end_src
+
+#+begin_src elisp
+
   )
 ;; :config
 ;; Quick template application
