@@ -137,6 +137,7 @@ Sync toc? Like modify here and reflect changes and viceversa
   - [ ] git@github.com:ag91/moldable-emacs.git"))
   - [ ] https://github.com/tarsius/keychain-environment/blob/main/keychain-environment.el#L27-L48
   - [ ] dotfiles dirs in projects/bookmarks?
+  - [ ] avy-goto
   - [ ] kill shell buffer with C-d if first char?
   - [ ] https://github.com/SqrtMinusOne/pomm.el?tab=readme-ov-file
   - [ ] emmet?
@@ -463,34 +464,29 @@ https://github.com/remyhonig/elfeed-org
 
 #+end_src
 
-#+RESULTS:
-
 * EVIL
 [[https://github.com/emacs-evil/evil][Evil]] is an extensible vi/vim layer for Emacs.  Because...let's face it.  The Vim keybindings are just plain better.
 
 #+begin_src elisp
 (use-package evil
-  :init      ; tweak evil's configuration before loading it
-(message "Evil loaded at %s" (current-time-string))
-   :custom
-  (evil-want-integration t) ;; This is optional since it's already set to t by default.
-        (evil-want-keybinding nil)
+  ;; :init      ; tweak evil's configuration before loading it
+   :init
+   (setq evil-want-integration t ;; This is optional since it's already set to t by default.
+        evil-want-keybinding nil
 	;; this way i can learn emacs
 	;; still want a way/keybinding to use one-shot insert mode keybinding tho (C-z)?
-        (evil-disable-insert-state-bindings t) ;; also wanna disable command-state-bindings?
-        (evil-vsplit-window-right t)
-        (evil-split-window-below nil)
-        (evil-undo-system 'undo-redo) ;; Adds vim-like C-r redo functionality
+        evil-disable-insert-state-bindings t ;; also wanna disable command-state-bindings?
+        evil-vsplit-window-right t
+        evil-split-window-below nil
+        evil-undo-system 'undo-redo ;; Adds vim-like C-r redo functionality
         ;; evil-want-C-h-delete t
-        (evil-want-C-u-scroll t)
-        (evil-want-Y-yank-to-eol t)
-	(evil-undo-system 'undo-redo) ;; C-r to redo
+        evil-want-C-u-scroll t
+        evil-want-Y-yank-to-eol t
         ;;evil-want-C-w-delete t
 
 	;;DISAMBIGUATE TAB and C-i
-	(evil-want-C-i-jump t)
-	(evil-lookup-func (lambda () (man (thing-at-point 'word)))
-        )  
+	evil-want-C-i-jump t
+	evil-lookup-func (lambda () (man (thing-at-point 'word))))
   :config
   (evil-mode 1))
 
@@ -655,7 +651,7 @@ https://github.com/remyhonig/elfeed-org
   (define-key evil-ex-search-keymap "\C-w" #'evil-delete-backward-word)
   (define-key evil-ex-search-keymap "\C-h" #'backward-delete-char-untabify)
 
-  (define-key evil-outer-text-objects-map "j" 'subword)
+  ;; (define-key evil-outer-text-objects-map "j" 'subword)
 
   (define-key evil-outer-text-objects-map "r" 'evil-a-bracket)
   (define-key evil-inner-text-objects-map "r" 'evil-inner-bracket)
@@ -1163,6 +1159,7 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
   )
 
 (use-package spacious-padding :ensure t :if (display-graphic-p) :config (spacious-padding-mode))
+(display-time)
 
 #+end_src
 
@@ -2188,22 +2185,11 @@ counsel rhytmbox stop current song?
 #+begin_src elisp
 (require 'recentf)
 
-;; get rid of `find-file-read-only' and replace it with something
-;; more useful.
-;;(global-set-key (kbd "C-c r") 'ido-recentf-open)
-
 ;; enable recent files mode.
 (recentf-mode t)
 
 ;; 50 files ought to be enough.
 (setq recentf-max-saved-items 50)
-
-;; (defun ido-recentf-open ()
-;;   "Use `ido-completing-read' to \\[find-file] a recent file"
-;;   (interactive)
-;;   (if (find-file (ido-completing-read "Find recent file: " recentf-list))
-;;       (message "Opening file...")
-;;     (message "Aborting")))
 #+end_src
 
 * Universal argument
@@ -2215,8 +2201,7 @@ lol, empty source blocks don't make emacs work...
 * ERC
 #+begin_src elisp
 (setq erc-prompt(lambda()(concat"["(buffer-name)"]"))
-      erc-server "irc.libera.chat"
-      )
+      erc-server "irc.libera.chat")
 ;; hide IP?
 #+end_src
 
@@ -2631,7 +2616,7 @@ Wait a few months
 ;         ("C-x t B"   . treemacs-bookmark)
 ;         ("C-x t C-t" . treemacs-find-file)
 ;         ("C-x t M-t" . treemacs-find-tag)))
-#+end_src
+,#+end_src
 
 * Socials
 https://github.com/alphapapa/ement.el
