@@ -16,6 +16,7 @@ Sync toc? Like modify here and reflect changes and viceversa
 - [[#important-programs-to-load-first][IMPORTANT PROGRAMS TO LOAD FIRST]]
   - [[#adding-the-scripts-directory-to-path][Adding the scripts directory to path]]
   - [[#sourcing-the-scripts][Sourcing the scripts]]
+- [[#sane-defaults][SANE DEFAULTS]]
 - [[#personal-information][Personal information]]
 - [[#multilingual-editing][MULTILINGUAL EDITING]]
 - [[#all-the-icons][ALL THE ICONS]]
@@ -31,6 +32,7 @@ Sync toc? Like modify here and reflect changes and viceversa
 - [[#flycheck][FLYCHECK]]
 - [[#fonts][FONTS]]
   - [[#setting-the-font-face][Setting the Font Face]]
+  - [[#font-preview][Font preview]]
 - [[#general-keybindings][GENERAL KEYBINDINGS]]
 - [[#git][GIT]]
   - [[#magit][Magit]]
@@ -42,7 +44,6 @@ Sync toc? Like modify here and reflect changes and viceversa
   -  [[#escape][ESCAPE]]
   -  [[#readline-sanity][READLINE SANITY]]
 - [[#modeline][MODELINE]]
-- [[#neotree][NEOTREE]]
 - [[#org-mode][ORG MODE]]
   - [[#make-more-appealing][Make more appealing]]
   - [[#log][Log]]
@@ -53,20 +54,17 @@ Sync toc? Like modify here and reflect changes and viceversa
   - [[#capture-templates][Capture templates]]
   - [[#habit-tracking][Habit tracking]]
   - [[#enabling-table-of-contents][Enabling Table of Contents]]
-  - [[#enabling-org-bullets][Enabling Org Bullets]]
   - [[#diminish-org-indent-mode][Diminish Org Indent Mode]]
   - [[#org-level-headers][Org Level Headers]]
   - [[#source-code-block-tag-expansion][Source Code Block Tag Expansion]]
   - [[#org-agenda][ORG AGENDA]]
   - [[#org-babel][ORG BABEL]]
-  - [[#templates][Templates]]
   - [[#auto-tangle][Auto-tangle]]
   - [[#images][IMAGES]]
   - [[#tables][TABLES]]
   - [[#vimscript][Vimscript]]
   - [[#org-mpv-note][org-mpv-note]]
   - [[#org-autolist][org-autolist]]
-  - [[#keybindings][keybindings]]
   - [[#org-modern][org modern]]
 - [[#pdfs][PDFs]]
   - [[#org-noter][org-noter]]
@@ -74,12 +72,10 @@ Sync toc? Like modify here and reflect changes and viceversa
 - [[#rainbow-delimiters][RAINBOW DELIMITERS]]
 - [[#rainbow-mode][RAINBOW MODE]]
 - [[#subword-mode][SUBWORD MODE]]
-- [[#sane-defaults][SANE DEFAULTS]]
 - [[#shells-and-terminals][SHELLS AND TERMINALS]]
   - [[#enhancements][Enhancements]]
   - [[#eshell][Eshell]]
   - [[#vterm][Vterm]]
-  - [[#vterm-toggle][Vterm-Toggle]]
 - [[#sudo-edit][SUDO EDIT]]
 - [[#theme][THEME]]
 - [[#tldr][TLDR]]
@@ -90,13 +86,10 @@ Sync toc? Like modify here and reflect changes and viceversa
 - [[#full-screen][FULL SCREEN]]
 - [[#noice][NOICE]]
 - [[#artist-mode][ARTIST MODE]]
-- [[#helpful-system-crafters][HELPFUL (system crafters)]]
-- [[#hooks][HOOKS]]
+- [[#helpful][HELPFUL]]
 - [[#hydra][HYDRA]]
 - [[#typing-break][TYPING BREAK]]
 - [[#lispy][LISPY]]
-- [[#ft-ultras-font][FT ULTRAS FONT]]
-- [[#niceties][NICETIES]]
 - [[#snacksnvim][Snacks.nvim]]
   - [[#recent-files][RECENT FILES]]
 - [[#universal-argument][Universal argument]]
@@ -123,94 +116,90 @@ Sync toc? Like modify here and reflect changes and viceversa
 - [[#password-management][Password management]]
 - [[#music][Music]]
 - [[#authinfo][Authinfo]]
+- [[#stt][STT]]
+- [[#keybindings][Keybindings]]
 
 * TODO TASK LIST
 ** Vim feature parity [2/10] [20%]
-  - [ ] :restart command/keybinding... (maybe C-x C-S-c?)
-  - [ ] orderless plugin is great (especially for beginners)
-  - [ ] gf shows popup for some reason
-  - [ ] v:count tab doesn't work in org mode tables? also how to make column same width?
-  - [ ] lazy ui for slowest plugins?
-  - [X] C-j indents, C-m doesn't
+- [ ] :restart command/keybinding... (maybe C-x C-S-c?)
+- [ ] orderless plugin is great (especially for beginners)
+- [ ] gf shows popup for some reason
+- [ ] v:count tab doesn't work in org mode tables? also how to make column same width?
+- [ ] lazy ui for slowest plugins?
+- [X] C-j indents, C-m doesn't
     
 ** Emacs [6/62] [9%]
-  - [ ] git@github.com:ag91/moldable-emacs.git"))
-  - [ ] https://github.com/tarsius/keychain-environment/blob/main/keychain-environment.el#L27-L48
-  - [ ] dotfiles dirs in projects/bookmarks?
-  - [ ] avy-goto
-  - [ ] kill shell buffer with C-d if first char?
-  - [ ] https://github.com/SqrtMinusOne/pomm.el?tab=readme-ov-file
-  - [ ] emmet?
-  - [ ] olivetti mode
-  - [ ] automatically update percentage in todo list
-  - [ ] make undo work like vim (u0?)
-  - [ ] gz operator to narrow
-  - [ ] c-o in help buffers?
-  - [ ] ts textobjects
-  - [ ] reload pdf on save?
-  - [ ] text object for orgmode block?
-  - [ ] vip non comprende begin_src?
-  - [ ] make emacs same ts and lsp as mason? or just use guix
-  - [ ] whenever u put ^, use it as control vim prefix (for picker loclist, etc... and stuff like ^y in insert mode)
-  - [ ] C-c C- ->localleader in normal mode?
-  - [ ] fixa f keys terminal
-  - [ ] also put ~/dotfiles in org agend for all Todos
-  - [ ] reload this config?
-  - [ ] use space as l in operator mode
-  - [ ] u could also use c-w as prefix since u use a/l for that, but don't since vim doesn't have function for windows... maybe wincmd though?
-  - [ ] text-scale-increase
-  - [ ] recompile
-  - [ ] C-l as enter for imenu, etc...?
-  - [ ] ghostty?
-  - [ ] is perspectie a global minor mode since it used c-c m-... as prefix?
-  - [ ] n/l text objects
-  - [ ] for some reason c-o doesn't work in minibuffer
-  - [ ] (beacon-mode 1)
-  - [ ] search in this todo lists?
-  - [ ] automatically jump if symlink... (libraries)
-  - [ ] reload config?
-  - [X] quickfix/loclist equivalent? kinda, c-c c-o
-  - [ ] % match also comments (FIX)
-  - [ ]  expand region = mapping? like tridactyl
-  - [ ] use i to go to emacs mode from normal mode? like tridactyl
-  - [ ] use o to go to one shot emacs mode from normal mode? like C-o in vim
-  - [ ] M-spc and C-M-spc as set mark kinda like universal-argument?
-  - [ ] 'EtiamNullam/deferred-clipboard.nvim',
-  - [ ] surround doesn't work well
-  - [ ] use localleader in normal mode for emacs keybindings? like localleder vi for identify matrix in emacs calc
-  - [ ] use C-o in emacs mode to one shot insert mode?
-  - [ ] fixa C-w kill region
-  - [ ] using vimscript for scripting/mapping? like %s? create transpiler
-  - [ ] r kinda doesn't work? (evil-mode)
-  - [X] company ctrl {j,k,l}
-  - [X] artist-mode doesn't work
-  - [ ] generate commented section for each orgmode header?
-  - [ ] focus on the minibuffer keybinding? ctrlx-o works, also ctrlw-{h,j,k,l}
-  - [ ] make insert mode be like emacs mode? get rid of insert mode
-  - [X] unimpaired co? so u can use z and / "modifiers"
-  - [ ] go to normal mode for pickers?
-  - [ ] readline in shell
-  - [ ] whatsapp
-  - [ ] indent/dedent in insert/emacs mode?
-  - [ ] tilde eof
-  - [-] doom modeline at the top? or at least tabline?
-  - [ ] vim insert mode equivalents in emacs?
-  - [ ] colorscheme change night/day?
-  - [ ] fixa eol behaviour?
-  - [X] minibuffer in the center like noice?
-  - [X] markdown-mode?
-  - [ ] emacs terminal yank clipboard
-  - [ ] emacs terminal fn keys
-  - [ ] org mode headers colored like chakras
+- [ ] git@github.com:ag91/moldable-emacs.git"))
+- [ ] https://github.com/tarsius/keychain-environment/blob/main/keychain-environment.el#L27-L48
+- [ ] HOOKS # when exiting emacs open terminal?
+- [ ] dotfiles dirs in projects/bookmarks?
+- [ ] avy-goto
+- [ ] kill shell buffer with C-d if first char?
+- [ ] https://github.com/SqrtMinusOne/pomm.el?tab=readme-ov-file
+- [ ] emmet?
+- [ ] olivetti mode
+- [ ] automatically update percentage in todo list
+- [ ] make undo work like vim (u0?)
+- [ ] gz operator to narrow
+- [ ] c-o in help buffers?
+- [ ] ts textobjects
+- [ ] reload pdf on save?
+- [ ] text object for orgmode block?
+- [ ] vip non comprende begin_src?
+- [ ] make emacs same ts and lsp as mason? or just use guix
+- [ ] whenever u put ^, use it as control vim prefix (for picker loclist, etc... and stuff like ^y in insert mode)
+- [ ] C-c C- ->localleader in normal mode?
+- [ ] fixa f keys terminal
+- [ ] also put ~/dotfiles in org agend for all Todos
+- [ ] reload this config?
+- [ ] use space as l in operator mode
+- [ ] u could also use c-w as prefix since u use a/l for that, but don't since vim doesn't have function for windows... maybe wincmd though?
+- [ ] text-scale-increase
+- [ ] recompile
+- [ ] C-l as enter for imenu, etc...?
+- [ ] ghostty?
+- [ ] is perspectie a global minor mode since it used c-c m-... as prefix?
+- [ ] n/l text objects
+- [ ] for some reason c-o doesn't work in minibuffer
+- [ ] (beacon-mode 1)
+- [ ] search in this todo lists?
+- [ ] automatically jump if symlink... (libraries)
+- [ ] reload config?
+- [X] quickfix/loclist equivalent? kinda, c-c c-o
+- [ ] % match also comments (FIX)
+- [ ] use i to go to emacs mode from normal mode? like tridactyl
+- [ ] use o to go to one shot emacs mode from normal mode? like C-o in vim
+- [ ] M-spc and C-M-spc as set mark kinda like universal-argument?
+- [ ] 'EtiamNullam/deferred-clipboard.nvim',
+- [ ] surround doesn't work well
+- [ ] use localleader in normal mode for emacs keybindings? like localleder vi for identify matrix in emacs calc
+- [ ] use C-o in emacs mode to one shot insert mode?
+- [ ] using vimscript for scripting/mapping? like %s? create transpiler
+- [ ] generate commented section for each orgmode header?
+- [ ] focus on the minibuffer keybinding? ctrlx-o works, also ctrlw-{h,j,k,l}
+- [ ] make insert mode be like emacs mode? get rid of insert mode
+- [X] unimpaired co? so u can use z and / "modifiers"
+- [ ] readline in shell
+- [ ] whatsapp
+- [ ] indent/dedent in insert/emacs mode?
+- [ ] tilde eof
+- [-] doom modeline at the top? or at least tabline?
+- [ ] vim insert mode equivalents in emacs?
+- [ ] colorscheme change night/day?
+- [ ] fixa eol behaviour?
+- [ ] emacs terminal yank clipboard
+- [ ] emacs terminal fn keys
+- [ ] org mode headers colored like chakras
 ** Emacs/vim interaction (Evil Mode)
-  - [ ] swap file or notify when working on the same file?
-  - [X] zj and zk in evil?
-  - [ ] set ft should work like for emacs modes
-  - [ ] c-r and c-y comparison?
-  - [ ] in emacs/insert mode, use c-x pressed as k and then x for vim insert, and l/s for emacs c-x
-  - [ ] use c/m for vim insert mode mappings?
-  - [ ] syncronize shada/command history
-  - [ ] from normal mode, go to insert mode after certain keybindings like M-; or M-RET
+- [ ] swap file or notify when working on the same file?
+- [X] zj and zk in evil?
+- [ ] set ft should work like for emacs modes
+- [ ] c-r and c-y comparison?
+- [ ] in emacs/insert mode, use c-x pressed as k and then x for vim insert, and l/s for emacs c-x
+- [ ] use c/m for vim insert mode mappings?
+- [ ] syncronize shada/command history
+- [ ] from normal mode, go to insert mode after certain keybindings like M-; or M-RET
+- [ ] go to normal mode for pickers?
 
 * IMPORTANT PROGRAMS TO LOAD FIRST
 To keep this =config.org= a reasonable length, I have moved a lot of code to individual scripts that will be sourced by this config.  These scripts are found in "~/.config/emacs/scripts" and do not contain any code that most people are likely to need to edit.
@@ -225,6 +214,81 @@ To keep this =config.org= a reasonable length, I have moved a lot of code to ind
 (require 'elpaca-setup)  ;; The Elpaca Package Manager
 (require 'app-launchers) ;; Use emacs as a run launcher like dmenu (experimental)
 #+end_src
+
+* SANE DEFAULTS
+The following settings are simple modes that are enabled (or disabled) so that Emacs functions more like you would expect a proper editor/IDE to function.
+
+#+begin_src elisp
+;; (setq use-package-verbose t)
+(delete-selection-mode 1)    ;; You can select text and delete it by typing.
+(electric-indent-mode -1)    ;; Turn off the weird indenting that Emacs does by default.
+(electric-pair-mode 1)       ;; Turns on automatic parens pairing
+;; The following prevents <> from auto-pairing when electric-pair-mode is on.
+;; Otherwise, org-tempo is broken when you try to <s TAB...
+(add-hook 'org-mode-hook (lambda ()
+			   (setq-local electric-pair-inhibit-predicate
+				       `(lambda (c)
+					  (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
+(global-auto-revert-mode t)  ;; Automatically show changes if the file has changed
+(column-number-mode)
+;; t and 1 difference here?
+(global-display-line-numbers-mode 1) ;; Display line numbers
+;; Disable line numbers for some modes
+(dolist(mode '(org-mode-hook term-mode-hook shell-mode-hook eshell-mode-hook))(add-hook mode (lambda()(display-line-numbers-mode 0))))
+(global-visual-line-mode t)  ;; Enable truncated lines
+(menu-bar-mode -1)           ;; Disable the menu bar 
+(scroll-bar-mode -1)         ;; Disable the scroll bar
+(tool-bar-mode -1)           ;; Disable the tool bar
+(setq org-edit-src-content-indentation 0) ;; Set src block automatic indent to 0 instead of 2.
+
+;; (global-set-key [(control h)]  'delete-backward-char)
+;; (keyboard-translate ?\C-h ?\s-m-h)
+(setq show-trailing-whitespace t)
+;; (setq initial-scratch-message "") 
+
+(setq use-short-answers t)
+(setq isearch-wrap-pause 'no-ding)
+
+(setq disabled-command-function nil)
+
+;; (setq desktop-dirname (concat user-emacs-directory "sessions")
+
+;; https://www.reddit.com/r/emacs/comments/osscfd/pgtk_emacswaylandgnome_no_shiftspace/
+(setq pgtk-use-im-context nil)
+(setq pgtk-use-im-context-on-new-connection nil)
+
+(setq which-key-idle-delay 0.1)
+(setq confirm-kill-emacs nil)
+(setq-default indicate-empty-lines t)	; i also don't want to Go beyond last line
+
+;; display current and total matches
+;; (use-package anzu
+;; :config
+;; (global-anzu-mode +1)
+
+;; (setq isearch-wrap-pause nil)		;wrap search
+;; )
+
+(setenv "PATH" (concat (expand-file-name "~/.local/bin") ":" (getenv "PATH")))
+(setq exec-path (cons (expand-file-name "~/.local/bin") exec-path))
+
+;; you can start Emacs from a terminal where ssh-agent is already running, or propagate the SSH_AUTH_SOCK env var to Emacs using:
+(setenv "SSH_AUTH_SOCK" (getenv "SSH_AUTH_SOCK"))
+
+;; (setq browse-url-browser-function 'eww-browse-url) ; use w/ webjump
+(setq webjump-use-internal-browser t)
+
+(setq org-imenu-depth 3)
+(setq dictionary-server "dict.org")
+
+;; Setting RETURN key in org-mode to follow links
+(setq org-return-follows-link  t)
+
+#+end_src
+
+
+#+end_src
+
 
 * Personal information
 #+begin_src elisp :tangle no
@@ -293,7 +357,7 @@ By default, Emacs creates automatic backups of files in their original directori
 * DASHBOARD
 Emacs Dashboard is an extensible startup screen showing you recent files, bookmarks, agenda items and an Emacs banner.
 
-#+begin_src elisp :tangle no
+#+begin_src elisp
 (use-package dashboard
   :ensure t
   :init
@@ -386,20 +450,11 @@ ln -s ~/.local/share/Trash .
 'ediff' is a diff program that is built into Emacs.  By default, 'ediff' splits files vertically and places the 'help' frame in its own window.  I have changed this so the two files are split horizontally and the 'help' frame appears as a lower split within the existing window.  Also, I create my own 'dt-ediff-hook' where I add 'j/k' for moving to next/prev diffs.  By default, this is set to 'n/p'.
 
 automatically fold when moving j/k?
+(use-package ztree)
 
 #+begin_src elisp
 (setq ediff-split-window-function 'split-window-horizontally
       ediff-window-setup-function 'ediff-setup-windows-plain)
-
-;; i guess this is the default?
-;; (defun dt-ediff-hook ()
-;;   (ediff-setup-keymap)
-;;   (define-key ediff-mode-map "j" 'ediff-next-difference)
-;;   (define-key ediff-mode-map "k" 'ediff-previous-difference))
-
-;; (add-hook 'ediff-mode-hook 'dt-ediff-hook)
-
-(use-package ztree)
 #+end_src 
 
 * ELFEED
@@ -409,6 +464,7 @@ https://github.com/remyhonig/elfeed-org
 
 #+begin_src elisp
 (use-package elfeed
+  :bind (("C-c e" . elfeed))
   :config
   (setq elfeed-search-feed-face ":foreground #ffffff :weight bold"
         elfeed-feeds (quote
@@ -436,9 +492,9 @@ https://github.com/remyhonig/elfeed-org
 
 
 (use-package elfeed-goodies
-  :init
-  (elfeed-goodies/setup)
+  :after elfeed
   :config
+  (elfeed-goodies/setup)
   (setq elfeed-goodies/entry-pane-size 0.5))
 
 (use-package elfeed-tube
@@ -457,6 +513,7 @@ https://github.com/remyhonig/elfeed-org
               ([remap save-buffer] . elfeed-tube-save)))
 
 (use-package elfeed-tube-mpv
+  :after elfeed
   :ensure t
   :bind (:map elfeed-show-mode-map
               ("C-c C-f" . elfeed-tube-mpv-follow-mode)
@@ -559,6 +616,7 @@ https://github.com/remyhonig/elfeed-org
 	 (define-key evil-inner-text-objects-map ,key #',inner-name)
 	 (define-key evil-outer-text-objects-map ,key #',outer-name))))
 
+  (define-and-bind-quoted-text-object "equal" "=" "=" "=")
   (define-and-bind-quoted-text-object "pipe" "|" "|" "|")
   (define-and-bind-quoted-text-object "colon" ":" ":" ":")
   (define-and-bind-quoted-text-object "underscore" "_" "_" "_")
@@ -576,9 +634,7 @@ https://github.com/remyhonig/elfeed-org
 	 ("C-x" . evil-numbers/dec-at-pt)
 
 	 ))
-(use-package evil-tutor)
-
-(use-package evil-mc :ensure t :config (global-evil-mc-mode 1) )
+;; (use-package evil-mc :ensure t :config (global-evil-mc-mode 1) )
 (use-package evil-commentary :ensure t
   :bind (
 	 :map evil-normal-state-map
@@ -586,17 +642,23 @@ https://github.com/remyhonig/elfeed-org
 	 :map evil-visual-state-map
 	 ("gc" . evil-commentary)))
 
-(use-package goto-chg)
+(use-package goto-chg :defer t)
 ;; https://github.com/roman/evil-paredit
 
 (use-package evil-exchange
-  :ensure t
+  :bind (
+	 :map evil-normal-state-map
+	 ("cx" . evil-exchange)
+	 :map evil-visual-state-map
+	 ("X" . evil-exchange)
+	 :map evil-normal-state-map
+	 ("X" . evil-exchange-cancel))
+
   :config
-  ;; change default key bindings (if you want) HERE
-  ;; (setq evil-exchange-key (kbd "c x"))
   (evil-exchange-cx-install)
   )
 (use-package evil-goggles
+  :after evil
   :ensure t
   :custom
   (evil-goggles-pulse t)
@@ -623,9 +685,18 @@ https://github.com/remyhonig/elfeed-org
 					; (evil-define-key* 'normal help-mode-map (kbd "C-o") 'evil-jump-backward)
 					; (evil-define-key* 'normal Info-mode-map (kbd "C-o") 'evil-jump-backward)
 
+
+  ;; would nice that it resptected v:count like 2gO to show only 2nd level header?
+  ;; (define-key evil-normal-state-map (kbd "g O") #'counsel-imenu )
+  (define-key evil-normal-state-map (kbd "g O") #'counsel-outline )
+  ;;  region? C-u g K for <CWORD>?
+  (define-key evil-normal-state-map (kbd "g K") #'dictionary-lookup-definition)
+
+  ;; (define-key evil-insert-state-map (kbd "M-g g") #'avy-goto-line )
+  ;; (define-key evil-normal-state-map (kbd "M-g g") #'avy-goto-line )
+
   (define-key evil-normal-state-map (kbd "C-i") 'evil-jump-forward)
 
-  ;; i want just emacs mode, normal mode and visual mode...
   ;; like snacks bindings
   ;;(define-key evil-normal-state-map (kbd "C-k") (kbd "C-x C-+"))
   ;;(define-key evil-normal-state-map (kbd "C-j") (kbd "C-x C--"))
@@ -637,9 +708,8 @@ https://github.com/remyhonig/elfeed-org
 
   (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
   ;; (define-key isearch-mode-map (kbd "C-h") 'evil-delete-backward-char-and-join)
-  ;; only if not in region?
 
-					; https://www.reddit.com/r/emacs/comments/6noffx/favorite_editing_tricks_or_keybindings/
+; https://www.reddit.com/r/emacs/comments/6noffx/favorite_editing_tricks_or_keybindings/
   (defun kill-region-or-backward-word ()
     (interactive)
     (if (region-active-p)
@@ -661,16 +731,9 @@ https://github.com/remyhonig/elfeed-org
   (define-key evil-outer-text-objects-map "q" 'evil-a-double-quote)
   (define-key evil-inner-text-objects-map "q" 'evil-inner-double-quote)
 
+  ;; how to Continue being in insert mode if called from insert mode?
   (global-set-key (kbd "<Launch7>") 'evil-window-map)
   
-  (evil-define-key 'normal org-mode-map (kbd "gj") 'evil-next-visual-line)
-  (evil-define-key 'normal org-mode-map (kbd "gk") 'evil-previous-visual-line)
-  (evil-define-key 'normal org-mode-map (kbd "zj") 'org-forward-heading-same-level)
-  (evil-define-key 'normal org-mode-map (kbd "zk") 'org-forward-heading-same-level)
-  (evil-define-key '(normal visual) org-mode-map (kbd "}") 'evil-forward-paragraph)
-  (evil-define-key '(normal visual) org-mode-map (kbd "{") 'evil-backward-paragraph)
-
-
   (define-key evil-command-line-map (kbd "C-a") 'move-beginning-of-line)
   (define-key evil-command-line-map (kbd "C-b") 'backward-char)
   (define-key evil-command-line-map (kbd "C-f") 'forward-char)
@@ -751,15 +814,16 @@ Defining the various fonts that Emacs will use.
 
 #+end_src
 
-#+begin_src elisp :tangle no
-(use-package expand-region :bind("C-=" . er/expand-region)
-  ;; ("C-=" . er/contract-region)
-  )
+** Font preview 
+#+begin_src elisp
+(use-package show-font
+  :ensure (:host github :repo "protesilaos/show-font"))
 #+end_src
 
 * GENERAL KEYBINDINGS
 #+begin_src elisp
 (use-package general
+  :after evil
   :config
   (general-evil-setup)
 
@@ -780,13 +844,6 @@ Defining the various fonts that Emacs will use.
     ;;"SPC" '(whitespace-mode :wk "Toggle whitespace-mode"))
     "l" '(whitespace-mode :wk "Toggle whitespace-mode"))
 
-  ;;"e" '(eshell-toggle :wk "Toggle eshell")
-  ;;"f" '(flycheck-mode :wk "Toggle flycheck")
-  ;;"n" '(neotree-toggle :wk "Toggle neotree file viewer")
-  ;;"o" '(org-mode :wk "Toggle org mode")
-  ;;"r" '(rainbow-mode :wk "Toggle rainbow mode")
-  ;;"v" '(vterm-toggle :wk "Toggle vterm"))
-
   ;; set up 'SPC' as the global leader key
   (general-create-definer gz/leader-keys
     :states '(normal insert visual emacs)
@@ -799,9 +856,12 @@ Defining the various fonts that Emacs will use.
 
   (gz/leader-keys
 
-
     ;;"=" '(perspective-map :wk "Perspective") ;; Lists all the perspective keybindings
     "u" '(universal-argument :wk "Universal argument")
+    
+;;"RET"
+    ;;'((lambda ()
+	;;(vterm)))
 
     "SPC"
     '((lambda ()
@@ -813,6 +873,7 @@ Defining the various fonts that Emacs will use.
 
     ;; would be cool if worked in visual mode ala narrowing
     ;; also match modes (if insert stays in insert) in both editors
+    ;; also support current windows/session
     "&"
     '((lambda ()
 	(interactive)
@@ -841,7 +902,8 @@ Defining the various fonts that Emacs will use.
   ;; (directory-files "~/dotfiles" t "_[[:alpha:]]\\.org$")
   (gz/leader-keys
     ;; use bookmarks?
-    "e" '(:ignore t :wk "Edit")    
+    "e" '(:ignore t :wk "Edit")
+
     ;; uppercase: containing directory/global
     ;; crea unico file e tangle in both vim & emacs?
     "e E" '((lambda () (interactive) (dired "~/.config/emacs/")) :wk "user-emacs-directory in dired")
@@ -856,7 +918,7 @@ Defining the various fonts that Emacs will use.
     "e d" '((lambda () (interactive) (find-file "~/dotfiles/rofi.org")) :wk "Rofi")
     "e h" '((lambda () (interactive) (find-file "~/dotfiles/hypr.org")) :wk "Hypr")
     "e a" '((lambda () (interactive) (find-file "~/dotfiles/atuin.org")) :wk "Atuin")
-					; "e H" '((lambda () (interactive) (dired "~/.config/hypr/")) :wk "hypr in dired")
+    					; "e H" '((lambda () (interactive) (dired "~/.config/hypr/")) :wk "hypr in dired")
     "e s" '((lambda () (interactive) (find-file "~/dotfiles/sioyek.org")) :wk "Sioyek")
     "e w" '((lambda () (interactive) (find-file "~/dotfiles/waybar.org")) :wk "Waybar")
     "e b" '((lambda () (interactive) (find-file "~/dotfiles/bashrc.org")) :wk "Bashrc")
@@ -873,8 +935,8 @@ Defining the various fonts that Emacs will use.
     "e n" '((lambda () (interactive) (find-file (concat (magit-toplevel) ".git/info/exclude"))) :wk "Gitignore")
 
     "e <RET>" '((lambda () (interactive)
-		  (find-file "~/dotfiles/_ghostty.org")) 
-		:wk "ghostty config"))
+    		  (find-file "~/dotfiles/_ghostty.org")) 
+    		:wk "ghostty config"))
 
 					; "e d" '(find-grep-dired :wk "Search for string in files in DIR")
 					; "e g" '(counsel-grep-or-swiper :wk "Search for string current file")
@@ -1023,9 +1085,8 @@ Adding highlights to TODO and related words.
 (use-package swiper
   :after ivy
   :bind (
-	 :map swiper-map			; void?
-	 ("C-l" . ivy-done)
-	 )
+         :map swiper-map
+         ("C-l" . ivy-done))
   )
 
 (use-package ivy
@@ -1072,8 +1133,9 @@ Adding highlights to TODO and related words.
   )
 
 (use-package all-the-icons-ivy-rich
+  :after ivy-rich
   :ensure t
-  :init (all-the-icons-ivy-rich-mode 1))
+  :config (all-the-icons-ivy-rich-mode 1))
 
 (use-package ivy-rich
   :after ivy
@@ -1085,6 +1147,17 @@ Adding highlights to TODO and related words.
   :config
   (ivy-rich-mode 1) ;; this gets us descriptions in M-x.
   )
+
+;; Improved Candidate Sorting 
+(use-package ivy-prescient
+  :after counsel
+  :custom
+  (ivy-prescient-enable-filtering nil)
+  :config
+  ;; Uncomment the following line to have sorting remembered across sessions!
+					;(prescient-persist-mode 1)
+  (ivy-prescient-mode 1))
+
 (use-package orderless
   :ensure t
   :custom
@@ -1097,10 +1170,13 @@ Adding highlights to TODO and related words.
 Emacs has built-in programming language modes for Lisp, Scheme, DSSSL, Ada, ASM, AWK, C, C++, Fortran, Icon, IDL (CORBA), IDLWAVE, Java, Javascript, M4, Makefiles, Metafont, Modula2, Object Pascal, Objective-C, Octave, Pascal, Perl, Pike, PostScript, Prolog, Python, Ruby, Simula, SQL, Tcl, Verilog, and VHDL.  Other languages will require you to install additional modes.
 
 #+begin_src elisp
-(use-package haskell-mode)
-(use-package lua-mode)
-(use-package php-mode)
-
+(use-package haskell-mode :mode "\\.hs\\'")
+(use-package lua-mode :mode "\\.lua\\'")
+(use-package typescript-mode
+  :mode "\\.ts\\'"
+  :hook (typescript-mode . lsp-deferred)
+  :config
+  (setq typescript-indent-level 2))
 #+end_src
 
 * MINIBUFFER
@@ -1163,45 +1239,36 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
 
 #+end_src
 
-* NEOTREE
-Neotree is a file tree viewer.  When you open neotree, it jumps to the current file thanks to neo-smart-open.  The neo-window-fixed-size setting makes the neotree width be adjustable.  NeoTree provides following themes: classic, ascii, arrow, icons, and nerd.  Theme can be config'd by setting "two" themes for neo-theme: one for the GUI and one for the terminal.  I like to use 'SPC t' for 'toggle' keybindings, so I have used 'SPC t n' for toggle-neotree.
-
-
-it looks bad
-| COMMAND          | DESCRIPTION                 | KEYBINDING   |
-| ---------------- + --------------------------- + ------------ |
-| neotree-toggle   | /Toggle neotree/            | SPC t n      |
-| neotree- dir     | /Open directory in neotree/ | SPC d n      |
-
-#+begin_src elisp
-(use-package neotree
-  :config
-  (setq neo-smart-open t
-        neo-show-hidden-files t
-        neo-window-width 55
-        neo-window-fixed-size nil
-        inhibit-compacting-font-caches t
-        projectile-switch-project-action 'neotree-projectile-action) 
-  ;; truncate long file names in neotree
-  (add-hook 'neo-after-create-hook
-            #'(lambda (_)
-		(with-current-buffer (get-buffer neo-buffer-name)
-                  (setq truncate-lines t)
-                  (setq word-wrap nil)
-                  (make-local-variable 'auto-hscroll-mode)
-                  (setq auto-hscroll-mode nil)))))
-
-#+end_src
-
 * ORG MODE
+#+begin_src elisp
+;; :pin org/gnu?
+(use-package org
+  :ensure nil
+  :bind (("C-c c" . counsel-org-capture)
+	 ("C-c 1" . org-store-link)
+	 ("C-c a" . org-agenda)
+
+	 ;;   "m i" '(org-toggle-item :wk "Org toggle item")
+	 ;;   "m T" '(org-todo-list :wk "Org todo list"))
+	 ;;   "m d t" '(org-time-stamp :wk "Org time stamp"))
+	 )
+  :config ;; (message "test lazy loading")
+
+  (with-eval-after-load 'evil
+    (evil-define-key 'normal org-mode-map (kbd "gj") 'evil-next-visual-line)
+    (evil-define-key 'normal org-mode-map (kbd "gk") 'evil-previous-visual-line)
+    (evil-define-key 'normal org-mode-map (kbd "zj") 'org-forward-heading-same-level)
+    (evil-define-key 'normal org-mode-map (kbd "zk") 'org-forward-heading-same-level)
+    (evil-define-key '(normal visual) org-mode-map (kbd "}") 'evil-forward-paragraph)
+    (evil-define-key '(normal visual) org-mode-map (kbd "{") 'evil-backward-paragraph))
+  )
+#+end_src
 ** Make more appealing
 #+begin_src elisp
 ;; https://github.com/A7R7/org-popup-posframe
-;; (use-package org
-;; :defer t
-;; :config
 (setq org-ellipsis " ▼"
-      org-hide-emphasis-markers t)
+  org-hide-emphasis-markers t)
+
 ;; Replace list hyphen with dot
 ;; (font-lock-add-keywords 'org-mode
 ;; '(("^ *\\([-]\\) "
@@ -1361,33 +1428,28 @@ it looks bad
 
 ** Habit tracking
 #+begin_src elisp
+
+(with-eval-after-load 'org
 (require 'org-habit)
 (add-to-list 'org-modules 'org-habit)
 (setq org-habit-graph-column 60)
+)
 #+end_src
 
 ** Enabling Table of Contents
 #+begin_src elisp
 (use-package toc-org
   :commands toc-org-enable
-  :init (add-hook 'org-mode-hook 'toc-org-enable))
+  :hook (org-mode . toc-org-enable))
 #+end_src
 
-** Enabling Org Bullets
-Org-bullets gives us attractive bullets rather than asterisks.
-
-#+begin_src elisp :tangle no
-(add-hook 'org-mode-hook 'org-indent-mode)
-(use-package org-bullets)
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-#+end_src
 
 ** Diminish Org Indent Mode
 Removes "Ind" from showing in the modeline.
 
 #+begin_src elisp
+(add-hook 'org-mode-hook 'org-indent-mode)
 (eval-after-load 'org-indent '(diminish 'org-indent-mode))
-
 #+end_src
 
 ** Org Level Headers
@@ -1419,9 +1481,28 @@ Org-tempo is not a separate package but a module within org that can be enabled.
 | <v                     | '#+BEGIN_VERSE'        … '#+END_VERSE'   |
 
 
-#+begin_src elisp 
-(require 'org-tempo)
+I'm using the file extension here.
+Automate with rg --type-list
+
+#+begin_src vimrc :tangle no
+echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute(line->split(":")[1:][0]->split(",")->sort({a,b->len(a)>len(b)})[0],'\W','','g')}})
 #+end_src
+
+#+begin_src elisp
+(with-eval-after-load 'org
+  ;; This is needed as of Org 9.2
+  (require 'org-tempo)
+
+  (add-to-list 'org-structure-template-alist '("sh"  . "src shell"))
+  (add-to-list 'org-structure-template-alist '("bash"  . "src bash"))
+  (add-to-list 'org-structure-template-alist '("el"  . "src elisp"))
+  (add-to-list 'org-structure-template-alist '("py"  . "src python"))
+  (add-to-list 'org-structure-template-alist '("pl"  . "src perl"))
+  (add-to-list 'org-structure-template-alist '("lua" . "src lua"))
+  (add-to-list 'org-structure-template-alist '("conf" . "src conf"))
+  (add-to-list 'org-structure-template-alist '("js" . "src js")))
+#+end_src
+
 
 ** ORG AGENDA
 #+begin_src elisp 
@@ -1441,6 +1522,7 @@ Org-tempo is not a separate package but a module within org that can be enabled.
 #+begin_src elisp
 (setq org-confirm-babel-evaluate nil)
 ;;(use-package ob-mermaid)
+   (with-eval-after-load 'org
 (org-babel-do-load-languages
  'org-babel-load-languages
  ;; how To make all langs true?
@@ -1452,6 +1534,7 @@ Org-tempo is not a separate package but a module within org that can be enabled.
 					; (php . t)
    (sqlite . t)
    (perl . t)
+   (octave . t)
    (calc . t)
    (lua . t)
    (C . t)
@@ -1462,14 +1545,15 @@ Org-tempo is not a separate package but a module within org that can be enabled.
    (shell . t)
    ;;(mermaid . t)
    ;;(scheme . t)
-   ))
+   )))
 (setq org-plantuml-jar-path (expand-file-name "/usr/share/java/plantuml/plantuml.jar"))
 (setq org-ditaa-jar-path (expand-file-name "/usr/share/java/ditaa.jar"))
-(add-to-list 'org-structure-template-alist '("ditaa" . "src ditaa :file ./images/.png :cmdline -E"))
+; (add-to-list 'org-structure-template-alist '("ditaa" . "src ditaa :file ./images/.png :cmdline -E"))
 ;;(setq ob-mermaid-cli-cpath "/usr/bin/mmdc")
 
 ;; Highlight Conf Files
-(push '("conf-unix" . conf-unix) org-src-lang-modes)
+   (with-eval-after-load 'org
+(push '("conf-unix" . conf-unix) org-src-lang-modes))
 
 #+end_src
 https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892d569f19fd66a/contrib/lisp/ob-php.el
@@ -1487,8 +1571,10 @@ https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892
       ;; Remove carriage returns
       (replace-regexp-in-string "\r" "" output))))
 
+
+   (with-eval-after-load 'org
 (add-to-list 'org-babel-load-languages '(vimrc . t))
-(add-to-list 'org-structure-template-alist '("vim" . "src vimrc"))
+(add-to-list 'org-structure-template-alist '("vim" . "src vimrc")))
 
 (defun org-babel-execute:nlua (body params)
   "Execute Nlua BODY according to PARAMS."
@@ -1502,32 +1588,12 @@ https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892
       ;; Remove carriage returns
       (replace-regexp-in-string "\r" "" output))))
 
+
+   (with-eval-after-load 'org
 (add-to-list 'org-babel-load-languages '(nlua . t))
 (add-to-list 'org-structure-template-alist '("nlua" . "src nlua"))
 (add-to-list 'auto-mode-alist '("\\.nlua\\'" . lua-mode))
-(add-to-list 'org-src-lang-modes '("nlua" . lua))
-#+end_src
-
-** Templates
-I'm using the file extension here.
-Automate with rg --type-list
-#+begin_example
-echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute(line->split(":")[1:][0]->split(",")->sort({a,b->len(a)>len(b)})[0],'\W','','g')}})
-#+end_example
-
-#+begin_src elisp
-(with-eval-after-load 'org
-  ;; This is needed as of Org 9.2
-  (require 'org-tempo)
-
-  (add-to-list 'org-structure-template-alist '("sh"  . "src shell"))
-  (add-to-list 'org-structure-template-alist '("bash"  . "src bash"))
-  (add-to-list 'org-structure-template-alist '("el"  . "src elisp"))
-  (add-to-list 'org-structure-template-alist '("py"  . "src python"))
-  (add-to-list 'org-structure-template-alist '("pl"  . "src perl"))
-  (add-to-list 'org-structure-template-alist '("lua" . "src lua"))
-  (add-to-list 'org-structure-template-alist '("conf" . "src conf"))
-  (add-to-list 'org-structure-template-alist '("js" . "src js")))
+(add-to-list 'org-src-lang-modes '("nlua" . lua)))
 #+end_src
 
 ** Auto-tangle
@@ -1551,7 +1617,7 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
 #+begin_src elisp
 (setq org-image-actual-width '(1200))	;; so i can use :width attribute
 (setq org-startup-with-inline-images t) ;; would be nice if automatically open if over line like neovim/snacks
-(setq org-latex-pdf-process '("tectonic %f")) ;; https://www.reddit.com/r/emacs/comments/jf9hzm/use_tectonic_in_latex_and_orgmode/
+;; (setq org-latex-pdf-process '("tectonic %f")) ;; https://www.reddit.com/r/emacs/comments/jf9hzm/use_tectonic_in_latex_and_orgmode/
 ;;https://github.com/tectonic-typesetting/tectonic/discussions/928
 (setq org-latex-pdf-process '("tectonic -X compile --outdir=%o -Z shell-escape -Z continue-on-errors %f"))
 #+end_src
@@ -1562,14 +1628,12 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
 ** Vimscript
 #+begin_src elisp
 ;;TODO: babel?
-(use-package vimrc-mode)
+(use-package vimrc-mode :mode "\\.vim\\'")
 #+end_src
 
 ** org-mpv-note
 usa with yt-dlp
 #+begin_src elisp
-
-
 (use-package smartrep
   :ensure t
   :demand t)
@@ -1585,7 +1649,7 @@ usa with yt-dlp
 
 
 ;; https://github.com/isamert/empv.el
-(use-package mpv
+(use-package mpv :defer t
   :ensure t)
 #+end_src
 ** org-autolist
@@ -1594,40 +1658,6 @@ usa with yt-dlp
 #+end_src
 
 org-cheatsheet, org-reveal.js? mindmaps?
-
-** keybindings
-#+begin_src elisp
-;; (evil-define-key 'normal org-mode-map 
-;; (kbd "g j") 'evil-next-visual-line
-;; (kbd "g k") 'evil-previous-line)
-;; useless (define-key global-map (kbd "C-c j") (lambda () (interactive) (org-capture nil "jj")))
-(define-key global-map (kbd "C-c c") 'org-capture)
-(define-key global-map (kbd "C-c 1") 'org-store-link)
-(define-key global-map (kbd "C-c 1") 'org-store-link)
-(define-key global-map (kbd "C-c a") 'org-agenda)
-(define-key global-map (kbd "C-c a") 'org-agenda)
-(define-key global-map (kbd "C-c c") 'org-capture)
-(define-key global-map (kbd "C-c c") 'org-capture)
-
-(define-key global-map (kbd "C-c w") 'webjump)
-(define-key global-map (kbd "C-c e") 'elfeed)
-;;   "o e" '(elfeed :wk "Elfeed RSS")
-
-;;   "m i" '(org-toggle-item :wk "Org toggle item")
-;;   "m T" '(org-todo-list :wk "Org todo list"))
-;;   "m d t" '(org-time-stamp :wk "Org time stamp"))
-
-;;   "s d" '(dictionary-search :wk "Search dictionary")
-;;   "s m" '(man :wk "Man pages")
-;;   "s t" '(tldr :wk "Lookup TLDR docs for a command")
-;;   "s w" '(woman :wk "Similar to man but doesn't require man"))
-
-;;   "e s" '(eshell :which-key "Eshell")
-;;   "e w" '(eww :which-key "EWW emacs web wowser"))
-
-;; benchmark
-;; profiler-{start,stop}
-#+end_src
 
 ** org modern
 #+begin_src elisp
@@ -1798,69 +1828,6 @@ use ij/aj for this?
 (add-hook 'prog-mode-hook #'subword-mode)
 #+end_src
 
-* SANE DEFAULTS
-The following settings are simple modes that are enabled (or disabled) so that Emacs functions more like you would expect a proper editor/IDE to function.
-
-#+begin_src elisp
-(delete-selection-mode 1)    ;; You can select text and delete it by typing.
-(electric-indent-mode -1)    ;; Turn off the weird indenting that Emacs does by default.
-(electric-pair-mode 1)       ;; Turns on automatic parens pairing
-;; The following prevents <> from auto-pairing when electric-pair-mode is on.
-;; Otherwise, org-tempo is broken when you try to <s TAB...
-(add-hook 'org-mode-hook (lambda ()
-			   (setq-local electric-pair-inhibit-predicate
-				       `(lambda (c)
-					  (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
-(global-auto-revert-mode t)  ;; Automatically show changes if the file has changed
-(column-number-mode)
-;; t and 1 difference here?
-(global-display-line-numbers-mode 1) ;; Display line numbers
-;; Disable line numbers for some modes
-(dolist(mode '(org-mode-hook term-mode-hook shell-mode-hook eshell-mode-hook))(add-hook mode (lambda()(display-line-numbers-mode 0))))
-(global-visual-line-mode t)  ;; Enable truncated lines
-(menu-bar-mode -1)           ;; Disable the menu bar 
-(scroll-bar-mode -1)         ;; Disable the scroll bar
-(tool-bar-mode -1)           ;; Disable the tool bar
-(setq org-edit-src-content-indentation 0) ;; Set src block automatic indent to 0 instead of 2.
-
-;; (global-set-key [(control h)]  'delete-backward-char)
-;; (keyboard-translate ?\C-h ?\s-m-h)
-(setq show-trailing-whitespace t)
-(setq initial-scratch-message "") 
-
-(setq use-short-answers t)
-
-(setq disabled-command-function nil)
-
-;; (setq desktop-dirname (concat user-emacs-directory "sessions")
-
-;; https://www.reddit.com/r/emacs/comments/osscfd/pgtk_emacswaylandgnome_no_shiftspace/
-(setq pgtk-use-im-context nil)
-(setq pgtk-use-im-context-on-new-connection nil)
-
-(setq which-key-idle-delay 0.1)
-(setq confirm-kill-emacs nil)
-(setq-default indicate-empty-lines t)	; i also don't want to Go beyond last line
-
-;; display current and total matches
-;; (use-package anzu
-;; :config
-;; (global-anzu-mode +1)
-
-;; (setq isearch-wrap-pause nil)		;wrap search
-;; )
-
-(setenv "PATH" (concat (expand-file-name "~/.local/bin") ":" (getenv "PATH")))
-(setq exec-path (cons (expand-file-name "~/.local/bin") exec-path))
-
-;; you can start Emacs from a terminal where ssh-agent is already running, or propagate the SSH_AUTH_SOCK env var to Emacs using:
-(setenv "SSH_AUTH_SOCK" (getenv "SSH_AUTH_SOCK"))
-
-;; (setq browse-url-browser-function 'eww-browse-url) ; use w/ webjump
-(setq webjump-use-internal-browser t)
-
-#+end_src
-
 * SHELLS AND TERMINALS
 In my configs, all of my shells (bash, fish, zsh and the ESHELL) require my shell-color-scripts-git package to be installed.  On Arch Linux, you can install it from the AUR.  Otherwise, go to my shell-color-scripts repository on GitLab to get it.
 
@@ -1877,13 +1844,6 @@ In my configs, all of my shells (bash, fish, zsh and the ESHELL) require my shel
 Eshell is an Emacs 'shell' that is written in Elisp.
 
 #+begin_src elisp
-(use-package eshell-toggle
-  :custom
-  (eshell-toggle-size-fraction 3)
-  (eshell-toggle-use-projectile-root t)
-  (eshell-toggle-run-command nil)
-  (eshell-toggle-init-function #'eshell-toggle-init-ansi-term))
-
 (use-package eshell-syntax-highlighting
   :after esh-mode
   :config
@@ -1913,33 +1873,23 @@ Vterm is a terminal emulator within Emacs.  The 'shell-file-name' setting sets t
 	vterm-max-scrollback 5000))
 #+end_src
 
-** Vterm-Toggle 
-[[https://github.com/jixiuf/vterm-toggle][vterm-toggle]] toggles between the vterm buffer and whatever buffer you are editing.
-
 #+begin_src elisp
-(use-package vterm-toggle
-  :after vterm
-  ;; :bind (("C-`" . vterm-toggle))
-  :config
-  ;; When running programs in Vterm and in 'normal' mode, make sure that ESC
-  ;; kills the program as it would in most standard terminal programs.
-  (evil-define-key 'normal vterm-mode-map (kbd "<escape>") 'vterm--self-insert)
-  (setq vterm-toggle-fullscreen-p nil)
-  (setq vterm-toggle-scope 'project)
-  (add-to-list 'display-buffer-alist
-               '((lambda (buffer-or-name _)
-                   (let ((buffer (get-buffer buffer-or-name)))
-                     (with-current-buffer buffer
-                       (or (equal major-mode 'vterm-mode)
-                           (string-prefix-p vterm-buffer-name (buffer-name buffer))))))
-                 (display-buffer-reuse-window display-buffer-at-bottom)
-                 ;;(display-buffer-reuse-window display-buffer-in-direction)
-                 ;;display-buffer-in-direction/direction/dedicated is added in emacs27
-                 ;; (direction . right)
-                 ;;(dedicated . t) ;dedicated is supported in emacs27
-                 (reusable-frames . visible)
-                 (window-height . 0.4))))
 
+;;  (with-eval-after-load 'evil
+;;(evil-define-key 'normal vterm-mode-map (kbd "<escape>") 'vterm--self-insert))
+;;(add-to-list 'display-buffer-alist
+;;             '((lambda (buffer-or-name _)
+;;                 (let ((buffer (get-buffer buffer-or-name)))
+;;                   (with-current-buffer buffer
+;;                     (or (equal major-mode 'vterm-mode)
+;;                         (string-prefix-p vterm-buffer-name (buffer-name buffer))))))
+;;               (display-buffer-reuse-window display-buffer-at-bottom)
+;;               ;;(display-buffer-reuse-window display-buffer-in-direction)
+;;               ;;display-buffer-in-direction/direction/dedicated is added in emacs27
+;;               ;; (direction . right)
+;;               ;;(dedicated . t) ;dedicated is supported in emacs27
+;;               (reusable-frames . visible)
+;;               (window-height . 0.4)))
 #+end_src
 
 * SUDO EDIT
@@ -1954,22 +1904,6 @@ The first line below designates the directory where will place all of our custom
 
 #+begin_src elisp
 ;; (add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
-
-;; (use-package doom-themes
-;;   :config
-;;   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-;;         doom-themes-enable-italic t) ; if nil, italics is universally disabled
-;;   ;; Sets the default theme to load!!! 
-;;   ;; (load-theme 'doom-one t)
-;;   ;;(load-theme 'doom-feather-dark t)
-;;   (load-theme 'modus-vivendi t)
-;;   ;; (load-theme 'doom-moonlight t)
-;;   ;; (load-theme 'doom-miramare t)
-;;   ;; (load-theme 'doom-outrun-electric t)
-;;   ;; Enable custom neotree theme (all-the-icons must be installed!)
-;;   (doom-themes-neotree-config)
-;;   ;; Corrects (and improves) org-mode's native fontification.
-;;   (doom-themes-org-config))
 
 ;; (use-package ef-themes :ensure t :config(ef-themes-select 'ef-cyprus))
 (use-package ef-themes :ensure t :config(ef-themes-select 'ef-dark))
@@ -1996,8 +1930,7 @@ TODO: put popup in the middle?
 how to copy or put everything in the popup in a buffer?
 #+begin_src elisp
 (use-package which-key
-  :init
-  (which-key-mode 1)
+    :defer 0
   :diminish
   :config
   (setq which-key-side-window-location 'top
@@ -2012,7 +1945,9 @@ how to copy or put everything in the popup in a buffer?
 	which-key-idle-delay 0.8
 	which-key-max-description-length 25
 	which-key-allow-imprecise-window-fit nil
-	which-key-separator " → " ))
+	which-key-separator " → " )
+  (which-key-mode)
+    )
 ;; height? how to align?
 (use-package which-key-posframe
   :custom (which-key-posframe-parameters '((border-width . 2)
@@ -2027,8 +1962,10 @@ how to copy or put everything in the popup in a buffer?
 #+end_src
 
 * COMMAND-LOG
+keycast
 #+begin_src elisp
-(use-package command-log-mode)
+(use-package command-log-mode
+    :commands command-log-mode)
 #+end_src
 
 * TODO [#B] KANATA SHEGANIGANS
@@ -2037,7 +1974,9 @@ how to copy or put everything in the popup in a buffer?
   :ensure (:host github :repo "chmouel/kanata-kbd-mode")
   :mode ("\\.kbd\\'" . kanata-kbd-mode))
 
-(add-to-list 'org-src-lang-modes '("kbd" . kanata-kbd))
+
+   (with-eval-after-load 'org
+(add-to-list 'org-src-lang-modes '("kbd" . kanata-kbd)))
 ;; would be cool (add-to-list 'org-babel-load-languages '(kanata . t))
 
 ;; TODO: these don't work in terminal?
@@ -2105,12 +2044,25 @@ toggle full screen binding?
 (with-eval-after-load 'evil-maps (define-key evil-motion-state-map [down-mouse-1] nil))
 #+end_src
 
-* HELPFUL (system crafters)
-* HOOKS
-# when exiting emacs open terminal?
+* HELPFUL
+#+begin_src elisp
+
+(use-package helpful
+  :commands (helpful-callable helpful-variable helpful-command helpful-key)
+  :custom
+  (counsel-describe-function-function #'helpful-callable)
+  (counsel-describe-variable-function #'helpful-variable)
+  :bind
+  ([remap describe-function] . counsel-describe-function)
+  ([remap describe-command] . helpful-command)
+  ([remap describe-variable] . counsel-describe-variable)
+  ([remap describe-key] . helpful-key))
+
+#+end_src
+
 * HYDRA
 #+begin_src elisp
-;; (use-package hydra)
+;; (use-package hydra :defer t)
 ;; (defhydra hydra-text-scale (:timeout 4)
 ;; "scale text"
 ;; ("j" text-scale-increase "in")
@@ -2135,31 +2087,6 @@ ogni-ora attiva type-break (timer_start in vim)
 ;;   (general-add-hook '(emacs-lisp-mode-hook lisp-mode-hook) #'lispyville-mode)
 ;;   :config
 ;;   (lispyville-set-key-theme '(operators c-w additional)))
-#+end_src
-
-* FT ULTRAS FONT
-for programming
-
-* NICETIES
-#+begin_src elisp
-
-(with-eval-after-load 'evil-maps
-  ;; would nice that it resptected v:count like 2gO to show only 2nd level header?
-  ;; (define-key evil-normal-state-map (kbd "g O") #'counsel-imenu )
-  (define-key evil-normal-state-map (kbd "g O") #'counsel-outline )
-  ;;  region? C-u g K for <CWORD>?
-  (define-key evil-normal-state-map (kbd "g K") #'dictionary-lookup-definition)
-
-  ;; (define-key evil-insert-state-map (kbd "M-g g") #'avy-goto-line )
-  ;; (define-key evil-normal-state-map (kbd "M-g g") #'avy-goto-line )
-  )
-
-(setq org-imenu-depth 3)
-(setq dictionary-server "dict.org")
-
-;; Setting RETURN key in org-mode to follow links
-(setq org-return-follows-link  t)
-
 #+end_src
 
 * Snacks.nvim
@@ -2431,7 +2358,8 @@ use general leader keymaps
   ;; gptel-api-key (auth-source-pass-get 'secret "openai/api-key")
   (gptel-default-mode #'org-mode)
   ;; (setq gptel-model 'gemma3:12b
-  (gptel-model 'claude-3.7-sonnet)
+  ;; (gptel-model 'claude-3.7-sonnet)
+  (gptel-model 'gpt-4.1)
 
 
 
@@ -2467,8 +2395,6 @@ use general leader keymaps
 #+end_src
 
 #+begin_src elisp
-
-  )
 ;; :config
 ;; Quick template application
 					; (defun gptel-insert-template (template-key)
@@ -2484,22 +2410,17 @@ use general leader keymaps
 					;                  (replace-regexp-in-string "{{language}}" (or language "") template)))))))
 
 ;; Auto-save conversations
-					; (defun gptel-auto-save ()
-					;   (when (eq major-mode 'gptel-mode)
-					;     (let ((dir "~/gptel-conversations/"))
-					;       (unless (file-exists-p dir) (make-directory dir t))
-					;       (write-file (format "%s%s.org" dir (format-time-string "%Y%m%d-%H%M%S"))))))
-					;
-					; (add-hook 'gptel-post-response-functions 'gptel-auto-save)
+;; 1 file=1 session?
+;; append answer?
+(defun gptel-auto-save (&rest _args)
+  (when gptel-mode
+    (let ((dir "~/.config/emacs/gptel-conversations/"))
+      (unless (file-exists-p dir) (make-directory dir t))
+      (write-file (format "%s%s.org" dir (format-time-string "%Y%m%d-%H%M%S"))))))
 
-;; Jump to prompt after response
-;; (defun gptel-jump-to-prompt ()
-;;   (when (eq major-mode 'gptel-mode)
-;;     (goto-char (point-max))
-;;     (recenter)))
-;; (add-hook 'gptel-post-response-functions 'gptel-jump-to-prompt)
+(add-hook 'gptel-post-response-functions 'gptel-auto-save)
 
-;; )
+)
 #+end_src
 
 ** MCP
@@ -2553,13 +2474,6 @@ https://github.com/lizqwerscott/gptel-mcp.el
 ;;(lsp-treemacs-sync-mode 1))
 
 (use-package lsp-ivy)
-
-(use-package typescript-mode
-  :mode "\\.ts\\'"
-  :hook (typescript-mode . lsp-deferred)
-  :config
-  (setq typescript-indent-level 2))
-
 
 #+end_src
 
@@ -2652,6 +2566,7 @@ https://github.com/ecraven/ivy-pass
 ;; Emacs Multimedia System
 ;; tags?
 (use-package emms
+  :diminish
   :custom
   (emms-browser-covers #'emms-browser-cache-thumbnail-async)
   (emms-source-file-default-directory "~/Music") ; hide dir in browser?
@@ -2659,8 +2574,6 @@ https://github.com/ecraven/ivy-pass
   (emms-player-mpv-ipc-socket "/tmp/mpvsocket")
   :bind
   (
-   ;;("C-c w m b" . emms-browser)
-   ;; ("C-c m" . emms)
    ;; ("C-c w m p" . emms-play-playlist )
    ;; ("<XF86AudioPrev>" . emms-previous)
    ;; ("<XF86AudioNext>" . emms-next)
@@ -2701,3 +2614,31 @@ Use only the gpg-encrypted version of the file.
 (setq auth-sources '("~/.authinfo.gpg"))
 #+end_src
 
+
+* STT
+#+begin_src elisp
+(use-package whisper
+  :ensure (:host github :repo "natrys/whisper.el")
+  ;; :bind ("C-H-r" . whisper-run)
+  :config
+  (setq whisper-install-directory "/tmp/"
+        whisper-model "base"
+        whisper-language "en"
+        whisper-translate nil
+        whisper-use-threads (/ (num-processors) 2)))
+#+end_src
+
+* Keybindings
+#+begin_src elisp
+(define-key global-map (kbd "C-c w") 'webjump)
+;;   "s d" '(dictionary-search :wk "Search dictionary")
+;;   "s m" '(man :wk "Man pages")
+;;   "s t" '(tldr :wk "Lookup TLDR docs for a command")
+;;   "s w" '(woman :wk "Similar to man but doesn't require man"))
+
+;;   "e s" '(eshell :which-key "Eshell")
+;;   "e w" '(eww :which-key "EWW emacs web wowser"))
+
+;; benchmark
+;; profiler-{start,stop}
+#+end_src
