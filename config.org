@@ -61,8 +61,6 @@ Sync toc? Like modify here and reflect changes and viceversa
   - [[#org-babel][ORG BABEL]]
   - [[#auto-tangle][Auto-tangle]]
   - [[#images][IMAGES]]
-  - [[#tables][TABLES]]
-  - [[#vimscript][Vimscript]]
   - [[#org-mpv-note][org-mpv-note]]
   - [[#org-autolist][org-autolist]]
   - [[#org-modern][org modern]]
@@ -284,8 +282,10 @@ The following settings are simple modes that are enabled (or disabled) so that E
 ;; Setting RETURN key in org-mode to follow links
 (setq org-return-follows-link  t)
 
-#+end_src
-
+(use-package eros
+  :ensure (:host github :repo "xiongtx/eros")
+  :init (eros-mode 1)
+  )
 
 #+end_src
 
@@ -883,7 +883,8 @@ Defining the various fonts that Emacs will use.
               (start-process
                "open-in-nvim" nil
                "ghostty" "-e" "nvim"
-               (format "+%d" (line-number-at-pos))
+               ;; (format "+%d" (line-number-at-pos))
+               (format "-c%d" (line-number-at-pos))
                (shell-quote-argument buffer-file-name)))
 	  (message "Current buffer is not visiting a file.")))
       :wk "Open in Neovim")
@@ -1057,6 +1058,8 @@ Adding highlights to TODO and related words.
 ;;("SPC SPC" .counsel-M-x :wk "Counsel M-x")
   open in other window action?
 
+ivy-occur copy the whole line, not just selected?
+
 #+begin_src elisp
 (use-package counsel
   :after ivy
@@ -1177,6 +1180,13 @@ Emacs has built-in programming language modes for Lisp, Scheme, DSSSL, Ada, ASM,
   :hook (typescript-mode . lsp-deferred)
   :config
   (setq typescript-indent-level 2))
+(use-package vimrc-mode :mode "\\.vim\\'")
+
+(use-package tridactyl-mode
+  :ensure (:host github :repo "Fuco1/tridactyl-mode"))
+
+;;    (with-eval-after-load 'org
+;; (add-to-list 'org-src-lang-modes '("tridactylrc" . tridactyl-mode)))
 #+end_src
 
 * MINIBUFFER
@@ -1522,38 +1532,38 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
 #+begin_src elisp
 (setq org-confirm-babel-evaluate nil)
 ;;(use-package ob-mermaid)
-   (with-eval-after-load 'org
-(org-babel-do-load-languages
- 'org-babel-load-languages
- ;; how To make all langs true?
- '(;; other Babel languages
-   (plantuml . t)
-					; (typst . t)
-   (ditaa . t)
-   (python . t)
-					; (php . t)
-   (sqlite . t)
-   (perl . t)
-   (octave . t)
-   (calc . t)
-   (lua . t)
-   (C . t)
-   (java . t)
-   (js . t)
-   ;; how does this work?
-   (sed . t)
-   (shell . t)
-   ;;(mermaid . t)
-   ;;(scheme . t)
-   )))
+(with-eval-after-load 'org
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   ;; how To make all langs true?
+   '(;; other Babel languages
+     (plantuml . t)
+                                        ; (typst . t)
+     (ditaa . t)
+     (python . t)
+                                        ; (php . t)
+     (sqlite . t)
+     (perl . t)
+     (octave . t)
+     (calc . t)
+     (lua . t)
+     (C . t)
+     (java . t)
+     (js . t)
+     ;; how does this work?
+     (sed . t)
+     (shell . t)
+     ;;(mermaid . t)
+     ;;(scheme . t)
+     )))
 (setq org-plantuml-jar-path (expand-file-name "/usr/share/java/plantuml/plantuml.jar"))
 (setq org-ditaa-jar-path (expand-file-name "/usr/share/java/ditaa.jar"))
-; (add-to-list 'org-structure-template-alist '("ditaa" . "src ditaa :file ./images/.png :cmdline -E"))
+                                        ; (add-to-list 'org-structure-template-alist '("ditaa" . "src ditaa :file ./images/.png :cmdline -E"))
 ;;(setq ob-mermaid-cli-cpath "/usr/bin/mmdc")
 
 ;; Highlight Conf Files
-   (with-eval-after-load 'org
-(push '("conf-unix" . conf-unix) org-src-lang-modes))
+(with-eval-after-load 'org
+  (push '("conf-unix" . conf-unix) org-src-lang-modes))
 
 #+end_src
 https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892d569f19fd66a/contrib/lisp/ob-php.el
@@ -1572,9 +1582,9 @@ https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892
       (replace-regexp-in-string "\r" "" output))))
 
 
-   (with-eval-after-load 'org
-(add-to-list 'org-babel-load-languages '(vimrc . t))
-(add-to-list 'org-structure-template-alist '("vim" . "src vimrc")))
+(with-eval-after-load 'org
+  (add-to-list 'org-babel-load-languages '(vimrc . t))
+  (add-to-list 'org-structure-template-alist '("vim" . "src vimrc")))
 
 (defun org-babel-execute:nlua (body params)
   "Execute Nlua BODY according to PARAMS."
@@ -1589,11 +1599,11 @@ https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892
       (replace-regexp-in-string "\r" "" output))))
 
 
-   (with-eval-after-load 'org
-(add-to-list 'org-babel-load-languages '(nlua . t))
-(add-to-list 'org-structure-template-alist '("nlua" . "src nlua"))
-(add-to-list 'auto-mode-alist '("\\.nlua\\'" . lua-mode))
-(add-to-list 'org-src-lang-modes '("nlua" . lua)))
+(with-eval-after-load 'org
+  (add-to-list 'org-babel-load-languages '(nlua . t))
+  (add-to-list 'org-structure-template-alist '("nlua" . "src nlua"))
+  (add-to-list 'auto-mode-alist '("\\.nlua\\'" . lua-mode))
+  (add-to-list 'org-src-lang-modes '("nlua" . lua)))
 #+end_src
 
 ** Auto-tangle
@@ -1622,14 +1632,6 @@ https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892
 (setq org-latex-pdf-process '("tectonic -X compile --outdir=%o -Z shell-escape -Z continue-on-errors %f"))
 #+end_src
 
-** TABLES
-#+TBLFM: $1=@#-1 does work except for last row
-  #+TBLFM: @2$1..@>$1 = @# - 1
-** Vimscript
-#+begin_src elisp
-;;TODO: babel?
-(use-package vimrc-mode :mode "\\.vim\\'")
-#+end_src
 
 ** org-mpv-note
 usa with yt-dlp
@@ -1876,8 +1878,8 @@ Vterm is a terminal emulator within Emacs.  The 'shell-file-name' setting sets t
 #+begin_src elisp
 
 ;;  (with-eval-after-load 'evil
-;;(evil-define-key 'normal vterm-mode-map (kbd "<escape>") 'vterm--self-insert))
-;;(add-to-list 'display-buffer-alist
+;; (evil-define-key 'normal vterm-mode-map (kbd "<escape>") 'vterm--self-insert))
+;; (add-to-list 'display-buffer-alist
 ;;             '((lambda (buffer-or-name _)
 ;;                 (let ((buffer (get-buffer buffer-or-name)))
 ;;                   (with-current-buffer buffer
@@ -1912,7 +1914,7 @@ The first line below designates the directory where will place all of our custom
 * TLDR
 
 #+begin_src elisp
-(use-package tldr)
+(use-package tldr :commands tldr)
 
 #+end_src
 
@@ -1975,8 +1977,8 @@ keycast
   :mode ("\\.kbd\\'" . kanata-kbd-mode))
 
 
-   (with-eval-after-load 'org
-(add-to-list 'org-src-lang-modes '("kbd" . kanata-kbd)))
+(with-eval-after-load 'org
+  (add-to-list 'org-src-lang-modes '("kbd" . kanata-kbd)))
 ;; would be cool (add-to-list 'org-babel-load-languages '(kanata . t))
 
 ;; TODO: these don't work in terminal?
@@ -2096,17 +2098,21 @@ ogni-ora attiva type-break (timer_start in vim)
 ;; use C-c leter for one-shot keybindings (without groups) and leader for groups
 #+begin_src elisp
 (with-eval-after-load 'evil-maps
-  (define-key evil-insert-state-map (kbd "<Launch8> m") #'man) (define-key evil-normal-state-map (kbd "<Launch8> m") #'man)
-  (evil-define-key '(normal insert) global-map (kbd "<Launch8> /") 'swiper)
+  (global-set-key (kbd "<Launch8> m") #'man)
+  (define-key  evil-normal-state-map (kbd "<Launch8> /") 'swiper)
   ;; zen/zoom?
-  (define-key evil-normal-state-map (kbd "<Launch8> r") 'counsel-recentf)
-  (define-key evil-normal-state-map (kbd "<Launch8> c") 'counsel-load-theme) ; make this refresh theme?
+  (global-set-key (kbd "<Launch8> r") 'counsel-recentf)
+  (global-set-key (kbd "<Launch8> c") 'counsel-load-theme) ; make this refresh theme?
+  (global-set-key (kbd "<Launch8> C") 'counsel-colors-web) ; make this refresh theme?
   ;; library and packages difference?
-  (define-key evil-normal-state-map (kbd "<Launch8> p") 'counsel-find-library) ; make this refresh theme?
-  )
+  (global-set-key (kbd "<Launch8> p") 'counsel-find-library)
+  (global-set-key (kbd "<Launch8> h") 'counsel-faces)
+  (global-set-key (kbd "<Launch8> m") 'counsel-rhythmbox)
+  (global-set-key (kbd "<Launch8> M") 'counsel-rhythmbox-playpause-current-song)
+  ;; (global-set-key (kbd "<Launch8> h") 'counsel-command-history)
+  ;; (global-set-key (kbd "<Launch8> h") 'counsel-minibuffer-history)
+)
 #+end_src
-
-counsel rhytmbox stop current song?
 
 ** [[https://www.masteringemacs.org/article/find-files-faster-recent-files-package][RECENT FILES]]
 #+begin_src elisp
@@ -2380,8 +2386,8 @@ use general leader keymaps
   (setq gptel-backend (gptel-make-gh-copilot "Copilot")) ;; BUG: non funge in :custom
   ;; (gptel-make-ollama "Ollama" :host "localhost:11434" :stream t :models '(gemma3:12b))
 
-(add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
-(add-hook 'gptel-post-response-functions 'gptel-end-of-response)
+  (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
+  (add-hook 'gptel-post-response-functions 'gptel-end-of-response)
 
 #+end_src
 **** Presets
@@ -2412,13 +2418,13 @@ use general leader keymaps
 ;; Auto-save conversations
 ;; 1 file=1 session?
 ;; append answer?
-(defun gptel-auto-save (&rest _args)
-  (when gptel-mode
-    (let ((dir "~/.config/emacs/gptel-conversations/"))
-      (unless (file-exists-p dir) (make-directory dir t))
-      (write-file (format "%s%s.org" dir (format-time-string "%Y%m%d-%H%M%S"))))))
+;; (defun gptel-auto-save (&rest _args)
+;;   (when gptel-mode
+;;     (let ((dir "~/.config/emacs/gptel-conversations/"))
+;;       (unless (file-exists-p dir) (make-directory dir t))
+;;       (write-file (format "%s%s.org" dir (format-time-string "%Y%m%d-%H%M%S"))))))
 
-(add-hook 'gptel-post-response-functions 'gptel-auto-save)
+;; (add-hook 'gptel-post-response-functions 'gptel-auto-save)
 
 )
 #+end_src
@@ -2536,6 +2542,7 @@ Wait a few months
 https://github.com/alphapapa/ement.el
 #+begin_src elisp
 (use-package reddigg
+  :commands reddigg-view-sub
   :config
   (setq org-confirm-elisp-link-function nil)
   )
@@ -2635,9 +2642,6 @@ Use only the gpg-encrypted version of the file.
 ;;   "s m" '(man :wk "Man pages")
 ;;   "s t" '(tldr :wk "Lookup TLDR docs for a command")
 ;;   "s w" '(woman :wk "Similar to man but doesn't require man"))
-
-;;   "e s" '(eshell :which-key "Eshell")
-;;   "e w" '(eww :which-key "EWW emacs web wowser"))
 
 ;; benchmark
 ;; profiler-{start,stop}
