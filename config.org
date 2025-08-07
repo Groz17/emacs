@@ -125,7 +125,7 @@ Sync toc? Like modify here and reflect changes and viceversa
 - [ ] v:count tab doesn't work in org mode tables? also how to make column same width?
 - [ ] lazy ui for slowest plugins?
 - [X] C-j indents, C-m doesn't
-    
+
 ** Emacs [6/62] [9%]
 - [ ] git@github.com:ag91/moldable-emacs.git"))
 - [ ] https://github.com/tarsius/keychain-environment/blob/main/keychain-environment.el#L27-L48
@@ -234,7 +234,7 @@ The following settings are simple modes that are enabled (or disabled) so that E
 ;; Disable line numbers for some modes
 (dolist(mode '(org-mode-hook term-mode-hook shell-mode-hook eshell-mode-hook))(add-hook mode (lambda()(display-line-numbers-mode 0))))
 (global-visual-line-mode t)  ;; Enable truncated lines
-(menu-bar-mode -1)           ;; Disable the menu bar 
+(menu-bar-mode -1)           ;; Disable the menu bar
 (scroll-bar-mode -1)         ;; Disable the scroll bar
 (tool-bar-mode -1)           ;; Disable the tool bar
 (setq org-edit-src-content-indentation 0) ;; Set src block automatic indent to 0 instead of 2.
@@ -242,7 +242,7 @@ The following settings are simple modes that are enabled (or disabled) so that E
 ;; (global-set-key [(control h)]  'delete-backward-char)
 ;; (keyboard-translate ?\C-h ?\s-m-h)
 (setq show-trailing-whitespace t)
-;; (setq initial-scratch-message "") 
+;; (setq initial-scratch-message "")
 
 (setq use-short-answers t)
 (setq isearch-wrap-pause 'no-ding)
@@ -296,13 +296,13 @@ The following settings are simple modes that are enabled (or disabled) so that E
 (setq user-full-name "")
 (setq user-mail-address "")
 #+end_src
-* MULTILINGUAL EDITING 
+* MULTILINGUAL EDITING
 #+begin_src elisp
 (setq default-input-method "devanagari-itrans")
 #+end_src
 * ALL THE ICONS
 This is an icon set that can be used with dashboard, dired, ibuffer and other Emacs programs.
-  
+
 #+begin_src elisp
 (use-package all-the-icons
   :ensure t
@@ -312,7 +312,7 @@ This is an icon set that can be used with dashboard, dired, ibuffer and other Em
   :hook (dired-mode . (lambda () (all-the-icons-dired-mode t))))
 #+end_src
 
-* BACKUP 
+* BACKUP
 By default, Emacs creates automatic backups of files in their original directories, such "file.el" and the backup "file.el~".  This leads to a lot of clutter, so let's tell Emacs to put all backups that it creates in the =TRASH= directory.
 
 #+begin_src elisp
@@ -376,7 +376,7 @@ Emacs Dashboard is an extensible startup screen showing you recent files, bookma
                           (bookmarks . 3)
                           (projects . 3)
                           (registers . 3)))
-  :custom 
+  :custom
   (dashboard-modify-heading-icons '((recents . "file-text")
 				    (bookmarks . "book")))
   :config
@@ -455,7 +455,7 @@ automatically fold when moving j/k?
 #+begin_src elisp
 (setq ediff-split-window-function 'split-window-horizontally
       ediff-window-setup-function 'ediff-setup-windows-plain)
-#+end_src 
+#+end_src
 
 * ELFEED
 An RSS newsfeed reader for Emacs.  Move through the articles with 'j/k'.  Move through the stories with 'CTRL j/k' when in other frame.
@@ -551,8 +551,8 @@ https://github.com/remyhonig/elfeed-org
   :after evil
   :config
   ;; Do not uncomment this unless you want to specify each and every mode
-  ;; that evil-collection should works with.  The following line is here 
-  ;; for documentation purposes in case you need it.  
+  ;; that evil-collection should works with.  The following line is here
+  ;; for documentation purposes in case you need it.
   ;; (setq evil-collection-mode-list '(calendar dashboard dired ediff info magit ibuffer))
   (add-to-list 'evil-collection-mode-list 'help) ;; evilify help mode
 
@@ -679,7 +679,7 @@ https://github.com/remyhonig/elfeed-org
 ;; )
 
 
-;; Using RETURN to follow links in Org/Evil 
+;; Using RETURN to follow links in Org/Evil
 ;; Unmap keys in 'evil-maps if not done, (setq org-return-follows-link t) will not work
 (with-eval-after-load 'evil-maps
 					; (evil-define-key* 'normal help-mode-map (kbd "C-o") 'evil-jump-backward)
@@ -733,7 +733,7 @@ https://github.com/remyhonig/elfeed-org
 
   ;; how to Continue being in insert mode if called from insert mode?
   (global-set-key (kbd "<Launch7>") 'evil-window-map)
-  
+
   (define-key evil-command-line-map (kbd "C-a") 'move-beginning-of-line)
   (define-key evil-command-line-map (kbd "C-b") 'backward-char)
   (define-key evil-command-line-map (kbd "C-f") 'forward-char)
@@ -771,9 +771,10 @@ Install =luacheck= from your Linux distro's repositories for flycheck to work co
   :diminish
   :init (global-flycheck-mode))
 
-;; (use-package flyover
-;;   :hook (flycheck-mode . flyover-mode)
-;;   )
+(use-package flyover
+  :ensure (:host github :repo "konrad1977/flyover")
+  :hook (flycheck-mode . flyover-mode)
+  )
 #+end_src
 
 * FONTS
@@ -814,7 +815,7 @@ Defining the various fonts that Emacs will use.
 
 #+end_src
 
-** Font preview 
+** Font preview
 #+begin_src elisp
 (use-package show-font
   :ensure (:host github :repo "protesilaos/show-font"))
@@ -858,7 +859,7 @@ Defining the various fonts that Emacs will use.
 
     ;;"=" '(perspective-map :wk "Perspective") ;; Lists all the perspective keybindings
     "u" '(universal-argument :wk "Universal argument")
-    
+
 ;;"RET"
     ;;'((lambda ()
 	;;(vterm)))
@@ -936,23 +937,23 @@ Defining the various fonts that Emacs will use.
     "e n" '((lambda () (interactive) (find-file (concat (magit-toplevel) ".git/info/exclude"))) :wk "Gitignore")
 
     "e <RET>" '((lambda () (interactive)
-    		  (find-file "~/dotfiles/_ghostty.org")) 
+    		  (find-file "~/dotfiles/_ghostty.org"))
     		:wk "ghostty config"))
 
 					; "e d" '(find-grep-dired :wk "Search for string in files in DIR")
 					; "e g" '(counsel-grep-or-swiper :wk "Search for string current file")
 					; "e i" '((lambda () (interactive)
-					;           (find-file "~/.config/emacs/init.el")) 
+					;           (find-file "~/.config/emacs/init.el"))
 					;         :wk "Open emacs init.el")
 					; "e j" '(counsel-file-jump :wk "Jump to a file below current directory")
 					; "e l" '(counsel-locate :wk "Locate a file")
 					; "e r" '(counsel-recentf :wk "Find recent files")
 					; "e u" '(sudo-edit-find-file :wk "Sudo find file")
 					; "e U" '(sudo-edit :wk "Sudo edit file"))
-  
+
   ;; how to put these in use-package?
   (gz/leader-keys
-    "a" '(:ignore t :wk "AI")    
+    "a" '(:ignore t :wk "AI")
     "a a" '(gptel :wk "gptel")
     "a m" '(gptel-menu :wk "gptel menu")
     "a c" '(gptel-add :wk "gptel add context")
@@ -960,18 +961,18 @@ Defining the various fonts that Emacs will use.
     )
 
   (gz/leader-keys
-    "g" '(:ignore t :wk "Git")    
+    "g" '(:ignore t :wk "Git")
     "g /" '(magit-dispatch :wk "Magit dispatch")
     "g ." '(magit-file-dispatch :wk "Magit file dispatch")
     ;; "g b" '(magit-branch-checkout :wk "Switch branch")
     "g b" '(magit-branch :wk "Magit branch")
-    "g c" '(:ignore t :wk "Create") 
+    "g c" '(:ignore t :wk "Create")
     ;; -or-
     "g c b" '(magit-branch-and-checkout :wk "Create branch and checkout")
     "g c c" '(magit-commit-create :wk "Create commit")
     "g c f" '(magit-commit-fixup :wk "Create fixup commit")
     "g C" '(magit-clone :wk "Clone repo")
-    ;; "g f" '(:ignore t :wk "Find") 
+    ;; "g f" '(:ignore t :wk "Find")
     ;; "g f c" '(magit-show-commit :wk "Show commit")
     ;; "g f" '(magit-fetch :wk "Fetch")
     "g F" '(magit-fetch-all :wk "Fetch All")
@@ -1078,7 +1079,7 @@ ivy-occur copy the whole line, not just selected?
 	 ;; ("<clt-x> b" . counsel-ibuffer)
 
 	 )
-  :config 
+  :config
   (counsel-mode)
   (add-to-list 'ivy-more-chars-alist '(counsel-rg . 0))
   (add-to-list 'ivy-more-chars-alist '(counsel-git-grep . 0))
@@ -1151,7 +1152,7 @@ ivy-occur copy the whole line, not just selected?
   (ivy-rich-mode 1) ;; this gets us descriptions in M-x.
   )
 
-;; Improved Candidate Sorting 
+;; Improved Candidate Sorting
 (use-package ivy-prescient
   :after counsel
   :custom
@@ -1191,7 +1192,7 @@ Emacs has built-in programming language modes for Lisp, Scheme, DSSSL, Ada, ASM,
 
 * MINIBUFFER
 **  ESCAPE
-By default, Emacs requires you to hit ESC three times to escape quit the minibuffer.  
+By default, Emacs requires you to hit ESC three times to escape quit the minibuffer.
 
 #+begin_src elisp
 ;; mappa escape a c-g e c-g a original vim behaviour?
@@ -1282,7 +1283,7 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
 ;; Replace list hyphen with dot
 ;; (font-lock-add-keywords 'org-mode
 ;; '(("^ *\\([-]\\) "
-;; 
+;;
 ;; (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "·"))))))
 
 ;; Ensure that anything that should be fixed-pitch in Org files appears that way
@@ -1515,7 +1516,7 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
 
 
 ** ORG AGENDA
-#+begin_src elisp 
+#+begin_src elisp
 ;; (setq org-directory "~/notes")
 ;; (setq org-agenda-files "~/notes/agenda.org")
 ;; (setq org-agenda-files (list org-directory))
@@ -1575,7 +1576,7 @@ https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892
     (with-temp-file script-file
       (insert body))
     (let ((output (org-babel-eval
-                   (format "nvim -V1 -es -u NONE -i NONE -c \"source %s\" -c \"quit\" 2>&1" 
+                   (format "nvim -V1 -es -u NONE -i NONE -c \"source %s\" -c \"quit\" 2>&1"
                            (org-babel-process-file-name script-file))
                    "")))
       ;; Remove carriage returns
@@ -1592,7 +1593,7 @@ https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892
     (with-temp-file script-file
       (insert body))
     (let ((output (org-babel-eval
-                   (format "nvim -V1 -es -u NONE -i NONE -c \"luafile %s\" -c \"quit\" 2>&1" 
+                   (format "nvim -V1 -es -u NONE -i NONE -c \"luafile %s\" -c \"quit\" 2>&1"
                            (org-babel-process-file-name script-file))
                    "")))
       ;; Remove carriage returns
@@ -1707,7 +1708,7 @@ invert colors?
 			     ) :wk "Open in sioyek"
 
 		      )
-  ;; :hook  (pdf-view-mode-hook . (lambda() 
+  ;; :hook  (pdf-view-mode-hook . (lambda()
   ;;  (display-line-numbers-mode -1)
   ;;  (blink-cursor-mode -1)
   ;;  (doom-modeline-mode -1)     )
@@ -1766,7 +1767,7 @@ https://github.com/novoid/extract_pdf_annotations_to_orgmode
   ;; I'm only setting the additional binding because setting it
   ;; helps suppress an annoying warning message.
   (persp-mode-prefix-key (kbd "C-c M-p"))
-  :init 
+  :init
   (persp-mode)
   :config
   ;; Sets a file to write to when we save states
@@ -1816,7 +1817,7 @@ Adding rainbow coloring to parentheses.
 #+end_src
 
 * RAINBOW MODE
-Display the actual color as a background for any hex color value (ex. #ffffff).  The code block below enables rainbow-mode in all programming modes (prog-mode) as well as org-mode, which is why rainbow works in this document.  
+Display the actual color as a background for any hex color value (ex. #ffffff).  The code block below enables rainbow-mode in all programming modes (prog-mode) as well as org-mode, which is why rainbow works in this document.
 
 #+begin_src elisp
 (use-package rainbow-mode
@@ -2191,7 +2192,7 @@ screenshots? https://github.com/tecosaur/screenshot
 ;;       (while (< (point) end)
 ;;         (beginning-of-line)
 ;;         (setq total-lines (1+ total-lines))
-;;         (when (comment-only-p (line-beginning-position) 
+;;         (when (comment-only-p (line-beginning-position)
 ;;                               (line-end-position))
 ;;           (setq commented-lines (1+ commented-lines)))
 ;;         (forward-line 1)))
@@ -2379,7 +2380,7 @@ use general leader keymaps
   ;; (gptel-prompt-templates
   ;;       '(("code-review" . "Review this code for bugs, improvements, and best practices:\n\n=\n{{text}}\n=")
   ;;         ("explain" . "Explain the following concept in simple terms:\n\n{{text}}")
-  ;;         ("translate" . "Translate this text to {{language}}:\n\n{{text}}") 
+  ;;         ("translate" . "Translate this text to {{language}}:\n\n{{text}}")
   ;;         ("improve" . "Improve this text for clarity and conciseness:\n\n{{text}}")))
 
   :config
@@ -2412,7 +2413,7 @@ use general leader keymaps
 					;                     ""))
 					;             (language (when (string= template-key "translate")
 					;                         (read-string "Target language: "))))
-					;         (gptel (replace-regexp-in-string "{{text}}" text 
+					;         (gptel (replace-regexp-in-string "{{text}}" text
 					;                  (replace-regexp-in-string "{{language}}" (or language "") template)))))))
 
 ;; Auto-save conversations
