@@ -1785,26 +1785,6 @@ https://github.com/novoid/extract_pdf_annotations_to_orgmode
 
 #+end_src
 
-# * PROJECTILE
-# [[https://github.com/bbatsov/projectile][Projectile]] is a project interaction library for Emacs.  It should be noted that many projectile commands do not work if you have set "fish" as the "shell-file-name" for Emacs.  I had initially set "fish" as the "shell-file-name" in the Vterm section of this config, but oddly enough I changed it to "bin/sh" and projectile now works as expected, and Vterm still uses "fish" because my default user "sh" on my Linux system is "fish".
-
-#+begin_src elisp
-
-;; (use-package projectile
-;; :diminish projectile-mode
-;; :config (projectile-mode)
-;; :custom ((projectile-completion-system 'ivy))
-;; :bind-keymap
-;; ("C-c p" . projectile-command-map)
-;; :init
-;; (when (file-directory-p "~/Projects/Code")
-;; (setq projectile-project-search-path '("~/Projects/Code")))
-;; (setq projectile-switch-project-action #'projectile-dired))
-;;
-;;       (use-package counsel-projectile :config(counsel-projectile-mode))
-
-#+end_src
-
 * RAINBOW DELIMITERS
 Adding rainbow coloring to parentheses.
 
