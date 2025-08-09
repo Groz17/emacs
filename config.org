@@ -7,10 +7,11 @@
 #+property: header-args :tangle ~/.config/emacs/init.el
 
 Sync toc? Like modify here and reflect changes and viceversa
+https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4b0e3b2201c31/config.org#L8158
 
 * TABLE OF CONTENTS :toc:
 - [[#task-list][TASK LIST]]
-  - [[#vim-feature-parity-210-20][Vim feature parity]]
+  - [[#vim-feature-parity-16-16][Vim feature parity]]
   - [[#emacs-662-9][Emacs]]
   - [[#emacsvim-interaction-evil-mode][Emacs/vim interaction (Evil Mode)]]
 - [[#important-programs-to-load-first][IMPORTANT PROGRAMS TO LOAD FIRST]]
@@ -48,7 +49,6 @@ Sync toc? Like modify here and reflect changes and viceversa
   - [[#make-more-appealing][Make more appealing]]
   - [[#log][Log]]
   - [[#states][States]]
-  - [[#configure-custom-agenda-views][Configure custom agenda views]]
   - [[#set-of-commonly-known-tags][Set of commonly known tags]]
   - [[#refiling][Refiling]]
   - [[#capture-templates][Capture templates]]
@@ -64,8 +64,9 @@ Sync toc? Like modify here and reflect changes and viceversa
   - [[#org-mpv-note][org-mpv-note]]
   - [[#org-autolist][org-autolist]]
   - [[#org-modern][org modern]]
-- [[#pdfs][PDFs]]
+  - [[#settings][Settings]]
   - [[#org-noter][org-noter]]
+- [[#pdfs][PDFs]]
 - [[#perspective][PERSPECTIVE]]
 - [[#rainbow-delimiters][RAINBOW DELIMITERS]]
 - [[#rainbow-mode][RAINBOW MODE]]
@@ -105,7 +106,7 @@ Sync toc? Like modify here and reflect changes and viceversa
 - [[#ai][AI]]
   - [[#llm][LLM]]
   - [[#mcp][MCP]]
-- [[#eof][eof]]
+- [[#eof][EOF]]
 - [[#lsp][LSP]]
 - [[#tree-sitter][Tree-sitter]]
   - [[#text-objects][Text-objects]]
@@ -118,7 +119,7 @@ Sync toc? Like modify here and reflect changes and viceversa
 - [[#keybindings][Keybindings]]
 
 * TODO TASK LIST
-** Vim feature parity [2/10] [20%]
+** Vim feature parity [1/6] [16%]
 - [ ] :restart command/keybinding... (maybe C-x C-S-c?)
 - [ ] orderless plugin is great (especially for beginners)
 - [ ] gf shows popup for some reason
@@ -221,23 +222,16 @@ The following settings are simple modes that are enabled (or disabled) so that E
 (delete-selection-mode 1)    ;; You can select text and delete it by typing.
 (electric-indent-mode -1)    ;; Turn off the weird indenting that Emacs does by default.
 (electric-pair-mode 1)       ;; Turns on automatic parens pairing
-;; The following prevents <> from auto-pairing when electric-pair-mode is on.
-;; Otherwise, org-tempo is broken when you try to <s TAB...
-(add-hook 'org-mode-hook (lambda ()
-			   (setq-local electric-pair-inhibit-predicate
-				       `(lambda (c)
-					  (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
 (global-auto-revert-mode t)  ;; Automatically show changes if the file has changed
 (column-number-mode)
 ;; t and 1 difference here?
 (global-display-line-numbers-mode 1) ;; Display line numbers
 ;; Disable line numbers for some modes
-(dolist(mode '(org-mode-hook term-mode-hook shell-mode-hook eshell-mode-hook))(add-hook mode (lambda()(display-line-numbers-mode 0))))
+(dolist(mode '(org-mode-hook vterm-mode-hook term-mode-hook shell-mode-hook eshell-mode-hook))(add-hook mode (lambda()(display-line-numbers-mode 0))))
 (global-visual-line-mode t)  ;; Enable truncated lines
 (menu-bar-mode -1)           ;; Disable the menu bar
 (scroll-bar-mode -1)         ;; Disable the scroll bar
 (tool-bar-mode -1)           ;; Disable the tool bar
-(setq org-edit-src-content-indentation 0) ;; Set src block automatic indent to 0 instead of 2.
 
 ;; (global-set-key [(control h)]  'delete-backward-char)
 ;; (keyboard-translate ?\C-h ?\s-m-h)
@@ -257,14 +251,14 @@ The following settings are simple modes that are enabled (or disabled) so that E
 
 (setq which-key-idle-delay 0.1)
 (setq confirm-kill-emacs nil)
-(setq-default indicate-empty-lines t)	; i also don't want to Go beyond last line
+(setq-default indicate-empty-lines t)  ; i also don't want to Go beyond last line
 
 ;; display current and total matches
 ;; (use-package anzu
 ;; :config
 ;; (global-anzu-mode +1)
 
-;; (setq isearch-wrap-pause nil)		;wrap search
+;; (setq isearch-wrap-pause nil)    ;wrap search
 ;; )
 
 (setenv "PATH" (concat (expand-file-name "~/.local/bin") ":" (getenv "PATH")))
@@ -276,11 +270,7 @@ The following settings are simple modes that are enabled (or disabled) so that E
 ;; (setq browse-url-browser-function 'eww-browse-url) ; use w/ webjump
 (setq webjump-use-internal-browser t)
 
-(setq org-imenu-depth 3)
 (setq dictionary-server "dict.org")
-
-;; Setting RETURN key in org-mode to follow links
-(setq org-return-follows-link  t)
 
 (use-package eros
   :ensure (:host github :repo "xiongtx/eros")
@@ -334,12 +324,12 @@ By default, Emacs creates automatic backups of files in their original directori
   (company-tooltip-align-annotations 't)
   (global-company-mode t)
   :bind(
-	;; :map evil-insert-state-map
-	:map company-active-map
+  ;; :map evil-insert-state-map
+  :map company-active-map
 
-	("C-j" . company-select-next-or-abort)
-	("C-k" . company-select-previous-or-abort)
-	("C-l" . company-complete-selection))
+  ("C-j" . company-select-next-or-abort)
+  ("C-k" . company-select-previous-or-abort)
+  ("C-l" . company-complete-selection))
   (:map lsp-mode-map
         ("<tab>" . company-indent-or-complete-common))
 
@@ -378,7 +368,7 @@ Emacs Dashboard is an extensible startup screen showing you recent files, bookma
                           (registers . 3)))
   :custom
   (dashboard-modify-heading-icons '((recents . "file-text")
-				    (bookmarks . "book")))
+            (bookmarks . "book")))
   :config
   (dashboard-setup-startup-hook))
 
@@ -398,9 +388,9 @@ Bookmarks like in mini.files?
   :after dired
   :config
   (setq dired-open-extensions '(
-				;; ("gif" . "sxiv")
-				;;                                 ("jpg" . "sxiv")
-				;;                                 ("png" . "sxiv")
+        ;; ("gif" . "sxiv")
+        ;;                                 ("jpg" . "sxiv")
+        ;;                                 ("png" . "sxiv")
                                 ("mkv" . "mpv")
                                 ("mp4" . "mpv"))))
 ;; ("pdf" . "sioyek"))))
@@ -410,29 +400,29 @@ Bookmarks like in mini.files?
   :ensure nil
   ;; :commands (dired dired-jump)
   :custom (
-	   ;; (setq dired-dwim-target t)
-	   (dired-listing-switches "-agho --group-directories-first")
-	   ;; (setq dired-listing-switches "-lhgoBF --group-directories-first")
-	   ;; (setq diredp-toggle-find-file-reuse-dir t)
+     ;; (setq dired-dwim-target t)
+     (dired-listing-switches "-agho --group-directories-first")
+     ;; (setq dired-listing-switches "-lhgoBF --group-directories-first")
+     ;; (setq diredp-toggle-find-file-reuse-dir t)
 
 
-	   )
+     )
   :config
   (evil-collection-define-key 'normal 'dired-mode-map
     "h" 'dired-up-directory
     "l" 'dired-find-file))
 
-					; (eval-after-load "dired" '(progn
-					;   (define-key dired-mode-map (kbd "q") 'kill-this-buffer)
-					;   (define-key dired-mode-map (kbd "h") 'dired-up-directory)
-					;   (define-key dired-mode-map (kbd "l") 'dired-open-file)
-					;   ; (define-key dired-mode-map (kbd "o") 'dired-sort-toggle-or-edit)
-					;   ; (define-key dired-mode-map (kbd "v") 'dired-toggle-marks)
-					;   ; (define-key dired-mode-map (kbd "m") 'dired-mark)
-					;   ; (define-key dired-mode-map (kbd "u") 'dired-unmark)
-					;   ; (define-key dired-mode-map (kbd "U") 'dired-unmark-all-marks)
-					; (define-key dired-mode-map (kbd "c") 'dired-create-directory)
-					; ))
+          ; (eval-after-load "dired" '(progn
+          ;   (define-key dired-mode-map (kbd "q") 'kill-this-buffer)
+          ;   (define-key dired-mode-map (kbd "h") 'dired-up-directory)
+          ;   (define-key dired-mode-map (kbd "l") 'dired-open-file)
+          ;   ; (define-key dired-mode-map (kbd "o") 'dired-sort-toggle-or-edit)
+          ;   ; (define-key dired-mode-map (kbd "v") 'dired-toggle-marks)
+          ;   ; (define-key dired-mode-map (kbd "m") 'dired-mark)
+          ;   ; (define-key dired-mode-map (kbd "u") 'dired-unmark)
+          ;   ; (define-key dired-mode-map (kbd "U") 'dired-unmark-all-marks)
+          ; (define-key dired-mode-map (kbd "c") 'dired-create-directory)
+          ; ))
 
 #+end_src
 
@@ -530,8 +520,8 @@ https://github.com/remyhonig/elfeed-org
    :init
    (setq evil-want-integration t ;; This is optional since it's already set to t by default.
         evil-want-keybinding nil
-	;; this way i can learn emacs
-	;; still want a way/keybinding to use one-shot insert mode keybinding tho (C-z)?
+  ;; this way i can learn emacs
+  ;; still want a way/keybinding to use one-shot insert mode keybinding tho (C-z)?
         evil-disable-insert-state-bindings t ;; also wanna disable command-state-bindings?
         evil-vsplit-window-right t
         evil-split-window-below nil
@@ -541,9 +531,9 @@ https://github.com/remyhonig/elfeed-org
         evil-want-Y-yank-to-eol t
         ;;evil-want-C-w-delete t
 
-	;;DISAMBIGUATE TAB and C-i
-	evil-want-C-i-jump t
-	evil-lookup-func (lambda () (man (thing-at-point 'word))))
+  ;;DISAMBIGUATE TAB and C-i
+  evil-want-C-i-jump t
+  evil-lookup-func (lambda () (man (thing-at-point 'word))))
   :config
   (evil-mode 1))
 
@@ -561,22 +551,22 @@ https://github.com/remyhonig/elfeed-org
 
   (add-hook 'git-commit-setup-hook 'evil-insert-state)
   (dolist (mode-map '((inferior-emacs-lisp-mode . emacs)
-   		      (nrepl-mode . insert)
-   		      (pylookup-mode . emacs)
-   		      (comint-mode . normal)
-   		      (pdf-view-mode . motion)
-   		      (shell-mode . insert)
-   		      (git-commit-mode . insert)
-   		      (git-rebase-mode . emacs)
-   		      (term-mode . emacs)
-   		      (help-mode . normal)
-   		      (helm-grep-mode . emacs)
-   		      (grep-mode . emacs)
-   		      (bc-menu-mode . emacs)
-   		      (magit-branch-manager-mode . emacs)
-   		      (rdictcc-buffer-mode . emacs)
-   		      ;; (dired-mode . emacs)
-   		      (wdired-mode . normal)))
+             (nrepl-mode . insert)
+             (pylookup-mode . emacs)
+             (comint-mode . normal)
+             (pdf-view-mode . motion)
+             (shell-mode . insert)
+             (git-commit-mode . insert)
+             (git-rebase-mode . emacs)
+             (term-mode . emacs)
+             (help-mode . normal)
+             (helm-grep-mode . emacs)
+             (grep-mode . emacs)
+             (bc-menu-mode . emacs)
+             (magit-branch-manager-mode . emacs)
+             (rdictcc-buffer-mode . emacs)
+             ;; (dired-mode . emacs)
+             (wdired-mode . normal)))
     (evil-set-initial-state `,(car mode-map) `,(cdr mode-map)))
 
   )
@@ -607,14 +597,14 @@ https://github.com/remyhonig/elfeed-org
   ;; this macro was copied from here: https://stackoverflow.com/a/22418983/4921402
   (defmacro define-and-bind-quoted-text-object (name key start-regex end-regex)
     (let ((inner-name (make-symbol (concat "evil-inner-" name)))
-	  (outer-name (make-symbol (concat "evil-a-" name))))
+    (outer-name (make-symbol (concat "evil-a-" name))))
       `(progn
-	 (evil-define-text-object ,inner-name (count &optional beg end type)
-	   (evil-select-paren ,start-regex ,end-regex beg end type count nil))
-	 (evil-define-text-object ,outer-name (count &optional beg end type)
-	   (evil-select-paren ,start-regex ,end-regex beg end type count t))
-	 (define-key evil-inner-text-objects-map ,key #',inner-name)
-	 (define-key evil-outer-text-objects-map ,key #',outer-name))))
+   (evil-define-text-object ,inner-name (count &optional beg end type)
+     (evil-select-paren ,start-regex ,end-regex beg end type count nil))
+   (evil-define-text-object ,outer-name (count &optional beg end type)
+     (evil-select-paren ,start-regex ,end-regex beg end type count t))
+   (define-key evil-inner-text-objects-map ,key #',inner-name)
+   (define-key evil-outer-text-objects-map ,key #',outer-name))))
 
   (define-and-bind-quoted-text-object "equal" "=" "=" "=")
   (define-and-bind-quoted-text-object "pipe" "|" "|" "|")
@@ -629,30 +619,30 @@ https://github.com/remyhonig/elfeed-org
   )
 (use-package evil-numbers
   :bind (
-	 :map evil-normal-state-map
-	 ("C-a" . evil-numbers/inc-at-pt)
-	 ("C-x" . evil-numbers/dec-at-pt)
+   :map evil-normal-state-map
+   ("C-a" . evil-numbers/inc-at-pt)
+   ("C-x" . evil-numbers/dec-at-pt)
 
-	 ))
+   ))
 ;; (use-package evil-mc :ensure t :config (global-evil-mc-mode 1) )
 (use-package evil-commentary :ensure t
   :bind (
-	 :map evil-normal-state-map
-	 ("gc" . evil-commentary)
-	 :map evil-visual-state-map
-	 ("gc" . evil-commentary)))
+   :map evil-normal-state-map
+   ("gc" . evil-commentary)
+   :map evil-visual-state-map
+   ("gc" . evil-commentary)))
 
 (use-package goto-chg :defer t)
 ;; https://github.com/roman/evil-paredit
 
 (use-package evil-exchange
   :bind (
-	 :map evil-normal-state-map
-	 ("cx" . evil-exchange)
-	 :map evil-visual-state-map
-	 ("X" . evil-exchange)
-	 :map evil-normal-state-map
-	 ("X" . evil-exchange-cancel))
+   :map evil-normal-state-map
+   ("cx" . evil-exchange)
+   :map evil-visual-state-map
+   ("X" . evil-exchange)
+   :map evil-normal-state-map
+   ("X" . evil-exchange-cancel))
 
   :config
   (evil-exchange-cx-install)
@@ -682,8 +672,8 @@ https://github.com/remyhonig/elfeed-org
 ;; Using RETURN to follow links in Org/Evil
 ;; Unmap keys in 'evil-maps if not done, (setq org-return-follows-link t) will not work
 (with-eval-after-load 'evil-maps
-					; (evil-define-key* 'normal help-mode-map (kbd "C-o") 'evil-jump-backward)
-					; (evil-define-key* 'normal Info-mode-map (kbd "C-o") 'evil-jump-backward)
+          ; (evil-define-key* 'normal help-mode-map (kbd "C-o") 'evil-jump-backward)
+          ; (evil-define-key* 'normal Info-mode-map (kbd "C-o") 'evil-jump-backward)
 
 
   ;; would nice that it resptected v:count like 2gO to show only 2nd level header?
@@ -713,7 +703,7 @@ https://github.com/remyhonig/elfeed-org
   (defun kill-region-or-backward-word ()
     (interactive)
     (if (region-active-p)
-	(kill-region (region-beginning) (region-end))
+  (kill-region (region-beginning) (region-end))
       (backward-kill-word 1)))
   ;;  (define-key evil-insert-state-map (kbd "C-w") 'backward-kill-word)
   (define-key evil-insert-state-map (kbd "C-w") 'kill-region-or-backward-word)
@@ -783,26 +773,26 @@ Defining the various fonts that Emacs will use.
 ** Setting the Font Face
 #+begin_src elisp
 (set-face-attribute 'default nil
-		    ;; :font "JetBrains Mono"
-		    ;; :font "Iosevka Term Curly-regular-normal"
-		    :font "Aporetic Sans"
-		    :height 110
-		    :weight 'medium)
+        ;; :font "JetBrains Mono"
+        ;; :font "Iosevka Term Curly-regular-normal"
+        :font "Aporetic Sans"
+        :height 110
+        :weight 'medium)
 (set-face-attribute 'variable-pitch nil
-		    :font "Aporetic Sans"
-		    :height 120
-		    :weight 'medium)
+        :font "Aporetic Sans"
+        :height 120
+        :weight 'medium)
 (set-face-attribute 'fixed-pitch nil
-		    :font "Aporetic Sans Mono"
-		    :height 110
-		    :weight 'medium)
+        :font "Aporetic Sans Mono"
+        :height 110
+        :weight 'medium)
 ;; Makes commented text and keywords italics.
 ;; This is working in emacsclient but not emacs.
 ;; Your font must have an italic face available.
 (set-face-attribute 'font-lock-comment-face nil
-		    :slant 'italic)
+        :slant 'italic)
 (set-face-attribute 'font-lock-keyword-face nil
-		    :slant 'italic)
+        :slant 'italic)
 
 ;; This sets the default font on all graphical frames created after restarting Emacs.
 ;; Does the same thing as 'set-face-attribute default' above, but emacsclient fonts
@@ -862,14 +852,14 @@ Defining the various fonts that Emacs will use.
 
 ;;"RET"
     ;;'((lambda ()
-	;;(vterm)))
+  ;;(vterm)))
 
     "SPC"
     '((lambda ()
-	(interactive)
+  (interactive)
         (start-process
          "send-clipboard" nil
-	 "hyprctl" "dispatch" "exec" "[float;size 30% 30%] ghostty -e nvim -c \"norm 1 Qd\""))
+   "hyprctl" "dispatch" "exec" "[float;size 30% 30%] ghostty -e nvim -c \"norm 1 Qd\""))
       :wk "Send clipboard")
 
     ;; would be cool if worked in visual mode ala narrowing
@@ -877,17 +867,17 @@ Defining the various fonts that Emacs will use.
     ;; also support current windows/session
     "&"
     '((lambda ()
-	(interactive)
-	(if buffer-file-name
-	    (if (buffer-modified-p)
-		(message "Buffer modified. Please save before opening in Neovim.")
+  (interactive)
+  (if buffer-file-name
+      (if (buffer-modified-p)
+    (message "Buffer modified. Please save before opening in Neovim.")
               (start-process
                "open-in-nvim" nil
                "ghostty" "-e" "nvim"
                ;; (format "+%d" (line-number-at-pos))
                (format "-c%d" (line-number-at-pos))
                (shell-quote-argument buffer-file-name)))
-	  (message "Current buffer is not visiting a file.")))
+    (message "Current buffer is not visiting a file.")))
       :wk "Open in Neovim")
 
     ;; doesn't work
@@ -920,7 +910,7 @@ Defining the various fonts that Emacs will use.
     "e d" '((lambda () (interactive) (find-file "~/dotfiles/rofi.org")) :wk "Rofi")
     "e h" '((lambda () (interactive) (find-file "~/dotfiles/hypr.org")) :wk "Hypr")
     "e a" '((lambda () (interactive) (find-file "~/dotfiles/atuin.org")) :wk "Atuin")
-    					; "e H" '((lambda () (interactive) (dired "~/.config/hypr/")) :wk "hypr in dired")
+              ; "e H" '((lambda () (interactive) (dired "~/.config/hypr/")) :wk "hypr in dired")
     "e s" '((lambda () (interactive) (find-file "~/dotfiles/sioyek.org")) :wk "Sioyek")
     "e w" '((lambda () (interactive) (find-file "~/dotfiles/waybar.org")) :wk "Waybar")
     "e b" '((lambda () (interactive) (find-file "~/dotfiles/bashrc.org")) :wk "Bashrc")
@@ -937,19 +927,19 @@ Defining the various fonts that Emacs will use.
     "e n" '((lambda () (interactive) (find-file (concat (magit-toplevel) ".git/info/exclude"))) :wk "Gitignore")
 
     "e <RET>" '((lambda () (interactive)
-    		  (find-file "~/dotfiles/_ghostty.org"))
-    		:wk "ghostty config"))
+          (find-file "~/dotfiles/_ghostty.org"))
+        :wk "ghostty config"))
 
-					; "e d" '(find-grep-dired :wk "Search for string in files in DIR")
-					; "e g" '(counsel-grep-or-swiper :wk "Search for string current file")
-					; "e i" '((lambda () (interactive)
-					;           (find-file "~/.config/emacs/init.el"))
-					;         :wk "Open emacs init.el")
-					; "e j" '(counsel-file-jump :wk "Jump to a file below current directory")
-					; "e l" '(counsel-locate :wk "Locate a file")
-					; "e r" '(counsel-recentf :wk "Find recent files")
-					; "e u" '(sudo-edit-find-file :wk "Sudo find file")
-					; "e U" '(sudo-edit :wk "Sudo edit file"))
+          ; "e d" '(find-grep-dired :wk "Search for string in files in DIR")
+          ; "e g" '(counsel-grep-or-swiper :wk "Search for string current file")
+          ; "e i" '((lambda () (interactive)
+          ;           (find-file "~/.config/emacs/init.el"))
+          ;         :wk "Open emacs init.el")
+          ; "e j" '(counsel-file-jump :wk "Jump to a file below current directory")
+          ; "e l" '(counsel-locate :wk "Locate a file")
+          ; "e r" '(counsel-recentf :wk "Find recent files")
+          ; "e u" '(sudo-edit-find-file :wk "Sudo find file")
+          ; "e U" '(sudo-edit :wk "Sudo edit file"))
 
   ;; how to put these in use-package?
   (gz/leader-keys
@@ -1060,25 +1050,25 @@ Adding highlights to TODO and related words.
   open in other window action?
 
 ivy-occur copy the whole line, not just selected?
+also check out helm/etc... keybindings
 
 #+begin_src elisp
 (use-package counsel
   :after ivy
   :diminish
   :bind (
-	 :map evil-normal-state-map
-	 ("C-p" . counsel-fzf) ;; current cwd
-	 ("C-S-p" . project-find-file)		   ; project?
-	 ("C-q" . counsel-rg) ;; current cwd
-	 ("C-S-q" . counsel-git-grep) ;; current cwd
-	 ;; ("C-q" . counsel-grep like vim?)
-	 ;; ("C-l" . counsel-locate)
-	 ;; ("C-x b" . counsel-ibuffer)
-	 ;; ([ctl-x] "b" . counsel-ibuffer)
+   :map evil-normal-state-map
+   ("C-p" . counsel-fzf) ;; current cwd
+   ("C-S-p" . project-find-file)       ; project?
+   ("C-q" . counsel-rg) ;; current cwd
+   ("C-S-q" . counsel-git-grep) ;; current cwd
+   ;; ("C-q" . counsel-grep like vim?)
+   ;; ("C-x b" . counsel-ibuffer)
+   ;; ([ctl-x] "b" . counsel-ibuffer)
 
-	 ;; ("<clt-x> b" . counsel-ibuffer)
+   ;; ("<clt-x> b" . counsel-ibuffer)
 
-	 )
+   )
   :config
   (counsel-mode)
   (add-to-list 'ivy-more-chars-alist '(counsel-rg . 0))
@@ -1146,8 +1136,8 @@ ivy-occur copy the whole line, not just selected?
   :ensure t
   :custom
   (ivy-virtual-abbreviate 'full
-			  ivy-rich-switch-buffer-align-virtual-buffer t
-			  ivy-rich-path-style 'abbrev)
+        ivy-rich-switch-buffer-align-virtual-buffer t
+        ivy-rich-path-style 'abbrev)
   :config
   (ivy-rich-mode 1) ;; this gets us descriptions in M-x.
   )
@@ -1159,7 +1149,7 @@ ivy-occur copy the whole line, not just selected?
   (ivy-prescient-enable-filtering nil)
   :config
   ;; Uncomment the following line to have sorting remembered across sessions!
-					;(prescient-persist-mode 1)
+          ;(prescient-persist-mode 1)
   (ivy-prescient-mode 1))
 
 (use-package orderless
@@ -1238,10 +1228,10 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
   ;; :config
   :custom
   (doom-modeline-height 35      ;; sets modeline height
-			doom-modeline-bar-width 5    ;; sets right bar width
-			;;doom-modeline-persp-name t   ;; adds perspective name to modeline
-			doom-modeline-persp-icon t ;; adds folder icon next to persp name
-			doom-modeline-buffer-file-name-style 'relative-to-project)
+      doom-modeline-bar-width 5    ;; sets right bar width
+      ;;doom-modeline-persp-name t   ;; adds perspective name to modeline
+      doom-modeline-persp-icon t ;; adds folder icon next to persp name
+      doom-modeline-buffer-file-name-style 'relative-to-project)
   (doom-modeline-lsp t)
   )
 
@@ -1252,27 +1242,27 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
 
 * ORG MODE
 #+begin_src elisp
-;; :pin org/gnu?
-(use-package org
-  :ensure nil
-  :bind (("C-c c" . counsel-org-capture)
-	 ("C-c 1" . org-store-link)
-	 ("C-c a" . org-agenda)
+  ;; :pin org/gnu?
+  (use-package org
+    :ensure nil
+    :bind (("C-c c" . counsel-org-capture)
+     ("C-c l" . org-store-link)
+     ("C-c a" . org-agenda)
 
-	 ;;   "m i" '(org-toggle-item :wk "Org toggle item")
-	 ;;   "m T" '(org-todo-list :wk "Org todo list"))
-	 ;;   "m d t" '(org-time-stamp :wk "Org time stamp"))
-	 )
-  :config ;; (message "test lazy loading")
+     ;;   "m i" '(org-toggle-item :wk "Org toggle item")
+     ;;   "m T" '(org-todo-list :wk "Org todo list")
+     ;;   "m d t" '(org-time-stamp :wk "Org time stamp")
+     )
+    :config ;; (message "test lazy loading")
 
-  (with-eval-after-load 'evil
-    (evil-define-key 'normal org-mode-map (kbd "gj") 'evil-next-visual-line)
-    (evil-define-key 'normal org-mode-map (kbd "gk") 'evil-previous-visual-line)
-    (evil-define-key 'normal org-mode-map (kbd "zj") 'org-forward-heading-same-level)
-    (evil-define-key 'normal org-mode-map (kbd "zk") 'org-forward-heading-same-level)
-    (evil-define-key '(normal visual) org-mode-map (kbd "}") 'evil-forward-paragraph)
-    (evil-define-key '(normal visual) org-mode-map (kbd "{") 'evil-backward-paragraph))
-  )
+    (with-eval-after-load 'evil
+      (evil-define-key 'normal org-mode-map (kbd "gj") 'evil-next-visual-line)
+      (evil-define-key 'normal org-mode-map (kbd "gk") 'evil-previous-visual-line)
+      (evil-define-key 'normal org-mode-map (kbd "zj") 'org-forward-heading-same-level)
+      (evil-define-key 'normal org-mode-map (kbd "zk") 'org-forward-heading-same-level)
+      (evil-define-key '(normal visual) org-mode-map (kbd "}") 'evil-forward-paragraph)
+      (evil-define-key '(normal visual) org-mode-map (kbd "{") 'evil-backward-paragraph))
+    )
 #+end_src
 ** Make more appealing
 #+begin_src elisp
@@ -1322,118 +1312,73 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
 #+begin_src elisp
 (setq org-todo-keywords
       '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-	(sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
-
+  (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
+;; #+TODO: TODO IN-PROGRESS WAITING | DONE CANCELLED
 #+end_src
 
-** Configure custom agenda views
-#+begin_src elisp
-(setq org-agenda-custom-commands
-      '(("d" "Dashboard"
-	 ((agenda "" ((org-deadline-warning-days 7)))
-	  (todo "NEXT"
-		((org-agenda-overriding-header "Next Tasks")))
-	  (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
-
-	("n" "Next Tasks"
-	 ((todo "NEXT"
-		((org-agenda-overriding-header "Next Tasks")))))
-
-	("W" "Work Tasks" tags-todo "+work-email")
-
-	;; Low-effort next actions
-	("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
-	 ((org-agenda-overriding-header "Low Effort Tasks")
-	  (org-agenda-max-todos 20)
-	  (org-agenda-files org-agenda-files)))
-
-	("w" "Workflow Status"
-	 ((todo "WAIT"
-		((org-agenda-overriding-header "Waiting on External")
-		 (org-agenda-files org-agenda-files)))
-	  (todo "REVIEW"
-		((org-agenda-overriding-header "In Review")
-		 (org-agenda-files org-agenda-files)))
-	  (todo "PLAN"
-		((org-agenda-overriding-header "In Planning")
-		 (org-agenda-todo-list-sublevels nil)
-		 (org-agenda-files org-agenda-files)))
-	  (todo "BACKLOG"
-		((org-agenda-overriding-header "Project Backlog")
-		 (org-agenda-todo-list-sublevels nil)
-		 (org-agenda-files org-agenda-files)))
-	  (todo "READY"
-		((org-agenda-overriding-header "Ready for Work")
-		 (org-agenda-files org-agenda-files)))
-	  (todo "ACTIVE"
-		((org-agenda-overriding-header "Active Projects")
-		 (org-agenda-files org-agenda-files)))
-	  (todo "COMPLETED"
-		((org-agenda-overriding-header "Completed Projects")
-		 (org-agenda-files org-agenda-files)))
-	  (todo "CANC"
-		((org-agenda-overriding-header "Cancelled Projects")
-		 (org-agenda-files org-agenda-files)))))))
-#+end_src
 ** Set of commonly known tags
 #+begin_src elisp
 (setq org-tag-alist
       '((:startgroup)
-					; Put mutually exclusive tags here
-	(:endgroup)
-	("@errand" . ?E)
-	("@home" . ?H)
-	("@work" . ?W)
-	("agenda" . ?a)
-	("planning" . ?p)
-	("publish" . ?P)
-	("batch" . ?b)
-	("note" . ?n)
-	("idea" . ?i)
-	("thinking" . ?t)
-	("recurring" . ?r)))
+          ; Put mutually exclusive tags here
+  (:endgroup)
+  ("@errand" . ?E)
+  ("@home" . ?H)
+  ("@work" . ?W)
+  ("agenda" . ?a)
+  ("planning" . ?p)
+  ("publish" . ?P)
+  ("batch" . ?b)
+  ("note" . ?n)
+  ("idea" . ?i)
+  ("thinking" . ?t)
+  ("recurring" . ?r)))
 #+end_src
 
 ** Refiling
 #+begin_src elisp
 (setq org-refile-targets
-      '(("Archive.org" :maxlevel . 1)
-	("Tasks.org" :maxlevel . 1)))
+      '(("~/notes/refile.org" :maxlevel . 1)
+	;; (nil :maxlevel . 1)
+	))
+
+  ;; (setq org-refile-targets '((org-agenda-files :maxlevel . 1)))
 
 ;; Save Org buffers after refiling!
 (advice-add 'org-refile :after 'org-save-all-org-buffers)
+;; C-c M-r wrong number of arguments?
 #+end_src
 
 ** Capture templates
 #+begin_src elisp
-
+;; (setq org-default-notes-file "~/notes/inbox.org")
 (setq org-capture-templates
       `(("t" "Tasks / Projects")
-	("tt" "Task" entry (file+olp "~/notes/Tasks.org" "Inbox")
+  ("tt" "Task" entry (file+olp "~/notes/Tasks.org" "Inbox")
          "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
-	("ts" "Clocked Entry Subtask" entry (clock)
-	 "* TODO %?\n %U\n %a\n %i" :empty-lines 1)
+  ("ts" "Clocked Entry Subtask" entry (clock)
+   "* TODO %?\n %U\n %a\n %i" :empty-lines 1)
 
-	("j" "Journal Entries")
-	("jj" "Journal" entry
+  ("j" "Journal Entries")
+  ("jj" "Journal" entry
          (file+olp+datetree "~/notes/Journal.org")
          "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
          ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
          :clock-in :clock-resume
          :empty-lines 1)
-	("jm" "Meeting" entry
+  ("jm" "Meeting" entry
          (file+olp+datetree "~/notes/Journal.org")
          "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
          :clock-in :clock-resume
          :empty-lines 1)
 
-	("w" "Workflows")
-	("we" "Checking Email" entry (file+olp+datetree "~/notes/Journal.org")
+  ("w" "Workflows")
+  ("we" "Checking Email" entry (file+olp+datetree "~/notes/Journal.org")
          "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
 
-	("m" "Metrics Capture")
-	("mw" "Weight" table-line (file+headline "~/notes/Metrics.org" "Weight")
-	 "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
+  ("m" "Metrics Capture")
+  ("mw" "Weight" table-line (file+headline "~/notes/Metrics.org" "Weight")
+   "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
 
 #+end_src
 
@@ -1512,6 +1457,13 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
   (add-to-list 'org-structure-template-alist '("lua" . "src lua"))
   (add-to-list 'org-structure-template-alist '("conf" . "src conf"))
   (add-to-list 'org-structure-template-alist '("js" . "src js")))
+
+;; The following prevents <> from auto-pairing when electric-pair-mode is on.
+;; Otherwise, org-tempo is broken when you try to <s TAB...
+(add-hook 'org-mode-hook (lambda ()
+         (setq-local electric-pair-inhibit-predicate
+               `(lambda (c)
+            (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
 #+end_src
 
 
@@ -1521,14 +1473,63 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
 ;; (setq org-agenda-files "~/notes/agenda.org")
 ;; (setq org-agenda-files (list org-directory))
 ;; (setq org-log-done 'note)
-(setq org-support-shift-select t) 	;; always?
+(setq org-support-shift-select t)   ;; always?
 ;; https://github.com/legalnonsense/elgantt
 
 (setq org-agenda-files
       '("~/notes/Tasks.org"
-	"~/notes/Habits.org"))
+  "~/notes/Habits.org"))
 #+end_src
 
+*** Configure custom agenda views
+#+begin_src elisp
+(setq org-agenda-custom-commands
+      '(("d" "Dashboard"
+   ((agenda "" ((org-deadline-warning-days 7)))
+    (todo "NEXT"
+    ((org-agenda-overriding-header "Next Tasks")))
+    (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
+
+  ("n" "Next Tasks"
+   ((todo "NEXT"
+    ((org-agenda-overriding-header "Next Tasks")))))
+
+  ("W" "Work Tasks" tags-todo "+work-email")
+
+  ;; Low-effort next actions
+  ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
+   ((org-agenda-overriding-header "Low Effort Tasks")
+    (org-agenda-max-todos 20)
+    (org-agenda-files org-agenda-files)))
+
+  ("w" "Workflow Status"
+   ((todo "WAIT"
+    ((org-agenda-overriding-header "Waiting on External")
+     (org-agenda-files org-agenda-files)))
+    (todo "REVIEW"
+    ((org-agenda-overriding-header "In Review")
+     (org-agenda-files org-agenda-files)))
+    (todo "PLAN"
+    ((org-agenda-overriding-header "In Planning")
+     (org-agenda-todo-list-sublevels nil)
+     (org-agenda-files org-agenda-files)))
+    (todo "BACKLOG"
+    ((org-agenda-overriding-header "Project Backlog")
+     (org-agenda-todo-list-sublevels nil)
+     (org-agenda-files org-agenda-files)))
+    (todo "READY"
+    ((org-agenda-overriding-header "Ready for Work")
+     (org-agenda-files org-agenda-files)))
+    (todo "ACTIVE"
+    ((org-agenda-overriding-header "Active Projects")
+     (org-agenda-files org-agenda-files)))
+    (todo "COMPLETED"
+    ((org-agenda-overriding-header "Completed Projects")
+     (org-agenda-files org-agenda-files)))
+    (todo "CANC"
+    ((org-agenda-overriding-header "Cancelled Projects")
+     (org-agenda-files org-agenda-files)))))))
+#+end_src
 ** ORG BABEL
 #+begin_src elisp
 (setq org-confirm-babel-evaluate nil)
@@ -1612,9 +1613,9 @@ https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892
 ;; Automatically tangle our dotfiles when we save them
 (defun efs/org-babel-tangle-config ()
   (when (or
-	 (string-prefix-p (expand-file-name "~/dotfiles/") (buffer-file-name))
-	 ;; (string-equal (concat user-emacs-directory "config.org") (buffer-file-name)))
-	 (string-equal (expand-file-name "~/.config/emacs/config.org") (buffer-file-name)))
+   (string-prefix-p (expand-file-name "~/dotfiles/") (buffer-file-name))
+   ;; (string-equal (concat user-emacs-directory "config.org") (buffer-file-name)))
+   (string-equal (expand-file-name "~/.config/emacs/config.org") (buffer-file-name)))
 
     ;; Dynamic scoping to the rescue
     (let ((org-confirm-babel-evaluate nil))
@@ -1626,7 +1627,7 @@ https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892
 
 ** IMAGES
 #+begin_src elisp
-(setq org-image-actual-width '(1200))	;; so i can use :width attribute
+(setq org-image-actual-width '(1200))  ;; so i can use :width attribute
 (setq org-startup-with-inline-images t) ;; would be nice if automatically open if over line like neovim/snacks
 ;; (setq org-latex-pdf-process '("tectonic %f")) ;; https://www.reddit.com/r/emacs/comments/jf9hzm/use_tectonic_in_latex_and_orgmode/
 ;;https://github.com/tectonic-typesetting/tectonic/discussions/928
@@ -1668,6 +1669,42 @@ org-cheatsheet, org-reveal.js? mindmaps?
   :hook (org-mode . org-modern-mode))
 #+end_src
 
+** Settings
+#+begin_src elisp
+(setq org-edit-src-content-indentation 0) ;; Set src block automatic indent to 0 instead of 2.
+
+(setq org-imenu-depth 3)
+;; Setting RETURN key in org-mode to follow links
+(setq org-return-follows-link  t)
+
+#+end_src
+
+** org-noter
+https://github.com/novoid/Memacs
+https://github.com/novoid/extract_pdf_annotations_to_orgmode
+#+begin_src elisp
+(use-package org-noter
+  :custom
+  ;; org-noter-highlight-selected-text to t
+  (org-noter-always-create-frame nil)
+  :bind (:map pdf-view-mode-map
+        ("C-c n" . #'org-noter))
+  ;; :load-path "~/notes/pdfs/"
+  ;; :ensure t
+  ;;   :bind (:map evil-normal-state-map
+  ;;  ("i" . #'org-noter-insert-note) ;; also works for org buffer
+  ;; )
+  ;; :config
+  )
+(with-eval-after-load 'org-noter
+  (define-key org-noter-doc-mode-map (kbd "i")   'org-noter-insert-precise-note)
+  (define-key org-noter-doc-mode-map (kbd "C-i") 'org-noter-insert-note)
+  (define-key org-noter-doc-mode-map (kbd "I")   'org-noter-insert-precise-note-toggle-no-questions)
+  (define-key org-noter-doc-mode-map (kbd "M-i") 'org-noter-insert-note-toggle-no-questions))
+#+end_src
+
+
+
 * PDFs
 [[https://github.com/vedang/pdf-tools][pdf-tools]] is a replacement of DocView for viewing PDF files inside Emacs.  It uses the =poppler= library, which also means that 'pdf-tools' can by used to modify PDFs.  I use to disable 'display-line-numbers-mode' in 'pdf-view-mode' because line numbers crash it.
 
@@ -1695,19 +1732,19 @@ invert colors?
   (general-define-key :states 'normal :keymaps 'pdf-view-mode-map
                       ;; "j" 'pdf-view-next-page
                       ;; "k" 'pdf-view-previous-page
-		      "C-j" 'pdf-view-shrink
-		      "C-k" 'pdf-view-enlarge
+          "C-j" 'pdf-view-shrink
+          "C-k" 'pdf-view-enlarge
 
 
-		      "&" '(lambda()(interactive)
-			     (start-process
-			      "open-in-sioyek" nil
-			      "ghostty" "-e" "sioyek"
-			      (format "+%d" (line-number-at-pos))
-			      (shell-quote-argument buffer-file-name))
-			     ) :wk "Open in sioyek"
+          "&" '(lambda()(interactive)
+           (start-process
+            "open-in-sioyek" nil
+            "ghostty" "-e" "sioyek"
+            (format "+%d" (line-number-at-pos))
+            (shell-quote-argument buffer-file-name))
+           ) :wk "Open in sioyek"
 
-		      )
+          )
   ;; :hook  (pdf-view-mode-hook . (lambda()
   ;;  (display-line-numbers-mode -1)
   ;;  (blink-cursor-mode -1)
@@ -1719,11 +1756,11 @@ invert colors?
 (add-hook 'pdf-view-mode-hook #'(lambda () (interactive) (display-line-numbers-mode -1)
                                   (blink-cursor-mode -1)
                                   (doom-modeline-mode -1) ; revert when exiting?
-					; (define-key evil-normal-state-local-map (kbd "C-j")#'pdf-view-shrink)
-				  ;; (define-key evil-normal-state-map (kbd "C-j")#'pdf-view-shrink)
-				  ;; (define-key evil-normal-state-map (kbd "C-k")#'pdf-view-enlarge)
-				  )
-	  )
+          ; (define-key evil-normal-state-local-map (kbd "C-j")#'pdf-view-shrink)
+          ;; (define-key evil-normal-state-map (kbd "C-j")#'pdf-view-shrink)
+          ;; (define-key evil-normal-state-map (kbd "C-k")#'pdf-view-enlarge)
+          )
+    )
 (add-hook 'pdf-view-mode-hook 'auto-revert-mode)
 
 ;; difference above and below hook?
@@ -1731,30 +1768,6 @@ invert colors?
 ;; (eval-after-load 'pdf-view '(add-hook 'pdf-view-mode-hook (lambda()define-key pdf-view-mode-map (kbd "C-k")#'pdf-view-enlarge)))
 ;; (with-eval-after-load 'pdf-view (evil-define-key 'normal pdf-view-mode-map (kbd "C-j")#'pdf-view-shrink))
 ;; (with-eval-after-load 'pdf-view (evil-define-key 'normal pdf-view-mode-map (kbd "C-k")#'pdf-view-enlarge))
-#+end_src
-
-** org-noter
-https://github.com/novoid/Memacs
-https://github.com/novoid/extract_pdf_annotations_to_orgmode
-#+begin_src elisp
-(use-package org-noter
-  :custom
-  ;; org-noter-highlight-selected-text to t
-  (org-noter-always-create-frame nil)
-  :bind (:map pdf-view-mode-map
-	      ("C-c n" . #'org-noter))
-  ;; :load-path "~/notes/pdfs/"
-  ;; :ensure t
-  ;;   :bind (:map evil-normal-state-map
-  ;;  ("i" . #'org-noter-insert-note) ;; also works for org buffer
-  ;; )
-  ;; :config
-  )
-(with-eval-after-load 'org-noter
-  (define-key org-noter-doc-mode-map (kbd "i")   'org-noter-insert-precise-note)
-  (define-key org-noter-doc-mode-map (kbd "C-i") 'org-noter-insert-note)
-  (define-key org-noter-doc-mode-map (kbd "I")   'org-noter-insert-precise-note-toggle-no-questions)
-  (define-key org-noter-doc-mode-map (kbd "M-i") 'org-noter-insert-note-toggle-no-questions))
 #+end_src
 
 * PERSPECTIVE
@@ -1853,7 +1866,17 @@ Vterm is a terminal emulator within Emacs.  The 'shell-file-name' setting sets t
 (use-package vterm
   :config
   (setq shell-file-name "/bin/sh"
-	vterm-max-scrollback 5000))
+  vterm-max-scrollback 5000)
+
+(general-define-key
+ :states 'normal
+ "SPC RET" (lambda ()
+             (interactive)
+             (split-window-right)
+             (other-window 1)
+             (vterm)))
+  
+  )
 #+end_src
 
 #+begin_src elisp
@@ -1917,18 +1940,18 @@ how to copy or put everything in the popup in a buffer?
   :diminish
   :config
   (setq which-key-side-window-location 'top
-	which-key-sort-order #'which-key-key-order-alpha
-	which-key-allow-imprecise-window-fit nil
-	which-key-sort-uppercase-first nil
-	which-key-add-column-padding 1
-	which-key-max-display-columns nil
-	which-key-min-display-lines 6
-	which-key-side-window-slot -10
-	which-key-side-window-max-height 0.33
-	which-key-idle-delay 0.8
-	which-key-max-description-length 25
-	which-key-allow-imprecise-window-fit nil
-	which-key-separator " → " )
+  which-key-sort-order #'which-key-key-order-alpha
+  which-key-allow-imprecise-window-fit nil
+  which-key-sort-uppercase-first nil
+  which-key-add-column-padding 1
+  which-key-max-display-columns nil
+  which-key-min-display-lines 6
+  which-key-side-window-slot -10
+  which-key-side-window-max-height 0.33
+  which-key-idle-delay 0.8
+  which-key-max-description-length 25
+  which-key-allow-imprecise-window-fit nil
+  which-key-separator " → " )
   (which-key-mode)
     )
 ;; height? how to align?
@@ -2092,6 +2115,9 @@ ogni-ora attiva type-break (timer_start in vim)
   (global-set-key (kbd "<Launch8> M") 'counsel-rhythmbox-playpause-current-song)
   ;; (global-set-key (kbd "<Launch8> h") 'counsel-command-history)
   ;; (global-set-key (kbd "<Launch8> h") 'counsel-minibuffer-history)
+  (global-set-key (kbd "<Launch8> d") 'consult-flymake) ; consult???
+  (global-set-key (kbd "<Launch8> l") 'counsel-locate)
+
 )
 #+end_src
 
@@ -2103,7 +2129,7 @@ ogni-ora attiva type-break (timer_start in vim)
 (recentf-mode t)
 
 ;; 50 files ought to be enough.
-(setq recentf-max-saved-items 50)
+(setq recentf-max-saved-items 200)
 #+end_src
 
 * Universal argument
@@ -2188,6 +2214,7 @@ screenshots? https://github.com/tecosaur/screenshot
 #+end_src
 
 * QUIZ
+key-quiz-use-mode
 #+begin_src elisp
 (use-package key-quiz :commands key-quiz)
 #+end_src
@@ -2235,52 +2262,52 @@ integrate w/ emms?
   ("C-c r" . eradio-toggle)
   :config
   (setq eradio-channels '(
-			  ("7soul - soma fm" . "https://somafm.com/7soul.pls")
-			  ("beatblender - soma fm" . "https://somafm.com/beatblender.pls")
-			  ("bootliquor - soma fm" . "https://somafm.com/bootliquor.pls")
-			  ("bossa - soma fm" . "https://somafm.com/bossa.pls")
-			  ("brfm - soma fm" . "https://somafm.com/brfm.pls")
-			  ("chillits - soma fm" . "https://somafm.com/chillits.pls")
-			  ("cliqhop - soma fm" . "https://somafm.com/cliqhop.pls")
-			  ("covers - soma fm" . "https://somafm.com/covers.pls")
-			  ("darkzone - soma fm" . "https://somafm.com/darkzone.pls")
-			  ("deepspaceone - soma fm" . "https://somafm.com/deepspaceone.pls")
-			  ("defcon - soma fm" . "https://somafm.com/defcon.pls")
-			  ("digitalis - soma fm" . "https://somafm.com/digitalis.pls")
-			  ("doomed - soma fm" . "https://somafm.com/doomed.pls")
-			  ("dronezone - soma fm" . "https://somafm.com/dronezone.pls")
-			  ("dubstep - soma fm" . "https://somafm.com/dubstep.pls")
-			  ("fluid - soma fm" . "https://somafm.com/fluid.pls")
-			  ("folkfwd - soma fm" . "https://somafm.com/folkfwd.pls")
-			  ("groovesalad - soma fm" . "https://somafm.com/groovesalad.pls")
-			  ("gsclassic - soma fm" . "https://somafm.com/gsclassic.pls")
-			  ("illstreet - soma fm" . "https://somafm.com/illstreet.pls")
-			  ("indiepop - soma fm" . "https://somafm.com/indiepop.pls")
-			  ("insound - soma fm" . "https://somafm.com/insound.pls")
-			  ("live - soma fm" . "https://somafm.com/live.pls")
-			  ("lush - soma fm" . "https://somafm.com/lush.pls")
-			  ("metal - soma fm" . "https://somafm.com/metal.pls")
-			  ("missioncontrol - soma fm" . "https://somafm.com/missioncontrol.pls")
-			  ("n5md - soma fm" . "https://somafm.com/n5md.pls")
-			  ("poptron - soma fm" . "https://somafm.com/poptron.pls")
-			  ("reggae - soma fm" . "https://somafm.com/reggae.pls")
-			  ("scanner - soma fm" . "https://somafm.com/scanner.pls")
-			  ("secretagent - soma fm" . "https://somafm.com/secretagent.pls")
-			  ("seventies - soma fm" . "https://somafm.com/seventies.pls")
-			  ("sf1033 - soma fm" . "https://somafm.com/sf1033.pls")
-			  ("sfinsf - soma fm" . "https://somafm.com/sfinsf.pls")
-			  ("sonicuniverse - soma fm" . "https://somafm.com/sonicuniverse.pls")
-			  ("spacestation - soma fm" . "https://somafm.com/spacestation.pls")
-			  ("specials - soma fm" . "https://somafm.com/specials.pls")
-			  ("suburbsofgoa - soma fm" . "https://somafm.com/suburbsofgoa.pls")
-			  ("synphaera - soma fm" . "https://somafm.com/synphaera.pls")
-			  ("thetrip - soma fm" . "https://somafm.com/thetrip.pls")
-			  ("thistle - soma fm" . "https://somafm.com/thistle.pls")
-			  ("tikitime - soma fm" . "https://somafm.com/tikitime.pls")
-			  ("u80s - soma fm" . "https://somafm.com/u80s.pls")
-			  ("vaporwaves - soma fm" . "https://somafm.com/vaporwaves.pls")
+        ("7soul - soma fm" . "https://somafm.com/7soul.pls")
+        ("beatblender - soma fm" . "https://somafm.com/beatblender.pls")
+        ("bootliquor - soma fm" . "https://somafm.com/bootliquor.pls")
+        ("bossa - soma fm" . "https://somafm.com/bossa.pls")
+        ("brfm - soma fm" . "https://somafm.com/brfm.pls")
+        ("chillits - soma fm" . "https://somafm.com/chillits.pls")
+        ("cliqhop - soma fm" . "https://somafm.com/cliqhop.pls")
+        ("covers - soma fm" . "https://somafm.com/covers.pls")
+        ("darkzone - soma fm" . "https://somafm.com/darkzone.pls")
+        ("deepspaceone - soma fm" . "https://somafm.com/deepspaceone.pls")
+        ("defcon - soma fm" . "https://somafm.com/defcon.pls")
+        ("digitalis - soma fm" . "https://somafm.com/digitalis.pls")
+        ("doomed - soma fm" . "https://somafm.com/doomed.pls")
+        ("dronezone - soma fm" . "https://somafm.com/dronezone.pls")
+        ("dubstep - soma fm" . "https://somafm.com/dubstep.pls")
+        ("fluid - soma fm" . "https://somafm.com/fluid.pls")
+        ("folkfwd - soma fm" . "https://somafm.com/folkfwd.pls")
+        ("groovesalad - soma fm" . "https://somafm.com/groovesalad.pls")
+        ("gsclassic - soma fm" . "https://somafm.com/gsclassic.pls")
+        ("illstreet - soma fm" . "https://somafm.com/illstreet.pls")
+        ("indiepop - soma fm" . "https://somafm.com/indiepop.pls")
+        ("insound - soma fm" . "https://somafm.com/insound.pls")
+        ("live - soma fm" . "https://somafm.com/live.pls")
+        ("lush - soma fm" . "https://somafm.com/lush.pls")
+        ("metal - soma fm" . "https://somafm.com/metal.pls")
+        ("missioncontrol - soma fm" . "https://somafm.com/missioncontrol.pls")
+        ("n5md - soma fm" . "https://somafm.com/n5md.pls")
+        ("poptron - soma fm" . "https://somafm.com/poptron.pls")
+        ("reggae - soma fm" . "https://somafm.com/reggae.pls")
+        ("scanner - soma fm" . "https://somafm.com/scanner.pls")
+        ("secretagent - soma fm" . "https://somafm.com/secretagent.pls")
+        ("seventies - soma fm" . "https://somafm.com/seventies.pls")
+        ("sf1033 - soma fm" . "https://somafm.com/sf1033.pls")
+        ("sfinsf - soma fm" . "https://somafm.com/sfinsf.pls")
+        ("sonicuniverse - soma fm" . "https://somafm.com/sonicuniverse.pls")
+        ("spacestation - soma fm" . "https://somafm.com/spacestation.pls")
+        ("specials - soma fm" . "https://somafm.com/specials.pls")
+        ("suburbsofgoa - soma fm" . "https://somafm.com/suburbsofgoa.pls")
+        ("synphaera - soma fm" . "https://somafm.com/synphaera.pls")
+        ("thetrip - soma fm" . "https://somafm.com/thetrip.pls")
+        ("thistle - soma fm" . "https://somafm.com/thistle.pls")
+        ("tikitime - soma fm" . "https://somafm.com/tikitime.pls")
+        ("u80s - soma fm" . "https://somafm.com/u80s.pls")
+        ("vaporwaves - soma fm" . "https://somafm.com/vaporwaves.pls")
 
-			  )))
+        )))
 ;; ("cyberia - lainon"  . "https://lainon.life/radio/cyberia.ogg.m3u") ;; cyberpunk-esque electronica
 ;; ("cafe - lainon"     . "https://lainon.life/radio/cafe.ogg.m3u")))  ;; boring ambient, but with lain
 #+end_src
@@ -2311,6 +2338,7 @@ is this like gitsigns.nvim?
 #+end_src
 
 * docker
+https://github.com/abrochard/kubel
 #+begin_src elisp
 (use-package docker
   :ensure t
@@ -2322,16 +2350,17 @@ is this like gitsigns.nvim?
 use general leader keymaps
 ** LLM
 *** GPTEL
+https://github.com/karthink/gptel/issues/165
 #+begin_src elisp
 (use-package gptel ;; :bind ("C-c RET" . 'gptel)
   :bind (
-	 ;; C-c and f15 two different prefixes 😁
-	 ;; ("C-c A" . 'gptel)
-	 ("C-c s" . 'gptel-send)
-	 :map gptel-mode-map
-	 ("<return>" . 'gptel-send)
-	 ("C-g" . 'gptel-abort)
-	 )
+   ;; C-c and f15 two different prefixes 😁
+   ;; ("C-c A" . 'gptel)
+   ("C-c s" . 'gptel-send)
+   :map gptel-mode-map
+   ("<return>" . 'gptel-send)
+   ("C-g" . 'gptel-abort)
+   )
 
   ;; :bind (:map gptel-mode-map
   ;;        ("C-c t" . gptel-insert-template)
@@ -2384,17 +2413,17 @@ use general leader keymaps
 #+begin_src elisp
 ;; :config
 ;; Quick template application
-					; (defun gptel-insert-template (template-key)
-					;   (interactive (list (completing-read "Template: " (mapcar #'car gptel-prompt-templates))))
-					;   (let ((template (cdr (assoc template-key gptel-prompt-templates))))
-					;     (when template
-					;       (let ((text (if (region-active-p)
-					;                       (buffer-substring-no-properties (region-beginning) (region-end))
-					;                     ""))
-					;             (language (when (string= template-key "translate")
-					;                         (read-string "Target language: "))))
-					;         (gptel (replace-regexp-in-string "{{text}}" text
-					;                  (replace-regexp-in-string "{{language}}" (or language "") template)))))))
+          ; (defun gptel-insert-template (template-key)
+          ;   (interactive (list (completing-read "Template: " (mapcar #'car gptel-prompt-templates))))
+          ;   (let ((template (cdr (assoc template-key gptel-prompt-templates))))
+          ;     (when template
+          ;       (let ((text (if (region-active-p)
+          ;                       (buffer-substring-no-properties (region-beginning) (region-end))
+          ;                     ""))
+          ;             (language (when (string= template-key "translate")
+          ;                         (read-string "Target language: "))))
+          ;         (gptel (replace-regexp-in-string "{{text}}" text
+          ;                  (replace-regexp-in-string "{{language}}" (or language "") template)))))))
 
 ;; Auto-save conversations
 ;; 1 file=1 session?
@@ -2410,6 +2439,52 @@ use general leader keymaps
 )
 #+end_src
 
+**** Functions
+#+begin_src elisp
+;; how to rewrite in place?
+(defun gptel-pinyin-to-chinese ()
+  (interactive)
+  (message "Convert pinyin to Chinese...")
+  (gptel-request
+      (format "把下面拼音转换成中文， 只输出内容， 不要解释：\n %s"
+              (if (region-active-p)
+                  (buffer-substring-no-properties (mark) (point))
+                (substring-no-properties (buffer-string)))
+              :system "你是一个语言学家， 精通英文和汉语")))
+
+(defun gptel-vim2elisp ()
+  (interactive)
+  (message "Converting Vimscript to Elisp...")
+  (gptel-request
+      (format "Convert the following vimscript to elisp, without explanations: \n %s"
+              (if (region-active-p)
+                  (buffer-substring-no-properties (mark) (point))
+                (substring-no-properties (buffer-string)))
+              :system "You are an expert user of both Emacs and Vim (not Neovim)")
+:in-place t :stream t
+    ))
+#+end_src
+**** Quick
+#+begin_src elisp
+;; (use-package posframe :ensure (:host github :repo "tumashu/posframe"))
+(use-package gptel-quick
+:ensure (:host github :repo "karthink/gptel-quick")
+:bind (("C-c q"  . gptel-quick)
+))
+
+(defun gptel-quick-translate ()
+    "Check the region or thing at point with an LLM.
+
+QUERY-TEXT is the text being explained.  COUNT is the approximate
+word count of the response."
+    (interactive)
+    (let ((gptel-quick-system-message
+           (lambda (count)
+             (format "Translate to english. No explanations" count))))
+      (call-interactively #'gptel-quick)))
+
+(define-key global-map (kbd "C-c t") 'gptel-quick-translate)
+#+end_src
 ** MCP
 https://github.com/lizqwerscott/gptel-mcp.el
 #+begin_src elisp :tangle no
@@ -2430,13 +2505,13 @@ https://github.com/lizqwerscott/gptel-mcp.el
   :config (require 'mcp-hub)
   :hook (after-init . mcp-hub-start-all-server))
 #+end_src
-* eof
+* EOF
 
 #+begin_src elisp
 ;; (use-package vi-tilde-fringe-mode)
 #+end_src
 
-* LSP
+* [#A] LSP
 #+begin_src elisp
 (defun efs/lsp-mode-setup ()
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
@@ -2567,7 +2642,7 @@ https://github.com/ecraven/ivy-pass
    ;; ("<XF86AudioNext>" . emms-next)
    ;; ("<XF86AudioPlay>" . emms-pause)
    ("C-c m" . emms)
-   ;;   ("s-m" . emms)			 same binding as WM/hyprland?
+   ;;   ("s-m" . emms)       same binding as WM/hyprland?
 
 
    )
@@ -2627,3 +2702,4 @@ Use only the gpg-encrypted version of the file.
 ;; benchmark
 ;; profiler-{start,stop}
 #+end_src
+
