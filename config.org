@@ -67,7 +67,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
   - [[#settings][Settings]]
   - [[#org-noter][org-noter]]
 - [[#pdfs][PDFs]]
-- [[#perspective][PERSPECTIVE]]
 - [[#rainbow-delimiters][RAINBOW DELIMITERS]]
 - [[#rainbow-mode][RAINBOW MODE]]
 - [[#subword-mode][SUBWORD MODE]]
@@ -389,12 +388,12 @@ Bookmarks like in mini.files?
   :after dired
   :config
   (setq dired-open-extensions '(
-        ;; ("gif" . "sxiv")
-        ;;                                 ("jpg" . "sxiv")
-        ;;                                 ("png" . "sxiv")
-                                ("mkv" . "mpv")
-                                ("mp4" . "mpv"))))
-;; ("pdf" . "sioyek"))))
+          ;; ("gif" . "sxiv")
+          ;; ("jpg" . "sxiv")
+          ;; ("png" . "sxiv")
+             ("mkv" . "mpv")
+             ("mp4" . "mpv"))))
+          ;; ("pdf" . "sioyek"))))
 
 (use-package dired
   :after evil-collection
@@ -1726,34 +1725,6 @@ invert colors?
 ;; (with-eval-after-load 'pdf-view (evil-define-key 'normal pdf-view-mode-map (kbd "C-k")#'pdf-view-enlarge))
 #+end_src
 
-* PERSPECTIVE
-[[https://github.com/nex3/perspective-el][Perspective]] provides multiple named workspaces (or "perspectives") in Emacs, similar to multiple desktops in window managers.  Each perspective has its own buffer list and its own window layout, along with some other isolated niceties, like the [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Xref.html][xref]] ring.
-
-#+begin_src elisp :tangle no
-(use-package perspective
-  :custom
-  ;; NOTE! I have also set 'SCP =' to open the perspective menu.
-  ;; I'm only setting the additional binding because setting it
-  ;; helps suppress an annoying warning message.
-  (persp-mode-prefix-key (kbd "C-c M-p"))
-  :init
-  (persp-mode)
-  :config
-  ;; Sets a file to write to when we save states
-  (setq persp-state-default-file "~/.config/emacs/sessions"))
-
-;; This will group buffers by persp-name in ibuffer.
-(add-hook 'ibuffer-hook
-          (lambda ()
-            (persp-ibuffer-set-filter-groups)
-            (unless (eq ibuffer-sorting-mode 'alphabetic)
-              (ibuffer-do-sort-by-alphabetic))))
-
-;; Automatically save perspective states to file when Emacs exits.
-(add-hook 'kill-emacs-hook #'persp-state-save)
-
-#+end_src
-
 * RAINBOW DELIMITERS
 Adding rainbow coloring to parentheses.
 
@@ -2508,33 +2479,6 @@ Wait a few months
   (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner"))
   (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer")))
   )
-;; Goto start of next function
-(define-key evil-normal-state-map
-            (kbd "]f")
-            (lambda ()
-              (interactive)
-              (evil-textobj-tree-sitter-goto-textobj "function.outer")))
-
-;; Goto start of previous function
-(define-key evil-normal-state-map
-            (kbd "[f")
-            (lambda ()
-              (interactive)
-              (evil-textobj-tree-sitter-goto-textobj "function.outer" t)))
-
-;; Goto end of next function
-(define-key evil-normal-state-map
-            (kbd "]F")
-            (lambda ()
-              (interactive)
-              (evil-textobj-tree-sitter-goto-textobj "function.outer" nil t)))
-
-;; Goto end of previous function
-(define-key evil-normal-state-map
-            (kbd "[F")
-            (lambda ()
-              (interactive)
-              (evil-textobj-tree-sitter-goto-textobj "function.outer" t t)))
 #+end_src
 
 ,#+begin_src elisp
@@ -2573,8 +2517,6 @@ https://www.youtube.com/watch?v=W-bRZlseNm0
   (setq yas-snippet-dirs '("~/.config/emacs/snippets"))
   (yas-global-mode 1))
 #+end_src
-
-
 
 * Password management
 
@@ -2659,8 +2601,6 @@ Use only the gpg-encrypted version of the file.
 ;; benchmark
 ;; profiler-{start,stop}
 #+end_src
-
-
 
 * info
 #+begin_src elisp
