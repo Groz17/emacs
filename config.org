@@ -67,6 +67,7 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
   - [[#settings][Settings]]
   - [[#org-noter][org-noter]]
 - [[#pdfs][PDFs]]
+- [[#epubs][EPUBs]]
 - [[#rainbow-delimiters][RAINBOW DELIMITERS]]
 - [[#rainbow-mode][RAINBOW MODE]]
 - [[#subword-mode][SUBWORD MODE]]
@@ -81,7 +82,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [[#which-key][WHICH-KEY]]
 - [[#command-log][COMMAND-LOG]]
 - [[#kanata-sheganigans][KANATA SHEGANIGANS]]
-- [[#full-screen][FULL SCREEN]]
 - [[#noice][NOICE]]
 - [[#artist-mode][ARTIST MODE]]
 - [[#helpful][HELPFUL]]
@@ -113,10 +113,11 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [[#snippets][Snippets]]
 - [[#password-management][Password management]]
 - [[#music][Music]]
+- [[#alda][Alda]]
 - [[#authinfo][Authinfo]]
 - [[#stt][STT]]
 - [[#keybindings][Keybindings]]
-- [[#info-1][info]]
+- [[#info-1][Info]]
 
 * TODO TASK LIST
 ** Vim feature parity [1/6] [16%]
@@ -330,8 +331,8 @@ By default, Emacs creates automatic backups of files in their original directori
   ("C-j" . company-select-next-or-abort)
   ("C-k" . company-select-previous-or-abort)
   ("C-l" . company-complete-selection))
-  (:map lsp-mode-map
-        ("<tab>" . company-indent-or-complete-common))
+  ;; (:map lsp-mode-map
+  ;;       ("<tab>" . company-indent-or-complete-common))
 
 
   ;; (define-key company-search-map (kbd "C-t") 'company-search-toggle-filtering)
@@ -935,7 +936,7 @@ Defining the various fonts that Emacs will use.
     "a c" '(gptel-add :wk "gptel add context")
     "a r" '(gptel-rewrite :wk "gptel rewrite")
     )
-
+)
  #+end_src
 
 * GIT
@@ -1524,6 +1525,16 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
 
 #+end_src
 https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892d569f19fd66a/contrib/lisp/ob-php.el
+*** html
+#+begin_src elisp
+(use-package ob-html
+  :ensure (:host github :repo "misohena/ob-html")
+:config
+(with-eval-after-load "org"
+  (require 'ob-html)
+  (org-babel-html-enable-open-src-block-result-temporary)) ;;Enable C-c C-o on html code block
+)
+#+end_src
 *** Neovim
 #+begin_src elisp
 (defun org-babel-execute:vimrc (body params)
@@ -1725,6 +1736,12 @@ invert colors?
 ;; (with-eval-after-load 'pdf-view (evil-define-key 'normal pdf-view-mode-map (kbd "C-k")#'pdf-view-enlarge))
 #+end_src
 
+* EPUBs
+#+begin_src elisp
+ (use-package nov
+    :mode ("\\.epub\\'" . nov-mode)
+    :custom (nov-text-width 75))
+#+end_src
 * RAINBOW DELIMITERS
 Adding rainbow coloring to parentheses.
 
@@ -1943,10 +1960,6 @@ keycast
 ;;(define-key key-translation-map (kbd "<Launch7>") (kbd "C-h"))
 ;;(keymap-global-set "<Launch5>" ctl-x-map)
 #+end_src
-
-* FULL SCREEN
-# (setq ns-use-native-fullscreen :true)
-# (add-to-list 'default-frame-alist '(fullscreen . fullscreen))
 
 * NOICE :vim:
 toggle full screen binding?
@@ -2602,7 +2615,7 @@ Use only the gpg-encrypted version of the file.
 ;; profiler-{start,stop}
 #+end_src
 
-* info
+* Info
 #+begin_src elisp
 (use-package info-variable-pitch
   :ensure (:host github :repo "kisaragi-hiu/info-variable-pitch")
