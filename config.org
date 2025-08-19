@@ -545,7 +545,11 @@ https://github.com/remyhonig/elfeed-org
   evil-want-C-i-jump t
   evil-lookup-func (lambda () (man (thing-at-point 'word))))
   :config
-  (evil-mode 1))
+  (evil-mode 1)
+  (evil-set-leader '(normal visual) (kbd "SPC"))
+  (evil-set-leader '(normal visual) "\\" t)
+  ;; (evil-define-key 'normal 'global (kbd "<leader>...") '...)
+  )
 
 (use-package evil-collection
   :after evil
@@ -1897,7 +1901,7 @@ The first line below designates the directory where will place all of our custom
 ;; (add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
 
 ;; (use-package ef-themes :ensure t :config(ef-themes-select 'ef-cyprus))
-(use-package ef-themes :ensure t :config(ef-themes-select 'ef-dark))
+(use-package ef-themes :ensure t :config(ef-themes-select 'ef-summer ;; ef-dark))
 #+end_src
 
 * TLDR
