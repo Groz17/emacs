@@ -54,6 +54,8 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
   - [[#capture-templates][Capture templates]]
   - [[#habit-tracking][Habit tracking]]
   - [[#enabling-table-of-contents][Enabling Table of Contents]]
+  - [[#yank][Yank]]
+  - [[#org-ref][Org-ref]]
   - [[#diminish-org-indent-mode][Diminish Org Indent Mode]]
   - [[#org-level-headers][Org Level Headers]]
   - [[#source-code-block-tag-expansion][Source Code Block Tag Expansion]]
@@ -104,7 +106,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [[#docker][docker]]
 - [[#ai][AI]]
   - [[#llm][LLM]]
-  - [[#mcp][MCP]]
 - [[#eof][EOF]]
 - [[#lsp][LSP]]
 - [[#tree-sitter][Tree-sitter]]
@@ -113,11 +114,14 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [[#snippets][Snippets]]
 - [[#password-management][Password management]]
 - [[#music][Music]]
-- [[#alda][Alda]]
 - [[#authinfo][Authinfo]]
 - [[#stt][STT]]
 - [[#keybindings][Keybindings]]
 - [[#info-1][Info]]
+- [[#translation][Translation]]
+- [[#pages][Pages]]
+- [[#symex][symex]]
+- [[#prism][Prism]]
 
 * TODO TASK LIST
 ** Vim feature parity [1/6] [16%]
@@ -128,6 +132,7 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [X] C-j indents, C-m doesn't
 
 ** Emacs [6/62] [9%]
+- [ ] https://github.com/MArpogaus/auto-tab-groups
 - [ ] emacs keybindings in /? (searching)
 - [ ] git@github.com:ag91/moldable-emacs.git"))
 - [ ] https://github.com/tarsius/keychain-environment/blob/main/keychain-environment.el#L27-L48
@@ -170,15 +175,12 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] use i to go to emacs mode from normal mode? like tridactyl
 - [ ] use o to go to one shot emacs mode from normal mode? like C-o in vim
 - [ ] M-spc and C-M-spc as set mark kinda like universal-argument?
-- [ ] 'EtiamNullam/deferred-clipboard.nvim',
+- [ ] 'EtiamNullam/deferred-clipboard.nvim', (x-select-enable-clipboard-manager)
 - [ ] surround doesn't work well
 - [ ] use localleader in normal mode for emacs keybindings? like localleder vi for identify matrix in emacs calc
 - [ ] use C-o in emacs mode to one shot insert mode?
 - [ ] using vimscript for scripting/mapping? like %s? create transpiler
-- [ ] generate commented section for each orgmode header?
-- [ ] focus on the minibuffer keybinding? ctrlx-o works, also ctrlw-{h,j,k,l}
 - [ ] make insert mode be like emacs mode? get rid of insert mode
-- [X] unimpaired co? so u can use z and / "modifiers"
 - [ ] readline in shell
 - [ ] whatsapp
 - [ ] indent/dedent in insert/emacs mode?
@@ -187,7 +189,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] vim insert mode equivalents in emacs?
 - [ ] colorscheme change night/day?
 - [ ] fixa eol behaviour?
-- [ ] emacs terminal yank clipboard
 - [ ] emacs terminal fn keys
 - [ ] org mode headers colored like chakras
 ** Emacs/vim interaction (Evil Mode)
@@ -233,6 +234,7 @@ The following settings are simple modes that are enabled (or disabled) so that E
 (menu-bar-mode -1)           ;; Disable the menu bar
 (scroll-bar-mode -1)         ;; Disable the scroll bar
 (tool-bar-mode -1)           ;; Disable the tool bar
+;; (setq select-enable-clipboard nil)
 (setq xterm-extra-capabilities '(getSelection setSelection))
 
 ;; (global-set-key [(control h)]  'delete-backward-char)
@@ -244,6 +246,7 @@ The following settings are simple modes that are enabled (or disabled) so that E
 (setq isearch-wrap-pause 'no-ding)
 
 (setq disabled-command-function nil)
+(setopt tab-bar-new-tab-choice "*scratch*")
 
 ;; (setq desktop-dirname (concat user-emacs-directory "sessions")
 
@@ -254,6 +257,8 @@ The following settings are simple modes that are enabled (or disabled) so that E
 (setq which-key-idle-delay 0.1)
 (setq confirm-kill-emacs nil)
 (setq-default indicate-empty-lines t)  ; i also don't want to Go beyond last line
+
+(setq mu4e-view-use-gnus t) 
 
 ;; display current and total matches
 ;; (use-package anzu
@@ -463,7 +468,7 @@ https://github.com/remyhonig/elfeed-org
   :config
   (setq elfeed-search-feed-face ":foreground #ffffff :weight bold"
         elfeed-feeds (quote
-                      (("https://www.reddit.com/r/linux.rss" reddit linux)
+                      (("https://www.reddit.com/r/linux.rss?sort=new" reddit linux)
                        ("https://www.reddit.com/r/commandline.rss" reddit commandline)
                        ("https://www.reddit.com/r/distrotube.rss" reddit distrotube)
                        ("https://www.reddit.com/r/emacs.rss" reddit emacs)
@@ -483,7 +488,7 @@ https://github.com/remyhonig/elfeed-org
                        ("https://distrowatch.com/news/dwd.xml" distrowatch linux))))
   (with-eval-after-load 'evil-collection
     (evil-collection-define-key 'normal 'elfeed-search-mode-map
-      "l" 'elfeed-search-show-entry)))
+      "l" 'elfeed-search-show-entry)))	; also remain in elfeed window?
 
 
 (use-package elfeed-goodies
@@ -672,13 +677,14 @@ https://github.com/remyhonig/elfeed-org
 ;; (require 'evil-org-agenda)
 ;; (evil-org-agenda-set-keys)
 ;; )
-
-
 ;; Using RETURN to follow links in Org/Evil
 ;; Unmap keys in 'evil-maps if not done, (setq org-return-follows-link t) will not work
 (with-eval-after-load 'evil-maps
           ; (evil-define-key* 'normal help-mode-map (kbd "C-o") 'evil-jump-backward)
           ; (evil-define-key* 'normal Info-mode-map (kbd "C-o") 'evil-jump-backward)
+
+  (evil-define-key 'normal help-mode-map
+    (kbd "C-o") 'evil-jump-backward)
 
 
   ;; would nice that it resptected v:count like 2gO to show only 2nd level header?
@@ -838,7 +844,12 @@ Defining the various fonts that Emacs will use.
     "w" '(toggle-truncate-lines :wk "Toggle truncated lines")
     "e" '(visible-mode :wk "Toggle conceal")
     ;;"SPC" '(whitespace-mode :wk "Toggle whitespace-mode"))
-    "l" '(whitespace-mode :wk "Toggle whitespace-mode"))
+    "l" '(whitespace-mode :wk "Toggle whitespace-mode")
+    "z" '(visual-fill-column-mode :wk "Zen mode")
+    "p" '(page-break-lines-mode :wk "Pages")
+    "d" '(prism-mode :wk "Color By Depth")
+    "b" '((lambda()(interactive)(invert-face 'default)) :wk "Toggle background color"))
+
 
   ;; set up 'SPC' as the global leader key
   (general-create-definer gz/leader-keys
@@ -1197,6 +1208,7 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
 #+end_src
 
 * ORG MODE
+- [ ] https://github.com/alphapapa/org-web-tools
 #+begin_src elisp
   ;; :pin org/gnu?
   (use-package org
@@ -1356,7 +1368,27 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
   :hook (org-mode . toc-org-enable))
 #+end_src
 
-
+** Yank
+#+begin_src elisp
+(use-package org-rich-yank
+  :ensure t
+  :demand t
+  :bind (:map org-mode-map
+              ("C-M-y" . org-rich-yank))
+  :config
+(defun my-org-rich-yank-format-paste (language contents link)
+  "Based on `org-rich-yank--format-paste-default'."
+  (format "#+BEGIN_SRC %s\n%s\n#+END_SRC\n#+comment: %s"
+          language
+          (org-rich-yank--trim-nl contents)
+          link))
+(customize-set-variable 'org-rich-yank-format-paste #'my-org-rich-yank-format-paste)
+  )
+#+end_src
+** Org-ref
+#+begin_src elisp
+(use-package org-ref)
+#+end_src
 ** Diminish Org Indent Mode
 Removes "Ind" from showing in the modeline.
 
@@ -1649,6 +1681,7 @@ org-cheatsheet, org-reveal.js? mindmaps?
 ** org-noter
 https://github.com/novoid/Memacs
 https://github.com/novoid/extract_pdf_annotations_to_orgmode
+https://github.com/fuxialexander/org-pdftools
 #+begin_src elisp
 (use-package org-noter
   :custom
@@ -1671,6 +1704,9 @@ https://github.com/novoid/extract_pdf_annotations_to_orgmode
 #+end_src
 
 
+#+begin_src elisp
+(use-package shrface)
+#+end_src
 
 * PDFs
 [[https://github.com/vedang/pdf-tools][pdf-tools]] is a replacement of DocView for viewing PDF files inside Emacs.  It uses the =poppler= library, which also means that 'pdf-tools' can by used to modify PDFs.  I use to disable 'display-line-numbers-mode' in 'pdf-view-mode' because line numbers crash it.
@@ -1679,6 +1715,7 @@ fit page to window size?
 invert colors?
 #+begin_src elisp
 (use-package pdf-tools
+    :ensure (:repo "aikrahguzar/pdf-tools" :host github :branch "upstream-pdf-roll")
   :defer t
   :commands (pdf-loader-install)
   :mode "\\.pdf\\'"
@@ -1819,9 +1856,10 @@ Vterm is a terminal emulator within Emacs.  The 'shell-file-name' setting sets t
              (interactive)
              (split-window-right)
              (other-window 1)
-             (vterm)))
+             (vterm)
+	     ;; (vterm-other-window)
   
-  )
+  )))
 #+end_src
 
 #+begin_src elisp
@@ -2045,7 +2083,7 @@ ogni-ora attiva type-break (timer_start in vim)
 #+begin_src elisp
 (with-eval-after-load 'evil-maps
   (global-set-key (kbd "<Launch8> m") #'man)
-  (define-key  evil-normal-state-map (kbd "<Launch8> /") 'swiper)
+  (global-set-key  (kbd "<Launch8> /") 'swiper)
   ;; zen/zoom?
   (global-set-key (kbd "<Launch8> r") 'counsel-recentf)
   (global-set-key (kbd "<Launch8> c") 'counsel-load-theme) ; make this refresh theme?
@@ -2053,8 +2091,8 @@ ogni-ora attiva type-break (timer_start in vim)
   ;; library and packages difference?
   (global-set-key (kbd "<Launch8> p") 'counsel-find-library)
   (global-set-key (kbd "<Launch8> h") 'counsel-faces)
-  (global-set-key (kbd "<Launch8> m") 'counsel-rhythmbox)
-  (global-set-key (kbd "<Launch8> M") 'counsel-rhythmbox-playpause-current-song)
+  ;; (global-set-key (kbd "<Launch8> m") 'counsel-rhythmbox)
+  ;; (global-set-key (kbd "<Launch8> M") 'counsel-rhythmbox-playpause-current-song)
   ;; (global-set-key (kbd "<Launch8> h") 'counsel-command-history)
   ;; (global-set-key (kbd "<Launch8> h") 'counsel-minibuffer-history)
   (global-set-key (kbd "<Launch8> d") 'consult-flymake) ; consult???
@@ -2427,26 +2465,6 @@ word count of the response."
 
 (define-key global-map (kbd "C-c t") 'gptel-quick-translate)
 #+end_src
-** MCP
-https://github.com/lizqwerscott/gptel-mcp.el
-#+begin_src elisp :tangle no
-(use-package mcp
-  :ensure t
-  :after gptel
-  :custom (mcp-hub-servers
-           `(("filesystem" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-filesystem" "/home/lizqwer/MyProject/")))
-             ("fetch" . (:command "uvx" :args ("mcp-server-fetch")))
-             ("qdrant" . (:url "http://localhost:8000/sse"))
-             ("graphlit" . (
-                            :command "npx"
-                            :args ("-y" "graphlit-mcp-server")
-                            :env (
-                                  :GRAPHLIT_ORGANIZATION_ID "your-organization-id"
-                                  :GRAPHLIT_ENVIRONMENT_ID "your-environment-id"
-                                  :GRAPHLIT_JWT_SECRET "your-jwt-secret")))))
-  :config (require 'mcp-hub)
-  :hook (after-init . mcp-hub-start-all-server))
-#+end_src
 * EOF
 
 #+begin_src elisp
@@ -2536,7 +2554,6 @@ https://www.youtube.com/watch?v=W-bRZlseNm0
 
 https://github.com/ecraven/ivy-pass
 
-
 * Music
 #+begin_src elisp
 ;; Emacs Multimedia System
@@ -2590,7 +2607,6 @@ Use only the gpg-encrypted version of the file.
 (setq auth-sources '("~/.authinfo.gpg"))
 #+end_src
 
-
 * STT
 #+begin_src elisp
 (use-package whisper
@@ -2621,4 +2637,32 @@ Use only the gpg-encrypted version of the file.
 (use-package info-variable-pitch
   :ensure (:host github :repo "kisaragi-hiu/info-variable-pitch")
   :hook (Info-mode . info-variable-pitch-mode))
+#+end_src
+
+* Translation
+#+begin_src elisp
+(use-package immersive-translate
+  :ensure t
+  :custom (immersive-translate-backend 'trans)
+  (immersive-translate-trans-target-language "hi")
+)
+#+end_src
+
+* Pages
+#+begin_src elisp
+(use-package page-break-lines)
+#+end_src
+
+* symex
+#+begin_src elisp
+(use-package symex
+  :config
+  (symex-initialize)
+  (global-set-key (kbd "C-c ;") 'symex-mode-interface))  ; or whatever keybinding you like
+#+end_src
+
+* Prism
+#+begin_src elisp
+(use-package prism
+  :ensure (:host github :repo "alphapapa/prism.el"))
 #+end_src
