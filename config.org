@@ -1,7 +1,6 @@
 #+TITLE: Groz's GNU Emacs Config
 #+AUTHOR: Groz
 #+DESCRIPTION: Groz's personal Emacs config
-#+STARTUP: folded
 #+STARTUP: overview
 #+OPTIONS: toc:2
 #+property: header-args :tangle ~/.config/emacs/init.el
