@@ -84,7 +84,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [[#command-log][COMMAND-LOG]]
 - [[#kanata-sheganigans][KANATA SHEGANIGANS]]
 - [[#noice][NOICE]]
-- [[#artist-mode][ARTIST MODE]]
 - [[#helpful][HELPFUL]]
 - [[#hydra][HYDRA]]
 - [[#typing-break][TYPING BREAK]]
@@ -105,6 +104,7 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [[#docker][docker]]
 - [[#ai][AI]]
   - [[#llm][LLM]]
+  - [[#mcp][MCP]]
 - [[#eof][EOF]]
 - [[#lsp][LSP]]
 - [[#tree-sitter][Tree-sitter]]
@@ -132,6 +132,7 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 
 ** Emacs [6/62] [9%]
 - [ ] https://github.com/MArpogaus/auto-tab-groups
+- [ ] emacs terminal show title
 - [ ] emacs keybindings in /? (searching)
 - [ ] git@github.com:ag91/moldable-emacs.git"))
 - [ ] https://github.com/tarsius/keychain-environment/blob/main/keychain-environment.el#L27-L48
@@ -529,6 +530,7 @@ https://github.com/remyhonig/elfeed-org
    :init
    (setq evil-want-integration t ;; This is optional since it's already set to t by default.
         evil-want-keybinding nil
+	evil-want-minibuffer nil
   ;; this way i can learn emacs
   ;; still want a way/keybinding to use one-shot insert mode keybinding tho (C-z)?
         evil-disable-insert-state-bindings t ;; also wanna disable command-state-bindings?
@@ -541,13 +543,18 @@ https://github.com/remyhonig/elfeed-org
         ;;evil-want-C-w-delete t
 
   ;;DISAMBIGUATE TAB and C-i
-  evil-want-C-i-jump t
+  evil-want-C-i-jump nil
   evil-lookup-func (lambda () (man (thing-at-point 'word))))
+
   :config
-  (evil-mode 1)
   (evil-set-leader '(normal visual) (kbd "SPC"))
   (evil-set-leader '(normal visual) "\\" t)
+  (evil-mode 1)
   ;; (evil-define-key 'normal 'global (kbd "<leader>...") '...)
+
+;; https://stackoverflow.com/questions/46513910/emacs-evil-mode-binding-mouse-event
+(define-key evil-motion-state-map [down-mouse-1] nil) ; for artist-mode
+
   )
 
 (use-package evil-collection
@@ -920,7 +927,7 @@ Defining the various fonts that Emacs will use.
     "e E" '((lambda () (interactive) (dired "~/.config/emacs/")) :wk "user-emacs-directory in dired")
     "e e" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "emacs ")
     "e k" '((lambda () (interactive) (find-file "~/dotfiles/kanata.org")) :wk "kanata")
-    "e v" '((lambda () (interactive) (find-file "~/.config/nvim/lua/config/keymaps.lua")) :wk "Neovim keymaps.lua")
+    "e v" '((lambda () (interactive) (find-file "~/.config/nvim/config.org")) :wk "Neovim config")
     "e V" '((lambda () (interactive) (dired "~/.config/nvim/")) :wk "user-neovim-directory in dired")
     "e i" '((lambda () (interactive) (find-file "~/dotfiles/inputrc.org")) :wk "inputrc")
     "e f" '((lambda () (interactive) (find-file "~/dotfiles/fzf.org")) :wk "fzf")
@@ -1379,14 +1386,13 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
   :bind (:map org-mode-map
               ("C-M-y" . org-rich-yank))
   :config
-(defun my-org-rich-yank-format-paste (language contents link)
-  "Based on `org-rich-yank--format-paste-default'."
-  (format "#+BEGIN_SRC %s\n%s\n#+END_SRC\n#+comment: %s"
-          language
-          (org-rich-yank--trim-nl contents)
-          link))
-(customize-set-variable 'org-rich-yank-format-paste #'my-org-rich-yank-format-paste)
-  )
+  (defun my-org-rich-yank-format-paste (language contents link)
+    "Based on `org-rich-yank--format-paste-default'."
+    (format "#+BEGIN_SRC %s\n%s\n#+END_SRC\n#+comment: %s"
+            language
+            (org-rich-yank--trim-nl contents)
+            link))
+  (customize-set-variable 'org-rich-yank-format-paste #'my-org-rich-yank-format-paste))
 #+end_src
 ** Org-ref
 #+begin_src elisp
@@ -1617,7 +1623,9 @@ https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892
   (when (or
    (string-prefix-p (expand-file-name "~/dotfiles/") (buffer-file-name))
    ;; (string-equal (concat user-emacs-directory "config.org") (buffer-file-name)))
-   (string-equal (expand-file-name "~/.config/emacs/config.org") (buffer-file-name)))
+   (string-equal (expand-file-name "~/.config/emacs/config.org") (buffer-file-name))
+   (string-equal (expand-file-name "~/.config/nvim/config.org") (buffer-file-name))
+)
 
     ;; Dynamic scoping to the rescue
     (let ((org-confirm-babel-evaluate nil))
@@ -1900,7 +1908,7 @@ The first line below designates the directory where will place all of our custom
 ;; (add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
 
 ;; (use-package ef-themes :ensure t :config(ef-themes-select 'ef-cyprus))
-(use-package ef-themes :ensure t :config(ef-themes-select 'ef-summer ;; ef-dark))
+(use-package ef-themes :ensure t :config(ef-themes-select 'ef-summer)) ;; ef-dark))
 #+end_src
 
 * TLDR
@@ -2027,15 +2035,8 @@ toggle full screen binding?
   (ivy-posframe-mode 1))
 #+end_src
 
-* ARTIST MODE
-#+begin_src elisp
-;; https://stackoverflow.com/questions/46513910/emacs-evil-mode-binding-mouse-event
-(with-eval-after-load 'evil-maps (define-key evil-motion-state-map [down-mouse-1] nil))
-#+end_src
-
 * HELPFUL
 #+begin_src elisp
-
 (use-package helpful
   :commands (helpful-callable helpful-variable helpful-command helpful-key)
   :custom
@@ -2468,6 +2469,7 @@ word count of the response."
 
 (define-key global-map (kbd "C-c t") 'gptel-quick-translate)
 #+end_src
+** MCP
 * EOF
 
 #+begin_src elisp
@@ -2659,9 +2661,10 @@ Use only the gpg-encrypted version of the file.
 * symex
 #+begin_src elisp
 (use-package symex
+ :after evil
   :config
   (symex-initialize)
-  (global-set-key (kbd "C-c ;") 'symex-mode-interface))  ; or whatever keybinding you like
+  (evil-define-key 'normal 'global (kbd "<leader>;") 'symex-mode-interface))
 #+end_src
 
 * Prism
