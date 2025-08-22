@@ -227,6 +227,7 @@ The following settings are simple modes that are enabled (or disabled) so that E
 (electric-indent-mode -1)    ;; Turn off the weird indenting that Emacs does by default.
 (electric-pair-mode 1)       ;; Turns on automatic parens pairing
 (global-auto-revert-mode t)  ;; Automatically show changes if the file has changed
+(setq global-auto-revert-non-file-buffers t)  ;; Automatically show changes if the file has changed in dired
 (column-number-mode)
 ;; t and 1 difference here?
 (global-display-line-numbers-mode 1) ;; Display line numbers
@@ -239,10 +240,21 @@ The following settings are simple modes that are enabled (or disabled) so that E
 ;; (setq select-enable-clipboard nil)
 (setq xterm-extra-capabilities '(getSelection setSelection))
 
+(setq use-dialog-box nil)
+
 ;; (global-set-key [(control h)]  'delete-backward-char)
 ;; (keyboard-translate ?\C-h ?\s-m-h)
 (setq show-trailing-whitespace t)
 ;; (setq initial-scratch-message "")
+
+(setq history-length 25)
+(savehist-mode 1)
+(save-place-mode 1)
+(repeat-mode 1)
+
+; Move customization variables to a separate file and load it
+(setq custom-file (locate-user-emacs-file "custom-vars.el"))
+(load custom-file 'noerror 'nomessage)
 
 (setq use-short-answers t)
 (setq isearch-wrap-pause 'no-ding)
