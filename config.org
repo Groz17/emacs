@@ -888,7 +888,7 @@ Defining the various fonts that Emacs will use.
   (gz/leader-keys
 
     ;;"=" '(perspective-map :wk "Perspective") ;; Lists all the perspective keybindings
-    "u" '(universal-argument :wk "Universal argument")
+    "u" '(universal-argument :wk "Universal argument") ; doesn't work for (C-u){2,}
 
 ;;"RET"
     ;;'((lambda ()
@@ -1090,7 +1090,7 @@ also check out helm/etc... keybindings
   :bind
   ;; ivy-resume resumes the last Ivy-based completion.
   (
-   ("C-c C-r" . ivy-resume)
+   ; ("C-c C-r" . ivy-resume) (check out embark/helm mappings for this...)
    ;; ("C-x B" . ivy-switch-buffer-other-window)
    :map ivy-minibuffer-map
    ;; ("TAB" . ivy-alt-done)
@@ -1246,27 +1246,27 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
 * ORG MODE
 - [ ] https://github.com/alphapapa/org-web-tools
 #+begin_src elisp
-  ;; :pin org/gnu?
-  (use-package org
-    :ensure nil
-    :bind (("C-c c" . counsel-org-capture)
-     ("C-c l" . org-store-link)
-     ("C-c a" . org-agenda)
+;; :pin org/gnu?
+(use-package org
+  :ensure nil
+  :bind (("C-c c" . counsel-org-capture)
+   ("C-c l" . org-store-link)
+   ("C-c a" . org-agenda)
 
-     ;;   "m i" '(org-toggle-item :wk "Org toggle item")
-     ;;   "m T" '(org-todo-list :wk "Org todo list")
-     ;;   "m d t" '(org-time-stamp :wk "Org time stamp")
-     )
-    :config ;; (message "test lazy loading")
+   ;;   "m i" '(org-toggle-item :wk "Org toggle item")
+   ;;   "m T" '(org-todo-list :wk "Org todo list")
+   ;;   "m d t" '(org-time-stamp :wk "Org time stamp")
+   )
+  :config ;; (message "test lazy loading")
 
-    (with-eval-after-load 'evil
-      (evil-define-key 'normal org-mode-map (kbd "gj") 'evil-next-visual-line)
-      (evil-define-key 'normal org-mode-map (kbd "gk") 'evil-previous-visual-line)
-      (evil-define-key 'normal org-mode-map (kbd "zj") 'org-forward-heading-same-level)
-      (evil-define-key 'normal org-mode-map (kbd "zk") 'org-forward-heading-same-level)
-      (evil-define-key '(normal visual) org-mode-map (kbd "}") 'evil-forward-paragraph)
-      (evil-define-key '(normal visual) org-mode-map (kbd "{") 'evil-backward-paragraph))
-    )
+  (with-eval-after-load 'evil
+    (evil-define-key 'normal org-mode-map (kbd "gj") 'evil-next-visual-line)
+    (evil-define-key 'normal org-mode-map (kbd "gk") 'evil-previous-visual-line)
+    (evil-define-key 'normal org-mode-map (kbd "zj") 'org-forward-heading-same-level)
+    (evil-define-key 'normal org-mode-map (kbd "zk") 'org-forward-heading-same-level)
+    (evil-define-key '(normal visual) org-mode-map (kbd "}") 'evil-forward-paragraph)
+    (evil-define-key '(normal visual) org-mode-map (kbd "{") 'evil-backward-paragraph))
+  )
 #+end_src
 ** Make more appealing
 #+begin_src elisp
@@ -2133,8 +2133,6 @@ ogni-ora attiva type-break (timer_start in vim)
 
 ** [[https://www.masteringemacs.org/article/find-files-faster-recent-files-package][RECENT FILES]]
 #+begin_src elisp
-(require 'recentf)
-
 ;; enable recent files mode.
 (recentf-mode t)
 
