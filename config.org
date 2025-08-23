@@ -777,7 +777,6 @@ https://github.com/remyhonig/elfeed-org
   ;;(evil-normal-state)(setq unread-comand-events (listify-key-sequence (kbd "C-w")))))
 
   ;; so i can use C-h as backspace and C-h as help
-  ;; (global-set-key (kbd "<Launch7>")#'help-command)
   ;; <help> translation?
   (define-key global-map (kbd "<f18>") #'help-command)
   ;; also want this in ivy/command... basially everywhere (use remap?)
@@ -2056,12 +2055,6 @@ keycast
   (add-to-list 'org-src-lang-modes '("kbd" . kanata-kbd)))
 ;; would be cool (add-to-list 'org-babel-load-languages '(kanata . t))
 
-;; TODO: these don't work in terminal?
-;;(define-key key-translation-map (kbd "<f13>") (kdb "C-h"))
-;;(global-set-key  (kbd "<f13>") 'help-command)
-;;(general-define-key  :keymaps 'override "<f13>" 'help-command)
-;;(keyboard-translate ?\C-h ?\s-m-h)
-;; (define-key key-translation-map (kbd "<Launch5>") (kdb "C-h"))
 ;; now get rid of c-x and c-c in normal mode?
 ;; (define-key key-translation-map (kbd "<Launch6>") (kbd "C-x"))
 ;; (define-key key-translation-map (kbd "<clt-x>") (kbd "C-x"))
@@ -2077,7 +2070,7 @@ keycast
 ;; (define-key key-translation-map (kbd "<Launch5>") (kbd "M-0")) ;; basically u can use 0 for v:count now
 
 ;; delta side by side?
-(define-key key-translation-map (kbd "<Launch5>") vc-prefix-map)
+;; (define-key key-translation-map (kbd "<Launch5>") vc-prefix-map)
 
 
 ;; TODO: hide translated from...
