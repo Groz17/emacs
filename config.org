@@ -327,10 +327,12 @@ The following settings are simple modes that are enabled (or disabled) so that E
 (setq user-full-name "")
 (setq user-mail-address "")
 #+end_src
+
 * MULTILINGUAL EDITING
 #+begin_src elisp
 (setq default-input-method "devanagari-itrans")
 #+end_src
+
 * ALL THE ICONS
 This is an icon set that can be used with dashboard, dired, ibuffer and other Emacs programs.
 
@@ -868,6 +870,7 @@ Defining the various fonts that Emacs will use.
   :config
   (general-evil-setup)
 #+end_src
+
 ** Toggle
 #+begin_src elisp
 
@@ -891,6 +894,7 @@ Defining the various fonts that Emacs will use.
   "d" '(prism-mode :wk "Color By Depth")
   "b" '((lambda()(interactive)(invert-face 'default)) :wk "Toggle background color"))
 #+end_src
+
 ** Picker
   is there a similar plugin for emacs?
   maybe use translation
@@ -922,6 +926,7 @@ Defining the various fonts that Emacs will use.
   "l" 'counsel-locate
 )
 #+end_src
+
 ** <Leader>
 #+begin_src elisp
 
@@ -1336,6 +1341,7 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
     (evil-define-key '(normal visual) org-mode-map (kbd "{") 'evil-backward-paragraph))
   )
 #+end_src
+
 ** Make more appealing
 #+begin_src elisp
 ;; https://github.com/A7R7/org-popup-posframe
@@ -1488,10 +1494,12 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
             link))
   (customize-set-variable 'org-rich-yank-format-paste #'my-org-rich-yank-format-paste))
 #+end_src
+
 ** Org-ref
 #+begin_src elisp
 (use-package org-ref)
 #+end_src
+
 ** Diminish Org Indent Mode
 Removes "Ind" from showing in the modeline.
 
@@ -1622,6 +1630,7 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
     ((org-agenda-overriding-header "Cancelled Projects")
      (org-agenda-files org-agenda-files)))))))
 #+end_src
+
 ** ORG BABEL
 #+begin_src elisp
 (setq org-confirm-babel-evaluate nil)
@@ -1660,6 +1669,7 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
   (push '("conf-unix" . conf-unix) org-src-lang-modes))
 
 #+end_src
+
 https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892d569f19fd66a/contrib/lisp/ob-php.el
 *** html
 #+begin_src elisp
@@ -1671,6 +1681,7 @@ https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892
   (org-babel-html-enable-open-src-block-result-temporary)) ;;Enable C-c C-o on html code block
 )
 #+end_src
+
 *** Neovim
 #+begin_src elisp
 (defun org-babel-execute:vimrc (body params)
@@ -1760,6 +1771,7 @@ usa with yt-dlp
 (use-package mpv :defer t
   :ensure t)
 #+end_src
+
 ** org-autolist
 #+begin_src elisp
 (use-package org-autolist :diminish :hook (org-mode . org-autolist-mode))
@@ -1887,6 +1899,7 @@ invert colors?
     :mode ("\\.epub\\'" . nov-mode)
     :custom (nov-text-width 75))
 #+end_src
+
 * RAINBOW DELIMITERS
 Adding rainbow coloring to parentheses.
 
@@ -2419,11 +2432,13 @@ https://github.com/karthink/gptel/issues/165
   (add-hook 'gptel-post-response-functions 'gptel-end-of-response)
 
 #+end_src
+
 **** Presets
 #+begin_src elisp
 (gptel-make-preset 'explain
   :system "Explain what this code does to a novice programmer.")
 #+end_src
+
 **** Tools
 #+begin_src elisp
 ;;
@@ -2483,6 +2498,7 @@ https://github.com/karthink/gptel/issues/165
 :in-place t :stream t
     ))
 #+end_src
+
 **** Quick
 #+begin_src elisp
 ;; (use-package posframe :ensure (:host github :repo "tumashu/posframe"))
@@ -2504,6 +2520,7 @@ word count of the response."
 
 (define-key global-map (kbd "C-c t") 'gptel-quick-translate)
 #+end_src
+
 ** MCP
 * EOF
 
