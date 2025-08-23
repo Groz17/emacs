@@ -662,14 +662,26 @@ https://github.com/remyhonig/elfeed-org
    (define-key evil-inner-text-objects-map ,key #',inner-name)
    (define-key evil-outer-text-objects-map ,key #',outer-name))))
 
-  (define-and-bind-quoted-text-object "equal" "=" "=" "=")
-  (define-and-bind-quoted-text-object "pipe" "|" "|" "|")
-  (define-and-bind-quoted-text-object "colon" ":" ":" ":")
-  (define-and-bind-quoted-text-object "underscore" "_" "_" "_")
-  (define-and-bind-quoted-text-object "dash" "-" "-" "-")
-  (define-and-bind-quoted-text-object "slash" "/" "/" "/")
-  (define-and-bind-quoted-text-object "asterisk" "*" "*" "*")
+;;  follows keyboard order
+  (define-and-bind-quoted-text-object "bang" "!" "!" "!")
+  (define-and-bind-quoted-text-object "at" "@" "@" "@")
+  (define-and-bind-quoted-text-object "hash" "#" "#" "#")
   (define-and-bind-quoted-text-object "dollar" "$" "\\$" "\\$") ;; sometimes your have to escape the regex
+  (define-and-bind-quoted-text-object "percent" "%" "%" "%")
+  (define-and-bind-quoted-text-object "caret" "^" "\\^" "\\^")
+  (define-and-bind-quoted-text-object "ampersand" "&" "\\&" "\\&")
+  (define-and-bind-quoted-text-object "asterisk" "*" "*" "*")
+  (define-and-bind-quoted-text-object "dash" "-" "-" "-")
+  (define-and-bind-quoted-text-object "underscore" "_" "_" "_")
+  (define-and-bind-quoted-text-object "plus" "+" "+" "+")
+  (define-and-bind-quoted-text-object "equal" "=" "=" "=")
+  (define-and-bind-quoted-text-object "slash" "/" "/" "/")
+  (define-and-bind-quoted-text-object "pipe" "|" "|" "|")
+  (define-and-bind-quoted-text-object "backslash" "\\" "\\\\" "\\\\")
+  (define-and-bind-quoted-text-object "colon" ":" ":" ":")
+  (define-and-bind-quoted-text-object "semicolon" ";" ";" ";")
+  (define-and-bind-quoted-text-object "comma" "," "," ",")
+  (define-and-bind-quoted-text-object "dot" "." "\\." "\\.")
 
 
   )
