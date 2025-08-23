@@ -2368,7 +2368,7 @@ https://github.com/karthink/gptel/issues/165
    ;; ("C-c A" . 'gptel)
    ("C-c s" . 'gptel-send)
    :map gptel-mode-map
-   ("<return>" . 'gptel-send)
+   ("<RET>" . 'gptel-send)
    ("C-g" . 'gptel-abort)
    )
 
