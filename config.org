@@ -34,6 +34,9 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
   - [[#setting-the-font-face][Setting the Font Face]]
   - [[#font-preview][Font preview]]
 - [[#general-keybindings][GENERAL KEYBINDINGS]]
+  - [[#toggle][Toggle]]
+  - [[#picker][Picker]]
+  - [[#leader][<Leader>]]
 - [[#git][GIT]]
   - [[#magit][Magit]]
   - [[#forge][Forge]]
@@ -89,8 +92,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [[#hydra][HYDRA]]
 - [[#typing-break][TYPING BREAK]]
 - [[#lispy][LISPY]]
-- [[#snacksnvim][Snacks.nvim]]
-  - [[#recent-files][RECENT FILES]]
 - [[#universal-argument][Universal argument]]
 - [[#erc][ERC]]
 - [[#vim-parity][VIM PARITY]]
@@ -239,6 +240,13 @@ The following settings are simple modes that are enabled (or disabled) so that E
 (tool-bar-mode -1)           ;; Disable the tool bar
 ;; (setq select-enable-clipboard nil)
 (setq xterm-extra-capabilities '(getSelection setSelection))
+
+;;  [[https://www.masteringemacs.org/article/find-files-faster-recent-files-package][RECENT FILES]]
+;; enable recent files mode.
+(recentf-mode t)
+
+;; 50 files ought to be enough.
+(setq recentf-max-saved-items 200)
 
 (setq use-dialog-box nil)
 
@@ -757,7 +765,7 @@ https://github.com/remyhonig/elfeed-org
   (define-key evil-inner-text-objects-map "q" 'evil-inner-double-quote)
 
   ;; how to Continue being in insert mode if called from insert mode?
-  (global-set-key (kbd "<Launch7>") 'evil-window-map)
+  (global-set-key (kbd "<f16>") 'evil-window-map)
 
   (define-key evil-command-line-map (kbd "C-a") 'move-beginning-of-line)
   (define-key evil-command-line-map (kbd "C-b") 'backward-char)
@@ -771,7 +779,7 @@ https://github.com/remyhonig/elfeed-org
   ;; so i can use C-h as backspace and C-h as help
   ;; (global-set-key (kbd "<Launch7>")#'help-command)
   ;; <help> translation?
-  (define-key global-map (kbd "<Launch9>") #'help-command)
+  (define-key global-map (kbd "<f18>") #'help-command)
   ;; also want this in ivy/command... basially everywhere (use remap?)
 
   ;; (define-key evil-normal-state-map (y c c) lambda() comment-line duplicate-line
@@ -852,128 +860,170 @@ Defining the various fonts that Emacs will use.
   :after evil
   :config
   (general-evil-setup)
+#+end_src
+** Toggle
+#+begin_src elisp
 
-  (general-create-definer gz/unimpaired
-    ;; add insert
-    :states '(normal insert);; visual as well? (operate on regions)
-    :keymaps 'override
-    ;; :prefix "co" ;; set leader
-    ;; what the heck is tools
-    :prefix "<Tools>" ;; set leader
-    )
-  (gz/unimpaired
-    "n" '(display-line-numbers-mode :wk "Toggle line numbers")
-    ;; this isnt wrap though
-    ;;"w" '(visual-line-mode :wk "Toggle truncated lines"))
-    "w" '(toggle-truncate-lines :wk "Toggle truncated lines")
-    "e" '(visible-mode :wk "Toggle conceal")
-    ;;"SPC" '(whitespace-mode :wk "Toggle whitespace-mode"))
-    "l" '(whitespace-mode :wk "Toggle whitespace-mode")
-    "z" '(visual-fill-column-mode :wk "Zen mode")
-    "p" '(page-break-lines-mode :wk "Pages")
-    "d" '(prism-mode :wk "Color By Depth")
-    "b" '((lambda()(interactive)(invert-face 'default)) :wk "Toggle background color"))
+(general-create-definer gz/unimpaired
+  ;; add insert
+  :states '(normal insert);; visual as well? (operate on regions)
+  :keymaps 'override
+  ;; :prefix "co" ;; set leader
+  :prefix "<f13>" ;; set leader
+  )
+(gz/unimpaired
+  "n" '(display-line-numbers-mode :wk "Toggle line numbers")
+  ;; this isnt wrap though
+  ;;"w" '(visual-line-mode :wk "Toggle truncated lines"))
+  "w" '(toggle-truncate-lines :wk "Toggle truncated lines")
+  "e" '(visible-mode :wk "Toggle conceal")
+  ;;"SPC" '(whitespace-mode :wk "Toggle whitespace-mode"))
+  "l" '(whitespace-mode :wk "Toggle whitespace-mode")
+  "z" '(visual-fill-column-mode :wk "Zen mode")
+  "p" '(page-break-lines-mode :wk "Pages")
+  "d" '(prism-mode :wk "Color By Depth")
+  "b" '((lambda()(interactive)(invert-face 'default)) :wk "Toggle background color"))
+#+end_src
+** Picker
+  is there a similar plugin for emacs?
+  maybe use translation
+  maybe use one prefix for snacks and another for one shot commands
+;; use C-c leter for one-shot keybindings (without groups) and leader for groups
+#+begin_src elisp
+
+(general-create-definer gz/picker
+  :states '(normal insert);; visual as well? (operate on regions)
+  :keymaps 'override
+  :prefix "<f17>" ;; set leader
+  )
+
+(gz/picker
+  "m" 'man
+  "/" 'swiper
+  ;; zen/zoom?
+  "r" 'counsel-recentf
+  "c" 'counsel-load-theme ; make this refresh theme?
+  "C" 'counsel-colors-web
+  ;; library and packages difference?
+  "p" 'counsel-find-library
+  "h" 'counsel-faces
+  ;; "m" 'counsel-rhythmbox
+  ;; "M" 'counsel-rhythmbox-playpause-current-song
+  ;; "h" 'counsel-command-history
+  ;; "h" 'counsel-minibuffer-history
+  "d" 'consult-flymake ; consult???
+  "l" 'counsel-locate
+)
+#+end_src
+** <Leader>
+#+begin_src elisp
 
 
-  ;; set up 'SPC' as the global leader key
-  (general-create-definer gz/leader-keys
-    :states '(normal insert visual emacs)
-    :keymaps 'override
-    :prefix "SPC" ;; set leader
-    ;; :global-prefix "M-SPC";; access leader in insert mode
-    :global-prefix "<f19>";; i wanna use m-spc in insert mode... per il momento ignora, magari usa S-spc
-    )
+;; set up 'SPC' as the global leader key
+(general-create-definer gz/leader-keys
+  :states '(normal insert visual emacs)
+  :keymaps 'override
+  :prefix "SPC" ;; set leader
+  ;; :global-prefix "M-SPC";; access leader in insert mode
+  :global-prefix "<f19>";; i wanna use m-spc in insert mode... per il momento ignora, magari usa S-spc
+  )
 
 
-  (gz/leader-keys
+(gz/leader-keys
 
-    ;;"=" '(perspective-map :wk "Perspective") ;; Lists all the perspective keybindings
-    "u" '(universal-argument :wk "Universal argument") ; doesn't work for (C-u){2,}
+  ;;"=" '(perspective-map :wk "Perspective") ;; Lists all the perspective keybindings
+  "u" '(universal-argument :wk "Universal argument") ; doesn't work for (C-u){2,}
 
-;;"RET"
-    ;;'((lambda ()
+  ;;"RET"
+  ;;'((lambda ()
   ;;(vterm)))
 
-    "SPC"
-    '((lambda ()
-  (interactive)
-        (start-process
-         "send-clipboard" nil
-   "hyprctl" "dispatch" "exec" "[float;size 30% 30%] ghostty -e nvim -c \"norm 1 Qd\""))
-      :wk "Send clipboard")
+  "SPC"
+  '((lambda ()
+      (interactive)
+      (start-process
+       "send-clipboard" nil
+       "hyprctl" "dispatch" "exec" "[float;size 30% 30%] ghostty -e nvim -c \"norm 1 Qd\""))
+    :wk "Send clipboard")
 
-    ;; would be cool if worked in visual mode ala narrowing
-    ;; also match modes (if insert stays in insert) in both editors
-    ;; also support current windows/session
-    "&"
-    '((lambda ()
-  (interactive)
-  (if buffer-file-name
-      (if (buffer-modified-p)
-    (message "Buffer modified. Please save before opening in Neovim.")
-              (start-process
-               "open-in-nvim" nil
-               "ghostty" "-e" "nvim"
-               ;; (format "+%d" (line-number-at-pos))
-               (format "-c%d" (line-number-at-pos))
-               (shell-quote-argument buffer-file-name)))
-    (message "Current buffer is not visiting a file.")))
-      :wk "Open in Neovim")
+  ;; would be cool if worked in visual mode ala narrowing
+  ;; also match modes (if insert stays in insert) in both editors
+  ;; also support current windows/session
+  "&"
+  '((lambda ()
+      (interactive)
+      (if buffer-file-name
+	  (if (buffer-modified-p)
+	      (message "Buffer modified. Please save before opening in Neovim.")
+            (start-process
+             "open-in-nvim" nil
+             "ghostty" "-e" "nvim"
+             ;; (format "+%d" (line-number-at-pos))
+             (format "-c%d" (line-number-at-pos))
+             (shell-quote-argument buffer-file-name)))
+	(message "Current buffer is not visiting a file.")))
+    :wk "Open in Neovim")
 
-    ;; doesn't work
-    "E" '(lambda()(interactive)
-           (if buffer-file-name
-               (async-shell-command
-                (format "dbus-launch emacsclient -a '' -c +%d %s"
-                        (line-number-at-pos)
-                        (shell-quote-argument buffer-file-name)))
-             (message "Current buffer is not visiting a file."))) :wk "Open in Emacs GUI"
-    )
+  ;; doesn't work
+  "E" '(lambda()(interactive)
+         (if buffer-file-name
+             (async-shell-command
+              (format "dbus-launch emacsclient -a '' -c +%d %s"
+                      (line-number-at-pos)
+                      (shell-quote-argument buffer-file-name)))
+           (message "Current buffer is not visiting a file."))) :wk "Open in Emacs GUI"
+  )
 
-  ;; how to show the descriptions in c-h l (lossage)?
-  ;; (directory-files "~/dotfiles" t "_[[:alpha:]]\\.org$")
-  (gz/leader-keys
-    ;; use bookmarks?
-    "e" '(:ignore t :wk "Edit")
+;; how to show the descriptions in c-h l (lossage)?
+;; (directory-files "~/dotfiles" t "_[[:alpha:]]\\.org$")
+(gz/leader-keys
+  ;; use bookmarks?
+  "e" '(:ignore t :wk "Edit")
 
-    ;; uppercase: containing directory/global
-    ;; crea unico file e tangle in both vim & emacs?
-    "e E" '((lambda () (interactive) (dired "~/.config/emacs/")) :wk "user-emacs-directory in dired")
-    "e e" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "emacs ")
-    "e k" '((lambda () (interactive) (find-file "~/dotfiles/kanata.org")) :wk "kanata")
-    "e v" '((lambda () (interactive) (find-file "~/.config/nvim/config.org")) :wk "Neovim config")
-    "e V" '((lambda () (interactive) (dired "~/.config/nvim/")) :wk "user-neovim-directory in dired")
-    "e i" '((lambda () (interactive) (find-file "~/dotfiles/inputrc.org")) :wk "inputrc")
-    "e f" '((lambda () (interactive) (find-file "~/dotfiles/fzf.org")) :wk "fzf")
-    "e m" '((lambda () (interactive) (find-file "~/dotfiles/mpv.org")) :wk "Mpv")
-    "e r" '((lambda () (interactive) (find-file "~/dotfiles/reaper.org")) :wk "Reaper")
-    "e h" '((lambda () (interactive) (find-file "~/dotfiles/hypr.org")) :wk "Hypr")
-    "e a" '((lambda () (interactive) (find-file "~/dotfiles/atuin.org")) :wk "Atuin")
-              ; "e H" '((lambda () (interactive) (dired "~/.config/hypr/")) :wk "hypr in dired")
-    "e s" '((lambda () (interactive) (find-file "~/dotfiles/sioyek.org")) :wk "Sioyek")
-    "e w" '((lambda () (interactive) (find-file "~/dotfiles/waybar.org")) :wk "Waybar")
-    "e b" '((lambda () (interactive) (find-file "~/dotfiles/bashrc.org")) :wk "Bashrc")
-    "e t" '((lambda () (interactive) (find-file "~/dotfiles/tridactylrc.org")) :wk "Tridactyl")
+  ;; uppercase: containing directory/global
+  ;; crea unico file e tangle in both vim & emacs?
+  "e E" '((lambda () (interactive) (dired "~/.config/emacs/")) :wk "user-emacs-directory in dired")
+  "e e" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "emacs ")
+  "e k" '((lambda () (interactive) (find-file "~/dotfiles/kanata.org")) :wk "kanata")
+  "e v" '((lambda () (interactive) (find-file "~/.config/nvim/config.org")) :wk "Neovim config")
+  "e V" '((lambda () (interactive) (dired "~/.config/nvim/")) :wk "user-neovim-directory in dired")
+  "e i" '((lambda () (interactive) (find-file "~/dotfiles/inputrc.org")) :wk "inputrc")
+  "e f" '((lambda () (interactive) (find-file "~/dotfiles/fzf.org")) :wk "fzf")
+  "e m" '((lambda () (interactive) (find-file "~/dotfiles/mpv.org")) :wk "Mpv")
+  "e r" '((lambda () (interactive) (find-file "~/dotfiles/reaper.org")) :wk "Reaper")
+  "e h" '((lambda () (interactive) (find-file "~/dotfiles/hypr.org")) :wk "Hypr")
+  "e a" '((lambda () (interactive) (find-file "~/dotfiles/atuin.org")) :wk "Atuin")
+					; "e H" '((lambda () (interactive) (dired "~/.config/hypr/")) :wk "hypr in dired")
+  "e s" '((lambda () (interactive) (find-file "~/dotfiles/sioyek.org")) :wk "Sioyek")
+  "e w" '((lambda () (interactive) (find-file "~/dotfiles/waybar.org")) :wk "Waybar")
+  "e b" '((lambda () (interactive) (find-file "~/dotfiles/bashrc.org")) :wk "Bashrc")
+  "e t" '((lambda () (interactive) (find-file "~/dotfiles/tridactylrc.org")) :wk "Tridactyl")
 
-    ;; u can just use find-file here...
-    "e g" '((lambda () (interactive) (find-file (concat (magit-toplevel) ".gitconfig"))) :wk "Gitconfig")
-    "e G" '((lambda () (interactive) (find-file "~/.gitconfig")) :wk "global Gitconfig")
-    "e n" '((lambda () (interactive) (find-file (concat (magit-toplevel) ".git/info/exclude"))) :wk "Gitignore")
+  ;; u can just use find-file here...
+  "e g" '((lambda () (interactive) (find-file (concat (magit-toplevel) ".gitconfig"))) :wk "Gitconfig")
+  "e G" '((lambda () (interactive) (find-file "~/.gitconfig")) :wk "global Gitconfig")
+  "e n" '((lambda () (interactive) (find-file (concat (magit-toplevel) ".git/info/exclude"))) :wk "Gitignore")
 
-    "e <RET>" '((lambda () (interactive)
-          (find-file "~/dotfiles/_ghostty.org"))
-        :wk "ghostty config"))
+  "e <RET>" '((lambda () (interactive)
+		(find-file "~/dotfiles/_ghostty.org"))
+              :wk "ghostty config"))
 
-  ;; how to put these in use-package?
-  (gz/leader-keys
-    "a" '(:ignore t :wk "AI")
-    "a a" '(gptel :wk "gptel")
-    "a m" '(gptel-menu :wk "gptel menu")
-    "a c" '(gptel-add :wk "gptel add context")
-    "a r" '(gptel-rewrite :wk "gptel rewrite")
-    )
+;; how to put these in use-package?
+(gz/leader-keys
+  "a" '(:ignore t :wk "AI")
+  "a a" '(gptel :wk "gptel")
+  "a m" '(gptel-menu :wk "gptel menu")
+  "a c" '(gptel-add :wk "gptel add context")
+  "a r" '(gptel-rewrite :wk "gptel rewrite")
+  )
+
+(gz/leader-keys
+  "g" '(:ignore t :wk "Git")
+  "g s" '(git-gutter:stage-hunk :wk "Stage hunk")
+  "g u" '(git-gutter:revert-hunk :wk "Unstage hunk ")
+  )
 )
- #+end_src
+#+end_src
 
 * GIT
 ** Magit
@@ -2022,7 +2072,7 @@ keycast
 (define-key key-translation-map (kbd "<f12>") [ctl-x]) ; hide translation in help files? don't really care
 (define-key global-map [ctl-x] ctl-x-map)
 ;; (define-key key-translation-map (kbd "<Launch5>") [snacks])
-(define-key key-translation-map (kbd "<Launch6>") (kbd "C-c"))
+(define-key key-translation-map (kbd "<f15>") (kbd "C-c"))
 ;; (define-key key-translation-map (kbd "<Launch5>") (lambda()(interactive)(universal-argument 0))) ;; doesn't even work
 ;; (define-key key-translation-map (kbd "<Launch5>") (kbd "M-0")) ;; basically u can use 0 for v:count now
 
@@ -2103,41 +2153,6 @@ ogni-ora attiva type-break (timer_start in vim)
 ;;   (general-add-hook '(emacs-lisp-mode-hook lisp-mode-hook) #'lispyville-mode)
 ;;   :config
 ;;   (lispyville-set-key-theme '(operators c-w additional)))
-#+end_src
-
-* Snacks.nvim
-  is there a similar plugin for emacs?
-  maybe use translation
-  maybe use one prefix for snacks and another for one shot commands
-;; use C-c leter for one-shot keybindings (without groups) and leader for groups
-#+begin_src elisp
-(with-eval-after-load 'evil-maps
-  (global-set-key (kbd "<Launch8> m") #'man)
-  (global-set-key  (kbd "<Launch8> /") 'swiper)
-  ;; zen/zoom?
-  (global-set-key (kbd "<Launch8> r") 'counsel-recentf)
-  (global-set-key (kbd "<Launch8> c") 'counsel-load-theme) ; make this refresh theme?
-  (global-set-key (kbd "<Launch8> C") 'counsel-colors-web) ; make this refresh theme?
-  ;; library and packages difference?
-  (global-set-key (kbd "<Launch8> p") 'counsel-find-library)
-  (global-set-key (kbd "<Launch8> h") 'counsel-faces)
-  ;; (global-set-key (kbd "<Launch8> m") 'counsel-rhythmbox)
-  ;; (global-set-key (kbd "<Launch8> M") 'counsel-rhythmbox-playpause-current-song)
-  ;; (global-set-key (kbd "<Launch8> h") 'counsel-command-history)
-  ;; (global-set-key (kbd "<Launch8> h") 'counsel-minibuffer-history)
-  (global-set-key (kbd "<Launch8> d") 'consult-flymake) ; consult???
-  (global-set-key (kbd "<Launch8> l") 'counsel-locate)
-
-)
-#+end_src
-
-** [[https://www.masteringemacs.org/article/find-files-faster-recent-files-package][RECENT FILES]]
-#+begin_src elisp
-;; enable recent files mode.
-(recentf-mode t)
-
-;; 50 files ought to be enough.
-(setq recentf-max-saved-items 200)
 #+end_src
 
 * Universal argument
