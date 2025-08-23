@@ -259,6 +259,19 @@ The following settings are simple modes that are enabled (or disabled) so that E
 (save-place-mode 1)
 (repeat-mode 1)
 
+(setq display-buffer-alist
+      '(
+        ("\\*Occur\\*"
+         ;; If a buffer with the matching major-mode exists in some
+         ;; window, then use that one.  Otherwise, display the buffer
+         ;; below the current window.
+         (display-buffer-reuse-mode-window display-buffer-below-selected)
+         ;; Then we have the parameters...
+         (dedicated . t)
+         (window-height . fit-window-to-buffer))
+
+        ))
+
 ; Move customization variables to a separate file and load it
 (setq custom-file (locate-user-emacs-file "custom-vars.el"))
 (load custom-file 'noerror 'nomessage)
