@@ -797,11 +797,7 @@ https://github.com/remyhonig/elfeed-org
 
   ;; doesn't work in minibuffer/find-file
   ;; (evil-define-key 'insert 'global "\C-h" 'backward-delete-char-untabify)
-
-  (define-key evil-motion-state-map (kbd "SPC") nil)
-  ;; doesn't work in terminal?
-  (define-key evil-motion-state-map (kbd "RET") nil)
-  (define-key evil-motion-state-map (kbd "TAB") nil))
+    )
 
 #+end_src
 
