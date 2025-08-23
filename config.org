@@ -102,7 +102,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [[#notes][notes?]]
 - [[#radio][Radio]]
 - [[#info][info]]
-- [[#diff-hl][diff-hl]]
 - [[#docker][docker]]
 - [[#ai][AI]]
   - [[#llm][LLM]]
@@ -1059,6 +1058,17 @@ how to go from diff to file w/ line num?
 ** Git-gutter
 #+begin_src elisp
 (use-package git-gutter
+  :demand t
+  :bind
+  (
+   :map evil-normal-state-map
+   ("[g" . diff-hl-previous-hunk)
+   ("]g" . diff-hl-next-hunk)
+   :map evil-visual-state-map
+   ("[g" . diff-hl-previous-hunk)
+   ("]g" . diff-hl-next-hunk)
+
+   )
   :custom 
 	   
  (git-gutter:modified-sign (nerd-icons-octicon "nf-oct-diff_modified"))
@@ -2332,24 +2342,6 @@ integrate w/ emms?
 #+begin_src elisp
 (use-package info-colors
   :hook (Info-selection . info-colors-fontify-node)
-  )
-#+end_src
-
-* diff-hl
-is this like gitsigns.nvim?
-#+begin_src elisp
-(use-package diff-hl
-  :bind
-  (
-   :map evil-normal-state-map
-   ("[g" . diff-hl-previous-hunk)
-   ("]g" . diff-hl-next-hunk)
-   :map evil-visual-state-map
-   ("[g" . diff-hl-previous-hunk)
-   ("]g" . diff-hl-next-hunk)
-
-   )
-  :config (global-diff-hl-mode)
   )
 #+end_src
 
