@@ -90,7 +90,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [[#noice][NOICE]]
 - [[#helpful][HELPFUL]]
 - [[#hydra][HYDRA]]
-- [[#typing-break][TYPING BREAK]]
 - [[#lispy][LISPY]]
 - [[#universal-argument][Universal argument]]
 - [[#erc][ERC]]
@@ -253,6 +252,8 @@ The following settings are simple modes that are enabled (or disabled) so that E
 ;; (keyboard-translate ?\C-h ?\s-m-h)
 (setq show-trailing-whitespace t)
 ;; (setq initial-scratch-message "")
+
+(setq search-whitespace-regexp ".*?")
 
 (setq history-length 25)
 (savehist-mode 1)
@@ -708,7 +709,7 @@ https://github.com/remyhonig/elfeed-org
    :map evil-visual-state-map
    ("X" . evil-exchange)
    :map evil-normal-state-map
-   ("X" . evil-exchange-cancel))
+   ("X" . evil-exchange-cancel))	; cxc?
 
   :config
   (evil-exchange-cx-install)
@@ -2175,9 +2176,6 @@ toggle full screen binding?
 ;; (rune/leader-keys
 ;; "ts" '(hydra-text-scale/body :which-key "scale text"))
 #+end_src
-
-* TYPING BREAK
-ogni-ora attiva type-break (timer_start in vim)
 
 * LISPY
 #+begin_src elisp
