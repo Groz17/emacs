@@ -696,8 +696,6 @@ https://github.com/remyhonig/elfeed-org
 (use-package evil-commentary :ensure t
   :bind (
    :map evil-normal-state-map
-   ("gc" . evil-commentary)
-   :map evil-visual-state-map
    ("gc" . evil-commentary)))
 
 (use-package goto-chg :defer t)
@@ -1088,12 +1086,8 @@ how to go from diff to file w/ line num?
   :bind
   (
    :map evil-normal-state-map
-   ("[g" . diff-hl-previous-hunk)
-   ("]g" . diff-hl-next-hunk)
-   :map evil-visual-state-map
-   ("[g" . diff-hl-previous-hunk)
-   ("]g" . diff-hl-next-hunk)
-
+   ("[g" . git-gutter:previous-hunk)
+   ("]g" . git-gutter:next-hunk)
    )
   :custom 
 	   
