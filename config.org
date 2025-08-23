@@ -1779,7 +1779,9 @@ https://github.com/novoid/Memacs
 https://github.com/novoid/extract_pdf_annotations_to_orgmode
 https://github.com/fuxialexander/org-pdftools
 #+begin_src elisp
+;; (use-package djvu)			; doesn't work?
 (use-package org-noter
+  :after djvu
   :custom
   ;; org-noter-highlight-selected-text to t
   (org-noter-always-create-frame nil)
