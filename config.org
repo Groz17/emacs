@@ -2099,7 +2099,11 @@ keycast
 (define-key key-translation-map (kbd "<f12>") [ctl-x]) ; hide translation in help files? don't really care
 (define-key global-map [ctl-x] ctl-x-map)
 ;; (define-key key-translation-map (kbd "<Launch5>") [snacks])
-(define-key key-translation-map (kbd "<f15>") (kbd "C-c"))
+(global-set-key [f15]
+  (lambda ()
+    (interactive)
+    (setq unread-command-events (listify-key-sequence "\C-c"))))
+
 ;; (define-key key-translation-map (kbd "<Launch5>") (lambda()(interactive)(universal-argument 0))) ;; doesn't even work
 ;; (define-key key-translation-map (kbd "<Launch5>") (kbd "M-0")) ;; basically u can use 0 for v:count now
 
