@@ -17,6 +17,7 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
   - [[#adding-the-scripts-directory-to-path][Adding the scripts directory to path]]
   - [[#sourcing-the-scripts][Sourcing the scripts]]
 - [[#sane-defaults][SANE DEFAULTS]]
+  - [[#prettier-vertical-window-divider-in-terminal][Prettier vertical window divider in terminal]]
 - [[#personal-information][Personal information]]
 - [[#multilingual-editing][MULTILINGUAL EDITING]]
 - [[#all-the-icons][ALL THE ICONS]]
@@ -319,7 +320,17 @@ The following settings are simple modes that are enabled (or disabled) so that E
   :ensure (:host github :repo "xiongtx/eros")
   :init (eros-mode 1)
   )
+#+end_src
 
+** [[https://www.reddit.com/r/emacs/comments/3u0d0u/how_do_i_make_the_vertical_window_divider_more/][Prettier vertical window divider in terminal]]
+#+begin_src elisp
+
+(defun my-change-window-divider ()
+  (let ((display-table (or buffer-display-table standard-display-table)))
+    (set-display-table-slot display-table 5 ?│)
+    (set-window-display-table (selected-window) display-table)))
+
+(add-hook 'window-configuration-change-hook 'my-change-window-divider)
 #+end_src
 
 
