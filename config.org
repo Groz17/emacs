@@ -71,6 +71,7 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
   - [[#org-modern][org modern]]
   - [[#settings][Settings]]
   - [[#org-noter][org-noter]]
+  - [[#unfold-when-ediffing][Unfold when ediffing]]
 - [[#pdfs][PDFs]]
 - [[#epubs][EPUBs]]
 - [[#rainbow-delimiters][RAINBOW DELIMITERS]]
@@ -1833,6 +1834,15 @@ https://github.com/fuxialexander/org-pdftools
   (define-key org-noter-doc-mode-map (kbd "M-i") 'org-noter-insert-note-toggle-no-questions))
 #+end_src
 
+** Unfold when ediffing
+#+begin_src elisp
+;; https://narkive.com/3rhdeunW:5.744.172
+(defun ora-ediff-prepare-buffer ()
+(when (memq major-mode '(org-mode emacs-lisp-mode))
+(outline-show-all)))
+
+(add-hook 'ediff-prepare-buffer-hook 'ora-ediff-prepare-buffer)
+#+end_src
 
 #+begin_src elisp
 (use-package shrface)
