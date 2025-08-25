@@ -248,6 +248,8 @@ The following settings are simple modes that are enabled (or disabled) so that E
 ;; 50 files ought to be enough.
 (setq recentf-max-saved-items 200)
 
+(setq next-line-add-newlines t)
+
 (setq use-dialog-box nil)
 
 ;; (global-set-key [(control h)]  'delete-backward-char)
