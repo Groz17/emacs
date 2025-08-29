@@ -2059,7 +2059,8 @@ The first line below designates the directory where will place all of our custom
 ;; (add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
 
 ;; (use-package ef-themes :ensure t :config(ef-themes-select 'ef-cyprus))
-(use-package ef-themes :ensure t :config(ef-themes-select 'ef-summer)) ;; ef-dark))
+; (use-package ef-themes :ensure t :config(ef-themes-select 'ef-summer))
+(use-package ef-themes :ensure t :config(ef-themes-select 'ef-dark))
 #+end_src
 
 * TLDR
