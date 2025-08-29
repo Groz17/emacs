@@ -124,6 +124,7 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [[#pages][Pages]]
 - [[#symex][symex]]
 - [[#prism][Prism]]
+- [[#gnuplot][Gnuplot]]
 
 * TODO TASK LIST
 ** Vim feature parity [1/6] [16%]
@@ -1670,6 +1671,7 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
                                         ; (typst . t)
      (ditaa . t)
      (python . t)
+     (gnuplot . t)
                                         ; (php . t)
      (sqlite . t)
      (perl . t)
@@ -2758,4 +2760,9 @@ Use only the gpg-encrypted version of the file.
 #+begin_src elisp
 (use-package prism
   :ensure (:host github :repo "alphapapa/prism.el"))
+#+end_src
+
+* Gnuplot
+#+begin_src elisp
+(use-package gnuplot)
 #+end_src
