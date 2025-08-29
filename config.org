@@ -577,6 +577,7 @@ https://github.com/remyhonig/elfeed-org
 * EVIL
 [[https://github.com/emacs-evil/evil][Evil]] is an extensible vi/vim layer for Emacs.  Because...let's face it.  The Vim keybindings are just plain better.
 
+evil-toggle-key
 #+begin_src elisp
 (use-package evil
   ;; :init      ; tweak evil's configuration before loading it
@@ -593,6 +594,7 @@ https://github.com/remyhonig/elfeed-org
         ;; evil-want-C-h-delete t
         evil-want-C-u-scroll t
         evil-want-Y-yank-to-eol t
+    evil-search-module 'i-search
         ;;evil-want-C-w-delete t
 
   ;;DISAMBIGUATE TAB and C-i
@@ -705,6 +707,9 @@ https://github.com/remyhonig/elfeed-org
 (define-key evil-inner-text-objects-map "k" 'evil-inner-symbol)
 
   )
+;; (use-package targets
+;;   :ensure (:host github :repo "noctuid/targets.el")
+;; )
 (use-package evil-numbers
   :bind (
    :map evil-normal-state-map
