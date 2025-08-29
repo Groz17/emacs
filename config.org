@@ -107,6 +107,7 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [[#ai][AI]]
   - [[#llm][LLM]]
   - [[#mcp][MCP]]
+  - [[#eca][ECA]]
 - [[#eof][EOF]]
 - [[#lsp][LSP]]
 - [[#tree-sitter][Tree-sitter]]
@@ -2557,6 +2558,10 @@ word count of the response."
 #+end_src
 
 ** MCP
+** ECA
+#+begin_src elisp
+(use-package eca :ensure(:host github :repo "editor-code-assistant/eca-emacs"))
+#+end_src
 * EOF
 
 #+begin_src elisp
@@ -2702,14 +2707,9 @@ Use only the gpg-encrypted version of the file.
 * STT
 #+begin_src elisp
 (use-package whisper
-  :ensure (:host github :repo "natrys/whisper.el")
   ;; :bind ("C-H-r" . whisper-run)
-  :config
-  (setq whisper-install-directory "/tmp/"
-        whisper-model "base"
-        whisper-language "en"
-        whisper-translate nil
-        whisper-use-threads (/ (num-processors) 2)))
+:custom
+  (whisper-model "small"))
 #+end_src
 
 * Keybindings
