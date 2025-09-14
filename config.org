@@ -125,6 +125,7 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [[#symex][symex]]
 - [[#prism][Prism]]
 - [[#gnuplot][Gnuplot]]
+- [[#gists][Gists]]
 
 * TODO TASK LIST
 ** Vim feature parity [1/6] [16%]
@@ -141,6 +142,7 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] emacs keybindings in /? (searching)
 - [ ] git@github.com:ag91/moldable-emacs.git"))
 - [ ] https://github.com/tarsius/keychain-environment/blob/main/keychain-environment.el#L27-L48
+- [ ] rooter? autochdir?
 - [ ] HOOKS # when exiting emacs open terminal?
 - [ ] dotfiles dirs in projects/bookmarks?
 - [ ] avy-goto
@@ -1029,16 +1031,17 @@ Defining the various fonts that Emacs will use.
 
   ;; uppercase: containing directory/global
   ;; crea unico file e tangle in both vim & emacs?
-  "e E" '((lambda () (interactive) (dired "~/.config/emacs/")) :wk "user-emacs-directory in dired")
+  "e E" '((lambda () (interactive) (dired "~/.config/emacs/")) :wk "Emacs dir")
   "e e" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "emacs ")
   "e k" '((lambda () (interactive) (find-file "~/dotfiles/kanata.org")) :wk "kanata")
   "e v" '((lambda () (interactive) (find-file "~/.config/nvim/config.org")) :wk "Neovim config")
-  "e V" '((lambda () (interactive) (dired "~/.config/nvim/")) :wk "user-neovim-directory in dired")
+  "e V" '((lambda () (interactive) (dired "~/.config/nvim/")) :wk " in dired")
   "e i" '((lambda () (interactive) (find-file "~/dotfiles/inputrc.org")) :wk "inputrc")
   "e f" '((lambda () (interactive) (find-file "~/dotfiles/fzf.org")) :wk "fzf")
   "e m" '((lambda () (interactive) (find-file "~/dotfiles/mpv.org")) :wk "Mpv")
   "e r" '((lambda () (interactive) (find-file "~/dotfiles/reaper.org")) :wk "Reaper")
   "e h" '((lambda () (interactive) (find-file "~/dotfiles/hypr.org")) :wk "Hypr")
+  "e g" '((lambda () (interactive) (find-file "~/dotfiles/git.org")) :wk "Git")
   "e a" '((lambda () (interactive) (find-file "~/dotfiles/atuin.org")) :wk "Atuin")
 					; "e H" '((lambda () (interactive) (dired "~/.config/hypr/")) :wk "hypr in dired")
   "e s" '((lambda () (interactive) (find-file "~/dotfiles/sioyek.org")) :wk "Sioyek")
@@ -1046,14 +1049,7 @@ Defining the various fonts that Emacs will use.
   "e b" '((lambda () (interactive) (find-file "~/dotfiles/bashrc.org")) :wk "Bashrc")
   "e t" '((lambda () (interactive) (find-file "~/dotfiles/tridactylrc.org")) :wk "Tridactyl")
 
-  ;; u can just use find-file here...
-  "e g" '((lambda () (interactive) (find-file (concat (magit-toplevel) ".gitconfig"))) :wk "Gitconfig")
-  "e G" '((lambda () (interactive) (find-file "~/.gitconfig")) :wk "global Gitconfig")
-  "e n" '((lambda () (interactive) (find-file (concat (magit-toplevel) ".git/info/exclude"))) :wk "Gitignore")
-
-  "e <RET>" '((lambda () (interactive)
-		(find-file "~/dotfiles/_ghostty.org"))
-              :wk "ghostty config"))
+  "e <RET>" '((lambda () (interactive) (find-file "~/dotfiles/_ghostty.org")) :wk "ghostty config"))
 
 ;; how to put these in use-package?
 (gz/leader-keys
@@ -2342,6 +2338,17 @@ https://www.reddit.com/r/emacs/comments/1kr94v4/automagic_dark_mode_automaticall
 #+end_src
 
 * anki editor
+ org-queue 
+#+begin_src elisp
+(use-package org-srs
+:ensure (:host github :repo "bohonghuang/org-srs")
+  :hook (org-mode . org-srs-embed-overlay-mode)
+  :bind (:map org-mode-map
+         ("<f5>" . org-srs-review-rate-easy)
+         ("<f6>" . org-srs-review-rate-good)
+         ("<f7>" . org-srs-review-rate-hard)
+         ("<f8>" . org-srs-review-rate-again)))
+#+end_src
 * notes?
  css: #+setupfile: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
 https://github.com/chenyanming/paw?tab=readme-ov-file
@@ -2717,10 +2724,10 @@ Use only the gpg-encrypted version of the file.
 
 * STT
 #+begin_src elisp
-(use-package whisper
+; (use-package whisper
   ;; :bind ("C-H-r" . whisper-run)
-:custom
-  (whisper-model "small"))
+; :custom
+  ; (whisper-model "small"))
 #+end_src
 
 * Keybindings
@@ -2775,3 +2782,8 @@ Use only the gpg-encrypted version of the file.
 #+begin_src elisp
 (use-package gnuplot)
 #+end_src
+
+* Gists
+,#+begin_src elisp
+(use-package ox-gist)
+,#+end_src
