@@ -2017,6 +2017,17 @@ Vterm is a terminal emulator within Emacs.  The 'shell-file-name' setting sets t
              (vterm)
 	     ;; (vterm-other-window)
   
+  ))
+;; FIX:
+(general-define-key
+ :states 'normal
+ "SPC S-RET" (lambda ()
+             (interactive)
+             (split-window-below)
+             (other-window 1)
+             (vterm)
+	     ;; (vterm-other-window)
+  
   )))
 #+end_src
 
@@ -2765,11 +2776,11 @@ Use only the gpg-encrypted version of the file.
 
 * symex
 #+begin_src elisp
-(use-package symex
- :after evil
-  :config
-  (symex-initialize)
-  (evil-define-key 'normal 'global (kbd "<leader>;") 'symex-mode-interface))
+; (use-package symex
+;  :after evil
+;   :config
+;   (symex-initialize)
+;   (evil-define-key 'normal 'global (kbd "<leader>;") 'symex-mode-interface))
 #+end_src
 
 * Prism
