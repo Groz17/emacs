@@ -1831,6 +1831,7 @@ https://github.com/fuxialexander/org-pdftools
 #+begin_src elisp
 ;; (use-package djvu)			; doesn't work?
 (use-package org-noter
+    :ensure (:repo "org-noter/org-noter" :host github)
   :after djvu
   :custom
   ;; org-noter-highlight-selected-text to t
