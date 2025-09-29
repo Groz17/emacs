@@ -1930,6 +1930,10 @@ invert colors?
 ;; (eval-after-load 'pdf-view '(add-hook 'pdf-view-mode-hook (lambda()define-key pdf-view-mode-map (kbd "C-k")#'pdf-view-enlarge)))
 ;; (with-eval-after-load 'pdf-view (evil-define-key 'normal pdf-view-mode-map (kbd "C-j")#'pdf-view-shrink))
 ;; (with-eval-after-load 'pdf-view (evil-define-key 'normal pdf-view-mode-map (kbd "C-k")#'pdf-view-enlarge))
+
+(use-package doc-tools-toc
+  :ensure (:host github :repo "dalanicolai/doc-tools-toc")
+  :mode "\\.pdf\\'")
 #+end_src
 
 * EPUBs
