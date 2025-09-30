@@ -927,7 +927,7 @@ Defining the various fonts that Emacs will use.
   ;;"SPC" '(whitespace-mode :wk "Toggle whitespace-mode"))
   "l" '(whitespace-mode :wk "Toggle whitespace-mode")
   "z" '(visual-fill-column-mode :wk "Zen mode")
-  "p" '(page-break-lines-mode :wk "Pages")
+  "p" '(pcheckdoc-startage-break-lines-mode :wk "Pages")
   "d" '(prism-mode :wk "Color By Depth")
   "b" '((lambda()(interactive)(invert-face 'default)) :wk "Toggle background color"))
 #+end_src
@@ -1836,6 +1836,9 @@ https://github.com/fuxialexander/org-pdftools
   :custom
   ;; org-noter-highlight-selected-text to t
   (org-noter-always-create-frame nil)
+(org-noter-notes-window-location 'vertical-split)
+;; :init  (setq org-noter-always-create-frame nil)
+ ;; (setq org-noter-notes-search-path '("~/notes"))
   :bind (:map pdf-view-mode-map
         ("C-c n" . #'org-noter))
   ;; :load-path "~/notes/pdfs/"
@@ -1850,6 +1853,20 @@ https://github.com/fuxialexander/org-pdftools
   (define-key org-noter-doc-mode-map (kbd "C-i") 'org-noter-insert-note)
   (define-key org-noter-doc-mode-map (kbd "I")   'org-noter-insert-precise-note-toggle-no-questions)
   (define-key org-noter-doc-mode-map (kbd "M-i") 'org-noter-insert-note-toggle-no-questions))
+(with-eval-after-load 'org-noter
+  (define-key org-noter-doc-mode-map (kbd "M-p") 'org-noter-sync-prev-note)
+  (define-key org-noter-doc-mode-map (kbd "M-.") 'org-noter-sync-current-note)
+  (define-key org-noter-doc-mode-map (kbd "M-n") 'org-noter-sync-next-note)
+  (define-key org-noter-doc-mode-map (kbd "C-M-p") 'org-noter-sync-prev-page-or-chapter)
+  (define-key org-noter-doc-mode-map (kbd "C-M-.") 'org-noter-sync-current-page-or-chapter)
+  (define-key org-noter-doc-mode-map (kbd "C-M-n") 'org-noter-sync-next-page-or-chapter)
+
+  (define-key org-noter-notes-mode-map (kbd "M-p") 'org-noter-sync-prev-note)
+  (define-key org-noter-notes-mode-map (kbd "M-.") 'org-noter-sync-current-note)
+  (define-key org-noter-notes-mode-map (kbd "M-n") 'org-noter-sync-next-note)
+  (define-key org-noter-notes-mode-map (kbd "C-M-p") 'org-noter-sync-prev-page-or-chapter)
+  (define-key org-noter-notes-mode-map (kbd "C-M-.") 'org-noter-sync-current-page-or-chapter)
+  (define-key org-noter-notes-mode-map (kbd "C-M-n") 'org-noter-sync-next-page-or-chapter))
 #+end_src
 
 ** Unfold when ediffing
@@ -1931,8 +1948,13 @@ invert colors?
 ;; (with-eval-after-load 'pdf-view (evil-define-key 'normal pdf-view-mode-map (kbd "C-j")#'pdf-view-shrink))
 ;; (with-eval-after-load 'pdf-view (evil-define-key 'normal pdf-view-mode-map (kbd "C-k")#'pdf-view-enlarge))
 
-(use-package doc-tools-toc
-  :ensure (:host github :repo "dalanicolai/doc-tools-toc")
+;; (use-package doc-tools-toc
+;;   :ensure (:host github :repo "dalanicolai/doc-tools-toc")
+(use-package pdf-meta-edit
+  :ensure (:host github :repo "krisbalintona/pdf-meta-edit")
+  :mode "\\.pdf\\'")
+
+(use-package doc-toc
   :mode "\\.pdf\\'")
 #+end_src
 
