@@ -1041,12 +1041,14 @@ Defining the various fonts that Emacs will use.
   "e m" '((lambda () (interactive) (find-file "~/dotfiles/mpv.org")) :wk "Mpv")
   "e r" '((lambda () (interactive) (find-file "~/dotfiles/reaper.org")) :wk "Reaper")
   "e h" '((lambda () (interactive) (find-file "~/dotfiles/hypr.org")) :wk "Hypr")
+  "e p" '((lambda () (interactive) (find-file "~/dotfiles/profile.org")) :wk "profile")
   "e g" '((lambda () (interactive) (find-file "~/dotfiles/git.org")) :wk "Git")
   "e a" '((lambda () (interactive) (find-file "~/dotfiles/atuin.org")) :wk "Atuin")
 					; "e H" '((lambda () (interactive) (dired "~/.config/hypr/")) :wk "hypr in dired")
   "e s" '((lambda () (interactive) (find-file "~/dotfiles/sioyek.org")) :wk "Sioyek")
   "e w" '((lambda () (interactive) (find-file "~/dotfiles/waybar.org")) :wk "Waybar")
   "e b" '((lambda () (interactive) (find-file "~/dotfiles/bashrc.org")) :wk "Bashrc")
+  "e z" '((lambda () (interactive) (find-file "~/dotfiles/zshrc.org")) :wk "Bashrc")
   "e t" '((lambda () (interactive) (find-file "~/dotfiles/tridactylrc.org")) :wk "Tridactyl")
 
   "e <RET>" '((lambda () (interactive) (find-file "~/dotfiles/_ghostty.org")) :wk "ghostty config"))
@@ -1890,7 +1892,8 @@ fit page to window size?
 invert colors?
 #+begin_src elisp
 (use-package pdf-tools
-    :ensure (:repo "aikrahguzar/pdf-tools" :host github :branch "upstream-pdf-roll")
+    ; :ensure (:repo "aikrahguzar/pdf-tools" :host github :branch "upstream-pdf-roll")
+    :ensure (:repo "rahguzar/pdf-tools" :host codeberg)
   :defer t
   :commands (pdf-loader-install)
   :mode "\\.pdf\\'"
