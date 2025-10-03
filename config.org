@@ -1823,7 +1823,9 @@ org-cheatsheet, org-reveal.js? mindmaps?
 (setq org-imenu-depth 3)
 ;; Setting RETURN key in org-mode to follow links
 (setq org-return-follows-link  t)
-(add-to-list 'org-file-apps '("\\.pdf\\'" . emacs))
+
+(with-eval-after-load 'org
+(add-to-list 'org-file-apps '("\\.pdf\\'" . emacs)))
 #+end_src
 
 ** org-noter
