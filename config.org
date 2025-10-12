@@ -2457,6 +2457,7 @@ integrate w/ emms?
 #+end_src
 
 * info
+disable vim keys in info-mode except j and k?
 #+begin_src elisp
 (use-package info-colors
   :hook (Info-selection . info-colors-fontify-node)
