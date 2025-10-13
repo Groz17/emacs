@@ -2596,7 +2596,7 @@ https://github.com/karthink/gptel/issues/165
 
 **** Quick
 #+begin_src elisp
-;; (use-package posframe :ensure (:host github :repo "tumashu/posframe"))
+(use-package posframe :ensure (:host github :repo "tumashu/posframe"))
 (use-package gptel-quick
 :ensure (:host github :repo "karthink/gptel-quick")
 :bind (("C-c q"  . gptel-quick)
