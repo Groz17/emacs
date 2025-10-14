@@ -1757,7 +1757,7 @@ https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892
 ;; Automatically tangle our dotfiles when we save them
 (defun efs/org-babel-tangle-config ()
   (when (or
-   (string-prefix-p (expand-file-name "~/dotfiles/") (buffer-file-name))
+   (string-match-p "dotfiles/.*[^|]\\.org\\'" (buffer-file-name))
    ;; (string-equal (concat user-emacs-directory "config.org") (buffer-file-name)))
    (string-equal (expand-file-name "~/.config/emacs/config.org") (buffer-file-name))
    (string-equal (expand-file-name "~/.config/nvim/config.org") (buffer-file-name))
