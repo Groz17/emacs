@@ -1047,8 +1047,8 @@ Defining the various fonts that Emacs will use.
 					; "e H" '((lambda () (interactive) (dired "~/.config/hypr/")) :wk "hypr in dired")
   "e s" '((lambda () (interactive) (find-file "~/dotfiles/sioyek.org")) :wk "Sioyek")
   "e w" '((lambda () (interactive) (find-file "~/dotfiles/waybar.org")) :wk "Waybar")
-  "e b" '((lambda () (interactive) (find-file "~/dotfiles/bashrc.org")) :wk "Bashrc")
-  "e z" '((lambda () (interactive) (find-file "~/dotfiles/zshrc.org")) :wk "Bashrc")
+  "e b" '((lambda () (interactive) (find-file "~/dotfiles/bash.org")) :wk "Bashrc")
+  "e z" '((lambda () (interactive) (find-file "~/dotfiles/zsh.org")) :wk "Bashrc")
   "e t" '((lambda () (interactive) (find-file "~/dotfiles/tridactylrc.org")) :wk "Tridactyl")
 
   "e <RET>" '((lambda () (interactive) (find-file "~/dotfiles/_ghostty.org")) :wk "ghostty config"))
