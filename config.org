@@ -169,7 +169,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] text-scale-increase
 - [ ] recompile
 - [ ] C-l as enter for imenu, etc...?
-- [ ] ghostty?
 - [ ] is perspectie a global minor mode since it used c-c m-... as prefix?
 - [ ] n/l text objects
 - [ ] for some reason c-o doesn't work in minibuffer
@@ -198,6 +197,7 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] fixa eol behaviour?
 - [ ] emacs terminal fn keys
 - [ ] org mode headers colored like chakras
+
 ** Emacs/vim interaction (Evil Mode)
 - [ ] swap file or notify when working on the same file?
 - [X] zj and zk in evil?
