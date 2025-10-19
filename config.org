@@ -13,6 +13,16 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
   - [[#vim-feature-parity-16-16][Vim feature parity]]
   - [[#emacs-662-9][Emacs]]
   - [[#emacsvim-interaction-evil-mode][Emacs/vim interaction (Evil Mode)]]
+- [[#universal-argument][Universal argument]]
+- [[#authinfo][Authinfo]]
+- [[#transparency][TRANSPARENCY]]
+- [[#minibuffer][MINIBUFFER]]
+  -  [[#escape][ESCAPE]]
+  -  [[#readline-sanity][READLINE SANITY]]
+- [[#fonts][FONTS]]
+  - [[#setting-the-font-face][Setting the Font Face]]
+- [[#keybindings][Keybindings]]
+- [[#making-deleted-files-go-to-trash-can][Making deleted files go to trash can]]
 - [[#important-programs-to-load-first][IMPORTANT PROGRAMS TO LOAD FIRST]]
   - [[#adding-the-scripts-directory-to-path][Adding the scripts directory to path]]
   - [[#sourcing-the-scripts][Sourcing the scripts]]
@@ -20,112 +30,66 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
   - [[#prettier-vertical-window-divider-in-terminal][Prettier vertical window divider in terminal]]
 - [[#personal-information][Personal information]]
 - [[#multilingual-editing][MULTILINGUAL EDITING]]
-- [[#all-the-icons][ALL THE ICONS]]
-- [[#backup][BACKUP]]
-- [[#company][COMPANY]]
-- [[#dashboard][DASHBOARD]]
-- [[#diminish][DIMINISH]]
-- [[#dired][DIRED]]
-  - [[#making-deleted-files-go-to-trash-can][Making deleted files go to trash can]]
-- [[#ediff][EDIFF]]
-- [[#elfeed][ELFEED]]
-- [[#evil][EVIL]]
-- [[#flycheck][FLYCHECK]]
-- [[#fonts][FONTS]]
-  - [[#setting-the-font-face][Setting the Font Face]]
-  - [[#font-preview][Font preview]]
-- [[#general-keybindings][GENERAL KEYBINDINGS]]
-  - [[#toggle][Toggle]]
-  - [[#picker][Picker]]
-  - [[#leader][<Leader>]]
-- [[#git][GIT]]
-  - [[#magit][Magit]]
-  - [[#forge][Forge]]
-  - [[#git-gutter][Git-gutter]]
-- [[#highlight-todo][HIGHLIGHT TODO]]
-- [[#ivy-counsel][IVY (COUNSEL)]]
-- [[#language-support][LANGUAGE SUPPORT]]
-- [[#minibuffer][MINIBUFFER]]
-  -  [[#escape][ESCAPE]]
-  -  [[#readline-sanity][READLINE SANITY]]
-- [[#modeline][MODELINE]]
-- [[#org-mode][ORG MODE]]
-  - [[#make-more-appealing][Make more appealing]]
-  - [[#log][Log]]
-  - [[#states][States]]
-  - [[#set-of-commonly-known-tags][Set of commonly known tags]]
-  - [[#refiling][Refiling]]
-  - [[#capture-templates][Capture templates]]
-  - [[#habit-tracking][Habit tracking]]
-  - [[#enabling-table-of-contents][Enabling Table of Contents]]
-  - [[#yank][Yank]]
-  - [[#org-ref][Org-ref]]
-  - [[#diminish-org-indent-mode][Diminish Org Indent Mode]]
-  - [[#org-level-headers][Org Level Headers]]
-  - [[#source-code-block-tag-expansion][Source Code Block Tag Expansion]]
-  - [[#org-agenda][ORG AGENDA]]
-  - [[#org-babel][ORG BABEL]]
-  - [[#auto-tangle][Auto-tangle]]
-  - [[#images][IMAGES]]
-  - [[#org-mpv-note][org-mpv-note]]
-  - [[#org-autolist][org-autolist]]
-  - [[#org-modern][org modern]]
-  - [[#settings][Settings]]
-  - [[#org-noter][org-noter]]
-  - [[#unfold-when-ediffing][Unfold when ediffing]]
-- [[#pdfs][PDFs]]
-- [[#epubs][EPUBs]]
-- [[#rainbow-delimiters][RAINBOW DELIMITERS]]
-- [[#rainbow-mode][RAINBOW MODE]]
-- [[#subword-mode][SUBWORD MODE]]
-- [[#shells-and-terminals][SHELLS AND TERMINALS]]
-  - [[#enhancements][Enhancements]]
-  - [[#eshell][Eshell]]
-  - [[#vterm][Vterm]]
-- [[#sudo-edit][SUDO EDIT]]
-- [[#theme][THEME]]
-- [[#tldr][TLDR]]
-- [[#transparency][TRANSPARENCY]]
-- [[#which-key][WHICH-KEY]]
-- [[#command-log][COMMAND-LOG]]
-- [[#kanata-sheganigans][KANATA SHEGANIGANS]]
-- [[#noice][NOICE]]
-- [[#helpful][HELPFUL]]
-- [[#hydra][HYDRA]]
-- [[#lispy][LISPY]]
-- [[#universal-argument][Universal argument]]
-- [[#erc][ERC]]
 - [[#vim-parity][VIM PARITY]]
-- [[#quiz][QUIZ]]
-- [[#themes][THEMES]]
-- [[#docs][DOCS]]
-- [[#anki-editor][anki editor]]
-- [[#notes][notes?]]
-- [[#radio][Radio]]
-- [[#info][info]]
-- [[#docker][docker]]
-- [[#ai][AI]]
-  - [[#llm][LLM]]
-  - [[#mcp][MCP]]
-  - [[#eca][ECA]]
-- [[#eof][EOF]]
-- [[#lsp][LSP]]
-- [[#tree-sitter][Tree-sitter]]
-  - [[#text-objects][Text-objects]]
-- [[#socials][Socials]]
-- [[#snippets][Snippets]]
-- [[#password-management][Password management]]
-- [[#music][Music]]
-- [[#authinfo][Authinfo]]
-- [[#stt][STT]]
-- [[#keybindings][Keybindings]]
-- [[#info-1][Info]]
-- [[#translation][Translation]]
-- [[#pages][Pages]]
-- [[#symex][symex]]
-- [[#prism][Prism]]
-- [[#gnuplot][Gnuplot]]
-- [[#gists][Gists]]
+- [[#backup][BACKUP]]
+- [[#plugins][Plugins]]
+  - [[#all-the-icons][ALL THE ICONS]]
+  - [[#company][COMPANY]]
+  - [[#dashboard][DASHBOARD]]
+  - [[#diminish][DIMINISH]]
+  - [[#dired][DIRED]]
+  - [[#ediff][EDIFF]]
+  - [[#elfeed][ELFEED]]
+  - [[#evil][EVIL]]
+  - [[#flycheck][FLYCHECK]]
+  - [[#general-keybindings][GENERAL KEYBINDINGS]]
+  - [[#git][GIT]]
+  - [[#highlight-todo][HIGHLIGHT TODO]]
+  - [[#ivy-counsel][IVY (COUNSEL)]]
+  - [[#language-support][LANGUAGE SUPPORT]]
+  - [[#modeline][MODELINE]]
+  - [[#org-mode][ORG MODE]]
+  - [[#pdfs][PDFs]]
+  - [[#epubs][EPUBs]]
+  - [[#rainbow-delimiters][RAINBOW DELIMITERS]]
+  - [[#rainbow-mode][RAINBOW MODE]]
+  - [[#subword-mode][SUBWORD MODE]]
+  - [[#shells-and-terminals][SHELLS AND TERMINALS]]
+  - [[#sudo-edit][SUDO EDIT]]
+  - [[#theme][THEME]]
+  - [[#tldr][TLDR]]
+  - [[#which-key][WHICH-KEY]]
+  - [[#command-log][COMMAND-LOG]]
+  - [[#kanata-sheganigans][KANATA SHEGANIGANS]]
+  - [[#noice][NOICE]]
+  - [[#helpful][HELPFUL]]
+  - [[#hydra][HYDRA]]
+  - [[#lispy][LISPY]]
+  - [[#erc][ERC]]
+  - [[#quiz][QUIZ]]
+  - [[#themes][THEMES]]
+  - [[#docs][DOCS]]
+  - [[#anki-editor][anki editor]]
+  - [[#notes][notes?]]
+  - [[#radio][Radio]]
+  - [[#info][info]]
+  - [[#docker][docker]]
+  - [[#ai][AI]]
+  - [[#eof][EOF]]
+  - [[#lsp][LSP]]
+  - [[#tree-sitter][Tree-sitter]]
+  - [[#socials][Socials]]
+  - [[#snippets][Snippets]]
+  - [[#password-management][Password management]]
+  - [[#music][Music]]
+  - [[#stt][STT]]
+  - [[#info-1][Info]]
+  - [[#translation][Translation]]
+  - [[#pages][Pages]]
+  - [[#symex][symex]]
+  - [[#prism][Prism]]
+  - [[#gnuplot][Gnuplot]]
+  - [[#gists][Gists]]
 
 * TODO TASK LIST
 ** Vim feature parity [1/6] [16%]
@@ -208,6 +172,127 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] syncronize shada/command history
 - [ ] from normal mode, go to insert mode after certain keybindings like M-; or M-RET
 - [ ] go to normal mode for pickers?
+
+* Universal argument
+basically space followed by a modifier should behave as C-u, otherwise as space (leader prefix for groups) (sadly doesn't work for stuff like c-u s in magit..., use hook?)
+lol, empty source blocks don't make emacs work...
+;;#+begin_src elisp
+;;#+end_src
+
+* Authinfo
+Use only the gpg-encrypted version of the file.
+
+#+begin_src elisp :tangle no
+(setq auth-source-debug nil)
+(setq auth-sources '("~/.authinfo.gpg"))
+#+end_src
+
+
+* TRANSPARENCY
+With Emacs version 29, true transparency has been added.  I have turned transparency off by setting the alpha to '100'.  If you want some slight transparency, try setting alpha to '90'.  Of course, if you set alpha to '0', the background of Emacs would completely transparent.
+
+TODO: doesn't work in terminal
+
+#+begin_src elisp
+(add-to-list 'default-frame-alist '(alpha-background . 87)) ; For all new frames henceforth
+#+end_src
+
+
+* MINIBUFFER
+**  ESCAPE
+By default, Emacs requires you to hit ESC three times to escape quit the minibuffer.
+
+#+begin_src elisp
+;; mappa escape a c-g e c-g a original vim behaviour?
+(global-set-key [escape] 'keyboard-escape-quit)
+#+end_src
+
+**  READLINE SANITY
+#+begin_src elisp
+;; replica instert mappings in emacs state?
+(define-key minibuffer-local-map (kbd "C-h") #'backward-delete-char)
+(define-key minibuffer-local-map (kbd "C-w") #'backward-kill-word)
+
+;; is interactive necessary here?
+
+(with-eval-after-load 'evil-maps
+  (define-key evil-insert-state-map (kbd "<ctl-x> C-?") (lambda () (interactive)(kill-line 0)))
+  ;; (define-key evil-insert-state-map (kbd "<C-]>") (lambda () (interactive)(evil-execute-in-normal-state)(execute-kbd-macro (kbd "f"))))
+
+  ;; (define-key evil-insert-state-map (kbd "<C-M-]>")
+  ;;   (lambda ()
+  ;;     (interactive)
+  ;;     (evil-execute-in-normal-state
+  ;;      (lambda ()
+  ;;        (call-interactively #'evil-find-char-backward)))))
+
+
+  )
+(define-key minibuffer-local-map (kbd "<ctl-x> C-?") (lambda () (interactive)(kill-line 0)))
+;; (define-key minibuffer-local-map (kbd "M-#") (lambda () (interactive)( 0)))
+#+end_src
+
+* FONTS
+Defining the various fonts that Emacs will use.
+
+** Setting the Font Face
+#+begin_src elisp
+(set-face-attribute 'default nil
+        ;; :font "JetBrains Mono"
+        ;; :font "Iosevka Term Curly-regular-normal"
+        :font "Aporetic Sans"
+        :height 110
+        :weight 'medium)
+(set-face-attribute 'variable-pitch nil
+        :font "Aporetic Sans"
+        :height 120
+        :weight 'medium)
+(set-face-attribute 'fixed-pitch nil
+        :font "Aporetic Sans Mono"
+        :height 110
+        :weight 'medium)
+;; Makes commented text and keywords italics.
+;; This is working in emacsclient but not emacs.
+;; Your font must have an italic face available.
+(set-face-attribute 'font-lock-comment-face nil
+        :slant 'italic)
+(set-face-attribute 'font-lock-keyword-face nil
+        :slant 'italic)
+
+;; This sets the default font on all graphical frames created after restarting Emacs.
+;; Does the same thing as 'set-face-attribute default' above, but emacsclient fonts
+;; are not right unless I also add this method of setting the default font.
+;; (add-to-list 'default-frame-alist '(font . "JetBrains Mono-11"))
+;; (add-to-list 'default-frame-alist '(font . "Aporetic Sans"))
+
+;; Uncomment the following line if line spacing needs adjusting.
+(setq-default line-spacing 0.12)
+
+#+end_src
+
+* Keybindings
+#+begin_src elisp
+(define-key global-map (kbd "C-c w") 'webjump)
+;;   "s d" '(dictionary-search :wk "Search dictionary")
+;;   "s m" '(man :wk "Man pages")
+;;   "s t" '(tldr :wk "Lookup TLDR docs for a command")
+;;   "s w" '(woman :wk "Similar to man but doesn't require man"))
+
+;; benchmark
+;; profiler-{start,stop}
+#+end_src
+
+
+* Making deleted files go to trash can
+#+begin_src elisp
+(setq delete-by-moving-to-trash t trash-directory "~/.local/share/Trash/files/")
+#+end_src
+
+NOTE: For convenience, you may want to create a symlink to 'local/share/Trash' in your home directory:
+#+begin_example
+cd ~/
+ln -s ~/.local/share/Trash .
+#+end_example
 
 * IMPORTANT PROGRAMS TO LOAD FIRST
 To keep this =config.org= a reasonable length, I have moved a lot of code to individual scripts that will be sourced by this config.  These scripts are found in "~/.config/emacs/scripts" and do not contain any code that most people are likely to need to edit.
@@ -355,7 +440,82 @@ The following settings are simple modes that are enabled (or disabled) so that E
 (setq default-input-method "devanagari-itrans")
 #+end_src
 
-* ALL THE ICONS
+* VIM PARITY
+
+#+begin_src elisp
+(defun open-line-below (&optional count)
+  "Open COUNT new lines below the current line and move the cursor to the first one."
+  (interactive "p")
+  (end-of-line)
+  (dotimes (_ (or count 1))
+    (newline-and-indent)))
+
+(defun open-line-above (&optional count)
+  "Open COUNT new lines above the current line and move the cursor to the first one."
+  (interactive "p")
+  (beginning-of-line)
+  (newline-and-indent)
+  (forward-line -1)
+  (indent-according-to-mode)
+  (dotimes (_ (1- (or count 1)))
+    (newline-and-indent)))
+
+(with-eval-after-load 'evil-maps
+  ;; doesn't work
+  ;;(define-key evil-normal-state-map (kbd "d =") #'ediff-current-file)
+  ;; c-l diffupdate? automatically though?
+
+  ;; terminal trick
+  (define-key evil-insert-state-map (kbd "M-o") #'open-line-below)
+  (define-key evil-insert-state-map (kbd "M-O") #'open-line-above)
+  )
+#+end_src
+
+gcO equivalenent: O<M-j>
+gco equivalenent: o<M-j>
+screenshots? https://github.com/tecosaur/screenshot
+  bs visual mode remove duplicates
+**** Invert comments
+#+begin_src elisp
+;; (defun evil-invert-comment-region ()
+;;   "Comment uncommented lines and uncomment commented lines in the selected region.
+;;   Uses the proper comment syntax for the current major mode."
+;;   (interactive)
+;;   (let* ((beg (region-beginning))
+;;          (end (region-end))
+;;          (commented-lines 0)
+;;          (total-lines 0))
+
+;;     ;; Count commented lines using the mode's comment syntax
+;;     (save-excursion
+;;       (goto-char beg)
+;;       (while (< (point) end)
+;;         (beginning-of-line)
+;;         (setq total-lines (1+ total-lines))
+;;         (when (comment-only-p (line-beginning-position)
+;;                               (line-end-position))
+;;           (setq commented-lines (1+ commented-lines)))
+;;         (forward-line 1)))
+
+;;     ;; If more than half of lines are commented, uncomment the region
+;;     ;; Otherwise, comment the region
+;;     (if (>= commented-lines (/ total-lines 2))
+;;         (uncomment-region beg end)
+;;       (comment-region beg end))))
+
+;; ;; Bind it to a key in evil visual mode
+;; (evil-define-key '(visual) 'global (kbd "gi") 'evil-invert-comment-region)
+#+end_src
+
+* BACKUP
+By default, Emacs creates automatic backups of files in their original directories, such "file.el" and the backup "file.el~".  This leads to a lot of clutter, so let's tell Emacs to put all backups that it creates in the =TRASH= directory.
+
+#+begin_src elisp
+(setq backup-directory-alist '((".*" . "~/.local/share/Trash/files")))
+#+end_src
+
+* Plugins
+** ALL THE ICONS
 This is an icon set that can be used with dashboard, dired, ibuffer and other Emacs programs.
 
 #+begin_src elisp
@@ -367,14 +527,7 @@ This is an icon set that can be used with dashboard, dired, ibuffer and other Em
   :hook (dired-mode . (lambda () (all-the-icons-dired-mode t))))
 #+end_src
 
-* BACKUP
-By default, Emacs creates automatic backups of files in their original directories, such "file.el" and the backup "file.el~".  This leads to a lot of clutter, so let's tell Emacs to put all backups that it creates in the =TRASH= directory.
-
-#+begin_src elisp
-(setq backup-directory-alist '((".*" . "~/.local/share/Trash/files")))
-#+end_src
-
-* COMPANY
+** COMPANY
 [[https://company-mode.github.io/][Company]] is a text completion framework for Emacs. The name stands for "complete anything".  Completion will start automatically after you type a few letters. Use M-n and M-p to select, <return> to complete or <tab> to complete the common part.
 
 #+begin_src elisp
@@ -409,7 +562,7 @@ By default, Emacs creates automatic backups of files in their original directori
   :hook (company-mode . company-box-mode))
 #+end_src
 
-* DASHBOARD
+** DASHBOARD
 Emacs Dashboard is an extensible startup screen showing you recent files, bookmarks, agenda items and an Emacs banner.
 
 #+begin_src elisp
@@ -439,14 +592,14 @@ Emacs Dashboard is an extensible startup screen showing you recent files, bookma
 
 #+end_src
 
-* DIMINISH
+** DIMINISH
 This package implements hiding or abbreviation of the modeline displays (lighters) of minor-modes.  With this package installed, you can add ':diminish' to any use-package block to hide that particular mode in the modeline.
 
 #+begin_src elisp
 (use-package diminish)
 #+end_src
 
-* DIRED
+** DIRED
 Bookmarks like in mini.files?
 #+begin_src elisp
 (use-package dired-open
@@ -491,17 +644,7 @@ Bookmarks like in mini.files?
 
 #+end_src
 
-** Making deleted files go to trash can
-#+begin_src elisp
-(setq delete-by-moving-to-trash t trash-directory "~/.local/share/Trash/files/")
-#+end_src
-
-NOTE: For convenience, you may want to create a symlink to 'local/share/Trash' in your home directory:
-#+begin_example
-cd ~/
-ln -s ~/.local/share/Trash .
-#+end_example
-* EDIFF
+** EDIFF
 'ediff' is a diff program that is built into Emacs.  By default, 'ediff' splits files vertically and places the 'help' frame in its own window.  I have changed this so the two files are split horizontally and the 'help' frame appears as a lower split within the existing window.  Also, I create my own 'dt-ediff-hook' where I add 'j/k' for moving to next/prev diffs.  By default, this is set to 'n/p'.
 
 automatically fold when moving j/k?
@@ -512,7 +655,7 @@ automatically fold when moving j/k?
       ediff-window-setup-function 'ediff-setup-windows-plain)
 #+end_src
 
-* ELFEED
+** ELFEED
 An RSS newsfeed reader for Emacs.  Move through the articles with 'j/k'.  Move through the stories with 'CTRL j/k' when in other frame.
 
 https://github.com/remyhonig/elfeed-org
@@ -579,7 +722,7 @@ https://github.com/remyhonig/elfeed-org
 
 #+end_src
 
-* EVIL
+** EVIL
 [[https://github.com/emacs-evil/evil][Evil]] is an extensible vi/vim layer for Emacs.  Because...let's face it.  The Vim keybindings are just plain better.
 
 evil-toggle-key
@@ -843,7 +986,7 @@ evil-toggle-key
 
 #+end_src
 
-* FLYCHECK
+** FLYCHECK
 Install =luacheck= from your Linux distro's repositories for flycheck to work correctly with lua files.  Install =python-pylint= for flycheck to work with python files.  Haskell works with flycheck as long as =haskell-ghc= or =haskell-stack-ghc= is installed.  For more information on language support for flycheck, [[https://www.flycheck.org/en/latest/languages.html][read this]].
 
 #+begin_src elisp
@@ -859,51 +1002,13 @@ Install =luacheck= from your Linux distro's repositories for flycheck to work co
   )
 #+end_src
 
-* FONTS
-Defining the various fonts that Emacs will use.
-
-** Setting the Font Face
-#+begin_src elisp
-(set-face-attribute 'default nil
-        ;; :font "JetBrains Mono"
-        ;; :font "Iosevka Term Curly-regular-normal"
-        :font "Aporetic Sans"
-        :height 110
-        :weight 'medium)
-(set-face-attribute 'variable-pitch nil
-        :font "Aporetic Sans"
-        :height 120
-        :weight 'medium)
-(set-face-attribute 'fixed-pitch nil
-        :font "Aporetic Sans Mono"
-        :height 110
-        :weight 'medium)
-;; Makes commented text and keywords italics.
-;; This is working in emacsclient but not emacs.
-;; Your font must have an italic face available.
-(set-face-attribute 'font-lock-comment-face nil
-        :slant 'italic)
-(set-face-attribute 'font-lock-keyword-face nil
-        :slant 'italic)
-
-;; This sets the default font on all graphical frames created after restarting Emacs.
-;; Does the same thing as 'set-face-attribute default' above, but emacsclient fonts
-;; are not right unless I also add this method of setting the default font.
-;; (add-to-list 'default-frame-alist '(font . "JetBrains Mono-11"))
-;; (add-to-list 'default-frame-alist '(font . "Aporetic Sans"))
-
-;; Uncomment the following line if line spacing needs adjusting.
-(setq-default line-spacing 0.12)
-
-#+end_src
-
-** Font preview
+*** Font preview
 #+begin_src elisp
 (use-package show-font
   :ensure (:host github :repo "protesilaos/show-font"))
 #+end_src
 
-* GENERAL KEYBINDINGS
+** GENERAL KEYBINDINGS
 #+begin_src elisp
 (use-package general
   :after evil
@@ -911,7 +1016,7 @@ Defining the various fonts that Emacs will use.
   (general-evil-setup)
 #+end_src
 
-** Toggle
+*** Toggle
 #+begin_src elisp
 
 (general-create-definer gz/unimpaired
@@ -935,7 +1040,7 @@ Defining the various fonts that Emacs will use.
   "b" '((lambda()(interactive)(invert-face 'default)) :wk "Toggle background color"))
 #+end_src
 
-** Picker
+*** Picker
   is there a similar plugin for emacs?
   maybe use translation
   maybe use one prefix for snacks and another for one shot commands
@@ -967,7 +1072,7 @@ Defining the various fonts that Emacs will use.
 )
 #+end_src
 
-** <Leader>
+*** <Leader>
 #+begin_src elisp
 
 
@@ -1073,8 +1178,8 @@ Defining the various fonts that Emacs will use.
 )
 #+end_src
 
-* GIT
-** Magit
+** GIT
+*** Magit
 [[https://magit.vc/manual/][Magit]] is a full-featured git client for Emacs.
 
 saving = C-c behavior?
@@ -1100,13 +1205,13 @@ how to go from diff to file w/ line num?
   :hook (magit-mode . magit-delta-mode))
 #+end_src
 
-** Forge
+*** Forge
 #+begin_src elisp
 ;; (use-package forge
 ;;   :after magit)
 #+end_src
 
-** Git-gutter
+*** Git-gutter
 #+begin_src elisp
 (use-package git-gutter
   :demand t
@@ -1125,7 +1230,7 @@ how to go from diff to file w/ line num?
   :config (global-git-gutter-mode +1))
 #+end_src
 
-* HIGHLIGHT TODO
+** HIGHLIGHT TODO
 Adding highlights to TODO and related words.
 
 #+begin_src elisp
@@ -1144,7 +1249,7 @@ Adding highlights to TODO and related words.
 
 #+end_src
 
-* IVY (COUNSEL)
+** IVY (COUNSEL)
 + Ivy, a generic completion mechanism for Emacs.
 + Counsel, a collection of Ivy-enhanced versions of common Emacs commands.
 + Ivy-rich allows us to add descriptions alongside the commands in M-x.
@@ -1269,7 +1374,7 @@ also check out helm/etc... keybindings
 
 #+end_src
 
-* LANGUAGE SUPPORT
+** LANGUAGE SUPPORT
 Emacs has built-in programming language modes for Lisp, Scheme, DSSSL, Ada, ASM, AWK, C, C++, Fortran, Icon, IDL (CORBA), IDLWAVE, Java, Javascript, M4, Makefiles, Metafont, Modula2, Object Pascal, Objective-C, Octave, Pascal, Perl, Pike, PostScript, Prolog, Python, Ruby, Simula, SQL, Tcl, Verilog, and VHDL.  Other languages will require you to install additional modes.
 
 #+begin_src elisp
@@ -1289,41 +1394,7 @@ Emacs has built-in programming language modes for Lisp, Scheme, DSSSL, Ada, ASM,
 ;; (add-to-list 'org-src-lang-modes '("tridactylrc" . tridactyl-mode)))
 #+end_src
 
-* MINIBUFFER
-**  ESCAPE
-By default, Emacs requires you to hit ESC three times to escape quit the minibuffer.
-
-#+begin_src elisp
-;; mappa escape a c-g e c-g a original vim behaviour?
-(global-set-key [escape] 'keyboard-escape-quit)
-#+end_src
-
-**  READLINE SANITY
-#+begin_src elisp
-;; replica instert mappings in emacs state?
-(define-key minibuffer-local-map (kbd "C-h") #'backward-delete-char)
-(define-key minibuffer-local-map (kbd "C-w") #'backward-kill-word)
-
-;; is interactive necessary here?
-
-(with-eval-after-load 'evil-maps
-  (define-key evil-insert-state-map (kbd "<ctl-x> C-?") (lambda () (interactive)(kill-line 0)))
-  ;; (define-key evil-insert-state-map (kbd "<C-]>") (lambda () (interactive)(evil-execute-in-normal-state)(execute-kbd-macro (kbd "f"))))
-
-  ;; (define-key evil-insert-state-map (kbd "<C-M-]>")
-  ;;   (lambda ()
-  ;;     (interactive)
-  ;;     (evil-execute-in-normal-state
-  ;;      (lambda ()
-  ;;        (call-interactively #'evil-find-char-backward)))))
-
-
-  )
-(define-key minibuffer-local-map (kbd "<ctl-x> C-?") (lambda () (interactive)(kill-line 0)))
-;; (define-key minibuffer-local-map (kbd "M-#") (lambda () (interactive)( 0)))
-#+end_src
-
-* MODELINE
+** MODELINE
 The modeline is the bottom status bar that appears in Emacs windows.  While you can create your own custom modeline, why go to the trouble when Doom Emacs already has a nice modeline package available.  For more information on what is available to configure in the Doom modeline, check out: [[https://github.com/seagle0128/doom-modeline][Doom Modeline]]
 
 #+begin_src elisp
@@ -1349,7 +1420,7 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
 
 #+end_src
 
-* ORG MODE
+** ORG MODE
 - [ ] https://github.com/alphapapa/org-web-tools
 #+begin_src elisp
 ;; :pin org/gnu?
@@ -1375,7 +1446,7 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
   )
 #+end_src
 
-** Make more appealing
+*** Make more appealing
 #+begin_src elisp
 ;; https://github.com/A7R7/org-popup-posframe
 (setq org-ellipsis " ▼"
@@ -1399,7 +1470,7 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
 
 #+end_src
 
-*** visual-fill-column
+**** visual-fill-column
 #+begin_src elisp
 (defun efs/org-mode-visual-fill ()
   (setq visual-fill-column-width 100
@@ -1410,7 +1481,7 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
   :hook (org-mode . efs/org-mode-visual-fill))
 #+end_src
 
-** Log
+*** Log
 
 #+begin_src elisp
 (setq org-agenda-start-with-log-mode t)
@@ -1418,7 +1489,7 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
 (setq org-log-into-drawer t)
 #+end_src
 
-** States
+*** States
 
 #+begin_src elisp
 (setq org-todo-keywords
@@ -1427,7 +1498,7 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
 ;; #+TODO: TODO IN-PROGRESS WAITING | DONE CANCELLED
 #+end_src
 
-** Set of commonly known tags
+*** Set of commonly known tags
 #+begin_src elisp
 (setq org-tag-alist
       '((:startgroup)
@@ -1446,7 +1517,7 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
   ("recurring" . ?r)))
 #+end_src
 
-** Refiling
+*** Refiling
 #+begin_src elisp
 (setq org-refile-targets
       '(("~/notes/refile.org" :maxlevel . 1)
@@ -1460,7 +1531,7 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
 ;; C-c M-r wrong number of arguments?
 #+end_src
 
-** Capture templates
+*** Capture templates
 #+begin_src elisp
 ;; start in insert mode?
 ;; (setq org-default-notes-file "~/notes/inbox.org")
@@ -1494,7 +1565,7 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
 
 #+end_src
 
-** Habit tracking
+*** Habit tracking
 #+begin_src elisp
 
 (with-eval-after-load 'org
@@ -1504,14 +1575,14 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
 )
 #+end_src
 
-** Enabling Table of Contents
+*** Enabling Table of Contents
 #+begin_src elisp
 (use-package toc-org
   :commands toc-org-enable
   :hook (org-mode . toc-org-enable))
 #+end_src
 
-** Yank
+*** Yank
 #+begin_src elisp
 (use-package org-rich-yank
   :ensure t
@@ -1528,12 +1599,12 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
   (customize-set-variable 'org-rich-yank-format-paste #'my-org-rich-yank-format-paste))
 #+end_src
 
-** Org-ref
+*** Org-ref
 #+begin_src elisp
 (use-package org-ref)
 #+end_src
 
-** Diminish Org Indent Mode
+*** Diminish Org Indent Mode
 Removes "Ind" from showing in the modeline.
 
 #+begin_src elisp
@@ -1541,7 +1612,7 @@ Removes "Ind" from showing in the modeline.
 (eval-after-load 'org-indent '(diminish 'org-indent-mode))
 #+end_src
 
-** Org Level Headers
+*** Org Level Headers
 #+begin_src elisp
 (custom-set-faces
  '(org-level-1 ((t (:inherit outline-1 :height 1.7))))
@@ -1553,7 +1624,7 @@ Removes "Ind" from showing in the modeline.
  '(org-level-7 ((t (:inherit outline-5 :height 1.1)))))
 #+end_src
 
-** Source Code Block Tag Expansion
+*** Source Code Block Tag Expansion
 Org-tempo is not a separate package but a module within org that can be enabled.  Org-tempo allows for '<s' followed by TAB to expand to a begin_src tag.  Other expansions available include:
 
 | Typing the below + TAB | Expands to ...                           |
@@ -1600,7 +1671,7 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
 #+end_src
 
 
-** ORG AGENDA
+*** ORG AGENDA
 #+begin_src elisp
 ;; (setq org-directory "~/notes")
 ;; (setq org-agenda-files "~/notes/agenda.org")
@@ -1614,7 +1685,7 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
   "~/notes/Habits.org"))
 #+end_src
 
-*** Configure custom agenda views
+**** Configure custom agenda views
 #+begin_src elisp
 (setq org-agenda-custom-commands
       '(("d" "Dashboard"
@@ -1664,7 +1735,7 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
      (org-agenda-files org-agenda-files)))))))
 #+end_src
 
-** ORG BABEL
+*** ORG BABEL
 #+begin_src elisp
 (setq org-confirm-babel-evaluate nil)
 ;;(use-package ob-mermaid)
@@ -1705,7 +1776,7 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
 #+end_src
 
 https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892d569f19fd66a/contrib/lisp/ob-php.el
-*** html
+**** html
 #+begin_src elisp
 (use-package ob-html
   :ensure (:host github :repo "misohena/ob-html")
@@ -1716,7 +1787,7 @@ https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892
 )
 #+end_src
 
-*** Neovim
+**** Neovim
 #+begin_src elisp
 (defun org-babel-execute:vimrc (body params)
   "Execute VimL BODY according to PARAMS."
@@ -1755,7 +1826,7 @@ https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892
   (add-to-list 'org-src-lang-modes '("nlua" . lua)))
 #+end_src
 
-** Auto-tangle
+*** Auto-tangle
 #+begin_src elisp
 ;; Automatically tangle our dotfiles when we save them
 (defun efs/org-babel-tangle-config ()
@@ -1774,7 +1845,7 @@ https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892
 
 #+end_src
 
-** IMAGES
+*** IMAGES
 #+begin_src elisp
 (setq org-image-actual-width '(1200))  ;; so i can use :width attribute
 (setq org-startup-with-inline-images t) ;; would be nice if automatically open if over line like neovim/snacks
@@ -1784,7 +1855,7 @@ https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892
 #+end_src
 
 
-** org-mpv-note
+*** org-mpv-note
 usa with yt-dlp
 #+begin_src elisp
 (use-package smartrep
@@ -1806,20 +1877,20 @@ usa with yt-dlp
   :ensure t)
 #+end_src
 
-** org-autolist
+*** org-autolist
 #+begin_src elisp
 (use-package org-autolist :diminish :hook (org-mode . org-autolist-mode))
 #+end_src
 
 org-cheatsheet, org-reveal.js? mindmaps?
 
-** org modern
+*** org modern
 #+begin_src elisp
 (use-package org-modern
   :hook (org-mode . org-modern-mode))
 #+end_src
 
-** Settings
+*** Settings
 #+begin_src elisp
 (setq org-edit-src-content-indentation 0) ;; Set src block automatic indent to 0 instead of 2.
 
@@ -1831,7 +1902,7 @@ org-cheatsheet, org-reveal.js? mindmaps?
 (add-to-list 'org-file-apps '("\\.pdf\\'" . emacs)))
 #+end_src
 
-** org-noter
+*** org-noter
 https://github.com/novoid/Memacs
 https://github.com/novoid/extract_pdf_annotations_to_orgmode
 https://github.com/fuxialexander/org-pdftools
@@ -1876,7 +1947,7 @@ https://github.com/fuxialexander/org-pdftools
   (define-key org-noter-notes-mode-map (kbd "C-M-n") 'org-noter-sync-next-page-or-chapter))
 #+end_src
 
-** Unfold when ediffing
+*** Unfold when ediffing
 #+begin_src elisp
 ;; https://narkive.com/3rhdeunW:5.744.172
 (defun ora-ediff-prepare-buffer ()
@@ -1890,7 +1961,7 @@ https://github.com/fuxialexander/org-pdftools
 (use-package shrface)
 #+end_src
 
-* PDFs
+** PDFs
 [[https://github.com/vedang/pdf-tools][pdf-tools]] is a replacement of DocView for viewing PDF files inside Emacs.  It uses the =poppler= library, which also means that 'pdf-tools' can by used to modify PDFs.  I use to disable 'display-line-numbers-mode' in 'pdf-view-mode' because line numbers crash it.
 
 fit page to window size?
@@ -1966,14 +2037,14 @@ invert colors?
   :mode "\\.pdf\\'")
 #+end_src
 
-* EPUBs
+** EPUBs
 #+begin_src elisp
  (use-package nov
     :mode ("\\.epub\\'" . nov-mode)
     :custom (nov-text-width 75))
 #+end_src
 
-* RAINBOW DELIMITERS
+** RAINBOW DELIMITERS
 Adding rainbow coloring to parentheses.
 
 #+begin_src elisp
@@ -1984,7 +2055,7 @@ Adding rainbow coloring to parentheses.
 
 #+end_src
 
-* RAINBOW MODE
+** RAINBOW MODE
 Display the actual color as a background for any hex color value (ex. #ffffff).  The code block below enables rainbow-mode in all programming modes (prog-mode) as well as org-mode, which is why rainbow works in this document.
 
 #+begin_src elisp
@@ -1993,16 +2064,16 @@ Display the actual color as a background for any hex color value (ex. #ffffff). 
   :hook org-mode prog-mode)
 #+end_src
 
-* SUBWORD MODE
+** SUBWORD MODE
 use ij/aj for this?
 #+begin_src elisp
 (add-hook 'prog-mode-hook #'subword-mode)
 #+end_src
 
-* SHELLS AND TERMINALS
+** SHELLS AND TERMINALS
 In my configs, all of my shells (bash, fish, zsh and the ESHELL) require my shell-color-scripts-git package to be installed.  On Arch Linux, you can install it from the AUR.  Otherwise, go to my shell-color-scripts repository on GitLab to get it.
 
-** Enhancements
+*** Enhancements
 #+begin_src elisp
 (use-package kkp
   :ensure t
@@ -2011,7 +2082,7 @@ In my configs, all of my shells (bash, fish, zsh and the ESHELL) require my shel
   (global-kkp-mode +1))
 #+end_src
 
-** Eshell
+*** Eshell
 Eshell is an Emacs 'shell' that is written in Elisp.
 
 #+begin_src elisp
@@ -2034,7 +2105,7 @@ Eshell is an Emacs 'shell' that is written in Elisp.
       eshell-visual-commands'("bash" "fish" "htop" "ssh" "top" "zsh"))
 #+end_src
 
-** Vterm
+*** Vterm
 Vterm is a terminal emulator within Emacs.  The 'shell-file-name' setting sets the shell to be used in M-x shell, M-x term, M-x ansi-term and M-x vterm.  By default, the shell is set to 'fish' but could change it to 'bash' or 'zsh' if you prefer.
 
 #+begin_src elisp
@@ -2085,7 +2156,7 @@ Vterm is a terminal emulator within Emacs.  The 'shell-file-name' setting sets t
 ;;               (window-height . 0.4)))
 #+end_src
 
-* SUDO EDIT
+** SUDO EDIT
 [[https://github.com/nflath/sudo-edit][sudo-edit]] gives us the ability to open files with sudo privileges or switch over to editing with sudo privileges if we initially opened the file without such privileges.
 
 #+begin_src elisp
@@ -2094,7 +2165,7 @@ Vterm is a terminal emulator within Emacs.  The 'shell-file-name' setting sets t
 ;; '(sudo-edit :wk "Sudo edit file"))
 #+end_src
 
-* THEME
+** THEME
 The first line below designates the directory where will place all of our custom-made themes, which I have created only one (dtmacs).  You can create your own Emacs themes with the help of the [[https://emacsfodder.github.io/emacs-theme-editor/][Emacs Theme Editor]].  I am also installing =doom-themes= because it contains a huge collection of themes.  M-x load-theme will list all of the themes available.
 
 #+begin_src elisp
@@ -2105,22 +2176,13 @@ The first line below designates the directory where will place all of our custom
 (use-package ef-themes :ensure t :config(ef-themes-select 'ef-dream))
 #+end_src
 
-* TLDR
+** TLDR
 
 #+begin_src elisp
 (use-package tldr :commands tldr)
 #+end_src
 
-* TRANSPARENCY
-With Emacs version 29, true transparency has been added.  I have turned transparency off by setting the alpha to '100'.  If you want some slight transparency, try setting alpha to '90'.  Of course, if you set alpha to '0', the background of Emacs would completely transparent.
-
-TODO: doesn't work in terminal
-
-#+begin_src elisp
-(add-to-list 'default-frame-alist '(alpha-background . 87)) ; For all new frames henceforth
-#+end_src
-
-* WHICH-KEY
+** WHICH-KEY
 TODO: put popup in the middle?
 how to copy or put everything in the popup in a buffer?
 #+begin_src elisp
@@ -2156,14 +2218,14 @@ how to copy or put everything in the popup in a buffer?
   )
 #+end_src
 
-* COMMAND-LOG
+** COMMAND-LOG
 keycast
 #+begin_src elisp
 (use-package command-log-mode
     :commands command-log-mode)
 #+end_src
 
-* TODO [#B] KANATA SHEGANIGANS
+** TODO [#B] KANATA SHEGANIGANS
 #+begin_src elisp
 (use-package kanata-kbd-mode
   :ensure (:host github :repo "chmouel/kanata-kbd-mode")
@@ -2203,7 +2265,7 @@ keycast
 ;;(keymap-global-set "<Launch5>" ctl-x-map)
 #+end_src
 
-* NOICE :vim:
+** NOICE                                                                 :vim:
 toggle full screen binding?
 #+begin_src elisp
 ;;(use-package mini-frame
@@ -2227,7 +2289,7 @@ toggle full screen binding?
   (ivy-posframe-mode 1))
 #+end_src
 
-* HELPFUL
+** HELPFUL
 #+begin_src elisp
 (use-package helpful
   :commands (helpful-callable helpful-variable helpful-command helpful-key)
@@ -2242,7 +2304,7 @@ toggle full screen binding?
 
 #+end_src
 
-* HYDRA
+** HYDRA
 #+begin_src elisp
 ;; (use-package hydra :defer t)
 ;; (defhydra hydra-text-scale (:timeout 4)
@@ -2255,7 +2317,7 @@ toggle full screen binding?
 ;; "ts" '(hydra-text-scale/body :which-key "scale text"))
 #+end_src
 
-* LISPY
+** LISPY
 #+begin_src elisp
 ;; (use-package lispy)
 ;; (use-package evil-lispy
@@ -2268,94 +2330,20 @@ toggle full screen binding?
 ;;   (lispyville-set-key-theme '(operators c-w additional)))
 #+end_src
 
-* Universal argument
-basically space followed by a modifier should behave as C-u, otherwise as space (leader prefix for groups) (sadly doesn't work for stuff like c-u s in magit..., use hook?)
-lol, empty source blocks don't make emacs work...
-;;#+begin_src elisp
-;;#+end_src
-
-* ERC
+** ERC
 #+begin_src elisp
 (setq erc-prompt(lambda()(concat"["(buffer-name)"]"))
       erc-server "irc.libera.chat")
 ;; hide IP?
 #+end_src
 
-* VIM PARITY
-
-#+begin_src elisp
-
-(defun open-line-below (&optional count)
-  "Open COUNT new lines below the current line and move the cursor to the first one."
-  (interactive "p")
-  (end-of-line)
-  (dotimes (_ (or count 1))
-    (newline-and-indent)))
-
-(defun open-line-above (&optional count)
-  "Open COUNT new lines above the current line and move the cursor to the first one."
-  (interactive "p")
-  (beginning-of-line)
-  (newline-and-indent)
-  (forward-line -1)
-  (indent-according-to-mode)
-  (dotimes (_ (1- (or count 1)))
-    (newline-and-indent)))
-
-(with-eval-after-load 'evil-maps
-  ;; doesn't work
-  ;;(define-key evil-normal-state-map (kbd "d =") #'ediff-current-file)
-  ;; c-l diffupdate? automatically though?
-
-  ;; terminal trick
-  (define-key evil-insert-state-map (kbd "M-o") #'open-line-below)
-  (define-key evil-insert-state-map (kbd "M-O") #'open-line-above)
-  )
-#+end_src
-
-gcO equivalenent: O<M-j>
-gco equivalenent: o<M-j>
-screenshots? https://github.com/tecosaur/screenshot
-  bs visual mode remove duplicates
-*** Invert comments
-#+begin_src elisp
-;; (defun evil-invert-comment-region ()
-;;   "Comment uncommented lines and uncomment commented lines in the selected region.
-;;   Uses the proper comment syntax for the current major mode."
-;;   (interactive)
-;;   (let* ((beg (region-beginning))
-;;          (end (region-end))
-;;          (commented-lines 0)
-;;          (total-lines 0))
-
-;;     ;; Count commented lines using the mode's comment syntax
-;;     (save-excursion
-;;       (goto-char beg)
-;;       (while (< (point) end)
-;;         (beginning-of-line)
-;;         (setq total-lines (1+ total-lines))
-;;         (when (comment-only-p (line-beginning-position)
-;;                               (line-end-position))
-;;           (setq commented-lines (1+ commented-lines)))
-;;         (forward-line 1)))
-
-;;     ;; If more than half of lines are commented, uncomment the region
-;;     ;; Otherwise, comment the region
-;;     (if (>= commented-lines (/ total-lines 2))
-;;         (uncomment-region beg end)
-;;       (comment-region beg end))))
-
-;; ;; Bind it to a key in evil visual mode
-;; (evil-define-key '(visual) 'global (kbd "gi") 'evil-invert-comment-region)
-#+end_src
-
-* QUIZ
+** QUIZ
 key-quiz-use-mode
 #+begin_src elisp
 (use-package key-quiz :commands key-quiz)
 #+end_src
 
-* THEMES
+** THEMES
 
 doesn't work!
 https://www.reddit.com/r/emacs/comments/1kr94v4/automagic_dark_mode_automatically_create_a_dark/
@@ -2376,14 +2364,14 @@ https://www.reddit.com/r/emacs/comments/1kr94v4/automagic_dark_mode_automaticall
 ;;  :init (setq custom-safe-themes t)(auto-dark-mode))
 #+end_src
 
-* DOCS
+** DOCS
 #+begin_src elisp
 (use-package devdocs
   :bind (("C-h D" . devdocs-lookup))
   )
 #+end_src
 
-* anki editor
+** anki editor
  org-queue 
 #+begin_src elisp
 (use-package org-srs
@@ -2395,10 +2383,10 @@ https://www.reddit.com/r/emacs/comments/1kr94v4/automagic_dark_mode_automaticall
          ("<f7>" . org-srs-review-rate-hard)
          ("<f8>" . org-srs-review-rate-again)))
 #+end_src
-* notes?
+** notes?
  css: #+setupfile: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
 https://github.com/chenyanming/paw?tab=readme-ov-file
-* TODO Radio
+** TODO Radio
 integrate w/ emms?
 #+begin_src elisp
 (use-package eradio
@@ -2459,7 +2447,7 @@ integrate w/ emms?
 ;; ("cafe - lainon"     . "https://lainon.life/radio/cafe.ogg.m3u")))  ;; boring ambient, but with lain
 #+end_src
 
-* info
+** info
 disable vim keys in info-mode except j and k?
 #+begin_src elisp
 (use-package info-colors
@@ -2467,7 +2455,7 @@ disable vim keys in info-mode except j and k?
   )
 #+end_src
 
-* docker
+** docker
 https://github.com/abrochard/kubel
 #+begin_src elisp
 (use-package docker
@@ -2476,10 +2464,10 @@ https://github.com/abrochard/kubel
   )
 #+end_src
 
-* AI
+** AI
 use general leader keymaps
-** LLM
-*** GPTEL
+*** LLM
+**** GPTEL
 https://github.com/karthink/gptel/issues/165
 #+begin_src elisp
 (use-package gptel ;; :bind ("C-c RET" . 'gptel)
@@ -2531,13 +2519,13 @@ https://github.com/karthink/gptel/issues/165
 
 #+end_src
 
-**** Presets
+***** Presets
 #+begin_src elisp
 (gptel-make-preset 'explain
   :system "Explain what this code does to a novice programmer.")
 #+end_src
 
-**** Tools
+***** Tools
 #+begin_src elisp
 ;;
 #+end_src
@@ -2571,7 +2559,7 @@ https://github.com/karthink/gptel/issues/165
 )
 #+end_src
 
-**** Functions
+***** Functions
 #+begin_src elisp
 ;; how to rewrite in place?
 (defun gptel-pinyin-to-chinese ()
@@ -2597,7 +2585,7 @@ https://github.com/karthink/gptel/issues/165
     ))
 #+end_src
 
-**** Quick
+***** Quick
 #+begin_src elisp
 (use-package posframe :ensure (:host github :repo "tumashu/posframe"))
 (use-package gptel-quick
@@ -2619,21 +2607,21 @@ word count of the response."
 (define-key global-map (kbd "C-c t") 'gptel-quick-translate)
 #+end_src
 
-** MCP
-** ECA
+*** MCP
+*** ECA
 #+begin_src elisp
 (use-package eca :ensure(:host github :repo "editor-code-assistant/eca-emacs")
   :config
     (evil-define-key 'normal eca-chat-map (kbd "<return>") 'eca-chat--key-pressed-return)
   )
 #+end_src
-* EOF
+** EOF
 
 #+begin_src elisp
 ;; (use-package vi-tilde-fringe-mode)
 #+end_src
 
-* [#A] LSP
+** [#A] LSP
 #+begin_src elisp
 (defun efs/lsp-mode-setup ()
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
@@ -2661,8 +2649,8 @@ word count of the response."
 
 #+end_src
 
-* Tree-sitter
-** Text-objects
+** Tree-sitter
+*** Text-objects
 Wait a few months
 #+begin_src elisp :tangle no
 (use-package evil-textobj-tree-sitter :ensure t
@@ -2689,7 +2677,7 @@ Wait a few months
 ;         ("C-x t M-t" . treemacs-find-tag)))
 ,#+end_src
 
-* Socials
+** Socials
 https://github.com/alphapapa/ement.el
 #+begin_src elisp
 (use-package reddigg
@@ -2699,7 +2687,7 @@ https://github.com/alphapapa/ement.el
   )
 #+end_src
 
-* Snippets
+** Snippets
 https://www.youtube.com/watch?v=W-bRZlseNm0
 #+begin_src elisp
 (use-package yasnippet-snippets
@@ -2712,11 +2700,11 @@ https://www.youtube.com/watch?v=W-bRZlseNm0
   (yas-global-mode 1))
 #+end_src
 
-* Password management
+** Password management
 
 https://github.com/ecraven/ivy-pass
 
-* Music
+** Music
 #+begin_src elisp
 ;; Emacs Multimedia System
 ;; tags?
@@ -2761,15 +2749,7 @@ https://github.com/ecraven/ivy-pass
 
 #+end_src
 
-* Authinfo
-Use only the gpg-encrypted version of the file.
-
-#+begin_src elisp :tangle no
-(setq auth-source-debug nil)
-(setq auth-sources '("~/.authinfo.gpg"))
-#+end_src
-
-* STT
+** STT
 #+begin_src elisp
 ; (use-package whisper
   ;; :bind ("C-H-r" . whisper-run)
@@ -2777,26 +2757,14 @@ Use only the gpg-encrypted version of the file.
   ; (whisper-model "small"))
 #+end_src
 
-* Keybindings
-#+begin_src elisp
-(define-key global-map (kbd "C-c w") 'webjump)
-;;   "s d" '(dictionary-search :wk "Search dictionary")
-;;   "s m" '(man :wk "Man pages")
-;;   "s t" '(tldr :wk "Lookup TLDR docs for a command")
-;;   "s w" '(woman :wk "Similar to man but doesn't require man"))
-
-;; benchmark
-;; profiler-{start,stop}
-#+end_src
-
-* Info
+** Info
 #+begin_src elisp
 (use-package info-variable-pitch
   :ensure (:host github :repo "kisaragi-hiu/info-variable-pitch")
   :hook (Info-mode . info-variable-pitch-mode))
 #+end_src
 
-* Translation
+** Translation
 #+begin_src elisp
 (use-package immersive-translate
   :ensure t
@@ -2805,12 +2773,12 @@ Use only the gpg-encrypted version of the file.
 )
 #+end_src
 
-* Pages
+** Pages
 #+begin_src elisp
 (use-package page-break-lines)
 #+end_src
 
-* symex
+** symex
 #+begin_src elisp
 ; (use-package symex
 ;  :after evil
@@ -2819,18 +2787,18 @@ Use only the gpg-encrypted version of the file.
 ;   (evil-define-key 'normal 'global (kbd "<leader>;") 'symex-mode-interface))
 #+end_src
 
-* Prism
+** Prism
 #+begin_src elisp
 (use-package prism
   :ensure (:host github :repo "alphapapa/prism.el"))
 #+end_src
 
-* Gnuplot
+** Gnuplot
 #+begin_src elisp
 (use-package gnuplot)
 #+end_src
 
-* Gists
+** Gists
 ,#+begin_src elisp
 (use-package ox-gist)
 ,#+end_src
