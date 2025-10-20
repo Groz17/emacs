@@ -121,6 +121,7 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] c-o in help buffers?
 - [ ] ts textobjects
 - [ ] reload pdf on save?
+- [ ] if cursor is after last char line, M-l should uppercase last (current) word
 - [ ] text object for orgmode block?
 - [ ] vip non comprende begin_src?
 - [ ] make emacs same ts and lsp as mason? or just use guix
@@ -411,10 +412,6 @@ The following settings are simple modes that are enabled (or disabled) so that E
 
 (setq dictionary-server "dict.org")
 
-(use-package eros
-  :ensure (:host github :repo "xiongtx/eros")
-  :init (eros-mode 1)
-  )
 #+end_src
 
 ** [[https://www.reddit.com/r/emacs/comments/3u0d0u/how_do_i_make_the_vertical_window_divider_more/][Prettier vertical window divider in terminal]]
@@ -2797,6 +2794,13 @@ https://github.com/ecraven/ivy-pass
 ** Gnuplot
 #+begin_src elisp
 (use-package gnuplot)
+#+end_src
+
+#+begin_src elisp
+(use-package eros
+  :ensure (:host github :repo "xiongtx/eros")
+  :init (eros-mode 1)
+  )
 #+end_src
 
 ** Gists
