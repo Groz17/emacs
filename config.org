@@ -111,6 +111,7 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] HOOKS # when exiting emacs open terminal?
 - [ ] dotfiles dirs in projects/bookmarks?
 - [ ] avy-goto
+- [ ] tangle only part of file that was modified (diff), especially not touched files
 - [ ] kill shell buffer with C-d if first char?
 - [ ] https://github.com/SqrtMinusOne/pomm.el?tab=readme-ov-file
 - [ ] emmet?
