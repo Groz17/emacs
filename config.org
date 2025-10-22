@@ -1421,6 +1421,7 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
 
 ** ORG MODE
 - [ ] https://github.com/alphapapa/org-web-tools
+https://github.com/isamert/corg.el
 #+begin_src elisp
 ;; :pin org/gnu?
 (use-package org
