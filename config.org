@@ -105,7 +105,7 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] emacs keybindings in /? (searching)
 - [ ] git@github.com:ag91/moldable-emacs.git"))
 - [ ] https://github.com/tarsius/keychain-environment/blob/main/keychain-environment.el#L27-L48
-- [ ] rooter? autochdir?
+- [X] rooter? autochdir?
 - [X] automatically focus split on mouse
 - [ ] HOOKS # when exiting emacs open terminal?
 - [ ] dotfiles dirs in projects/bookmarks?
@@ -367,6 +367,12 @@ The following settings are simple modes that are enabled (or disabled) so that E
 
 (setq mouse-autoselect-window t)
 (setq focus-follows-mouse t)
+
+(add-hook 'find-file-hook
+  (lambda ()
+    (when (and buffer-file-name
+               (locate-dominating-file default-directory ".git"))
+      (cd (locate-dominating-file default-directory ".git")))))
 
 ;; (setq display-buffer-alist
 ;;       '(
