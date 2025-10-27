@@ -144,9 +144,7 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] use C-o in emacs mode to one shot insert mode?
 - [ ] using vimscript for scripting/mapping? like %s? create transpiler
 - [ ] make insert mode be like emacs mode? get rid of insert mode
-- [ ] readline in shell
 - [ ] whatsapp
-- [ ] indent/dedent in insert/emacs mode?
 - [-] doom modeline at the top? or at least tabline?
 - [ ] vim insert mode equivalents in emacs?
 - [ ] fixa eol behaviour?
@@ -797,6 +795,10 @@ evil-toggle-key
 
 ;; https://stackoverflow.com/questions/46513910/emacs-evil-mode-binding-mouse-event
 (define-key evil-motion-state-map [down-mouse-1] nil) ; for artist-mode
+
+;; Indent/dedent in insert mode
+(define-key evil-insert-state-map (kbd "C-S-d") 'evil-shift-left-line)
+(define-key evil-insert-state-map (kbd "C-S-t") 'evil-shift-right-line)
 
   )
 
