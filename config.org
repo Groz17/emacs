@@ -136,7 +136,7 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] is perspectie a global minor mode since it used c-c m-... as prefix?
 - [ ] n/l text objects
 - [ ] for some reason c-o doesn't work in minibuffer
-- [ ] (beacon-mode 1)
+- [X] (beacon-mode 1)
 - [ ] search in this todo lists?
 - [ ] automatically jump if symlink... (libraries)
 - [X] quickfix/loclist equivalent? kinda, c-c c-o
@@ -608,6 +608,16 @@ This package implements hiding or abbreviation of the modeline displays (lighter
 
 #+begin_src elisp
 (use-package diminish)
+#+end_src
+
+** BEACON
+Highlight cursor position when switching windows or scrolling.
+
+#+begin_src elisp
+(use-package beacon
+  :ensure t
+  :config
+  (beacon-mode 1))
 #+end_src
 
 ** DIRED
