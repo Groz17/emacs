@@ -1913,6 +1913,10 @@ org-cheatsheet, org-reveal.js? mindmaps?
 ;; Setting RETURN key in org-mode to follow links
 (setq org-return-follows-link  t)
 
+;; Automatically update TODO statistics cookies [/] and [%]
+; (setq org-hierarchical-todo-statistics nil)
+; (add-hook 'org-after-todo-state-change-hook 'org-update-parent-todo-statistics)
+
 (with-eval-after-load 'org
 (add-to-list 'org-file-apps '("\\.pdf\\'" . emacs)))
 #+end_src
