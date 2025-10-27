@@ -93,7 +93,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 
 * TODO TASK LIST
 ** Vim feature parity [1/6] [16%]
-- [ ] :restart command/keybinding... (maybe C-x C-S-c?)
 - [ ] gf shows popup for some reason
 - [ ] v:count tab doesn't work in org mode tables? also how to make column same width?
 - [ ] lazy ui for slowest plugins?
@@ -133,7 +132,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [X] reload this config?
 - [ ] use space as l in operator mode
 - [ ] u could also use c-w as prefix since u use a/l for that, but don't since vim doesn't have function for windows... maybe wincmd though?
-- [ ] text-scale-increase
 - [ ] C-l as enter for imenu, etc...?
 - [ ] is perspectie a global minor mode since it used c-c m-... as prefix?
 - [ ] n/l text objects
@@ -287,6 +285,13 @@ Defining the various fonts that Emacs will use.
   (interactive)
   (load-file (expand-file-name "~/.config/emacs/init.el"))
   (message "Config reloaded!"))
+
+;; :restart command/keybinding... (maybe C-x C-S-c?)
+(defun gz/restart-emacs ()
+  "Restart Emacs"
+  (interactive)
+  (let ((kill-emacs-hook (append kill-emacs-hook (list (lambda () (call-process "emacsclient -a''" nil nil nil))))))
+    (save-buffers-kill-emacs)))
 #+end_src
 
 
@@ -1182,6 +1187,7 @@ Install =luacheck= from your Linux distro's repositories for flycheck to work co
 (gz/leader-keys
   "r" '(:ignore t :wk "Reload")
   "r r" '(gz/reload-config :wk "Reload config")
+  "r R" '(gz/restart-emacs :wk "Restart Emacs")
   )
 )
 #+end_src
