@@ -108,7 +108,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] git@github.com:ag91/moldable-emacs.git"))
 - [ ] https://github.com/tarsius/keychain-environment/blob/main/keychain-environment.el#L27-L48
 - [ ] HOOKS # when exiting emacs open terminal?
-- [ ] dotfiles dirs in projects/bookmarks?
 - [ ] tangle only part of file that was modified (diff), especially not touched files
 - [ ] kill shell buffer with C-d if first char?
 - [ ] https://github.com/SqrtMinusOne/pomm.el?tab=readme-ov-file
@@ -419,6 +418,10 @@ The following settings are simple modes that are enabled (or disabled) so that E
 (setq webjump-use-internal-browser t)
 
 (setq dictionary-server "dict.org")
+
+(setq bookmark-default-file (concat user-emacs-directory "bookmarks"))
+(bookmark-maybe-load-default-file)
+(setq bookmark-set-fringe-mark nil)
 
 #+end_src
 
@@ -1226,6 +1229,7 @@ Install =luacheck= from your Linux distro's repositories for flycheck to work co
   "r r" '(gz/reload-config :wk "Reload config")
   "r R" '(gz/restart-emacs :wk "Restart Emacs")
   )
+
 )
 #+end_src
 
