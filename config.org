@@ -107,7 +107,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] emacs keybindings in /? (searching)
 - [ ] git@github.com:ag91/moldable-emacs.git"))
 - [ ] https://github.com/tarsius/keychain-environment/blob/main/keychain-environment.el#L27-L48
-- [X] rooter? autochdir?
 - [ ] HOOKS # when exiting emacs open terminal?
 - [ ] dotfiles dirs in projects/bookmarks?
 - [ ] tangle only part of file that was modified (diff), especially not touched files
@@ -118,7 +117,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] gz operator to narrow
 - [ ] c-o in help buffers?
 - [ ] ts textobjects
-- [X] reload pdf on save?
 - [ ] if cursor is after last char line, M-l should uppercase last (current) word
 - [ ] text object for orgmode block?
 - [ ] vip non comprende begin_src?
@@ -127,14 +125,12 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] C-c C- ->localleader in normal mode?
 - [ ] fixa f keys terminal
 - [ ] also put ~/dotfiles in org agend for all Todos
-- [X] reload this config?
 - [ ] use space as l in operator mode
 - [ ] u could also use c-w as prefix since u use a/l for that, but don't since vim doesn't have function for windows... maybe wincmd though?
 - [ ] C-l as enter for imenu, etc...?
 - [ ] is perspectie a global minor mode since it used c-c m-... as prefix?
 - [ ] n/l text objects
 - [ ] for some reason c-o doesn't work in minibuffer
-- [X] (beacon-mode 1)
 - [ ] search in this todo lists?
 - [ ] automatically jump if symlink... (libraries)
 - [X] quickfix/loclist equivalent? kinda, c-c c-o
@@ -154,7 +150,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] tilde eof
 - [-] doom modeline at the top? or at least tabline?
 - [ ] vim insert mode equivalents in emacs?
-- [ ] colorscheme change night/day?
 - [ ] fixa eol behaviour?
 - [ ] emacs terminal fn keys
 - [ ] org mode headers colored like chakras
@@ -2239,6 +2234,14 @@ The first line below designates the directory where will place all of our custom
 ;; (use-package ef-themes :ensure t :config(ef-themes-select 'ef-cyprus))
 ; (use-package ef-themes :ensure t :config(ef-themes-select 'ef-summer))
 (use-package ef-themes :ensure t :config(ef-themes-select 'ef-dream))
+
+(use-package auto-dark
+  :ensure t
+  :custom
+  (auto-dark-dark-theme 'ef-dream)
+  (auto-dark-light-theme 'ef-summer)
+  :config
+  (auto-dark-mode t))
 #+end_src
 
 ** TLDR
