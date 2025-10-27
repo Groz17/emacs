@@ -112,7 +112,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] tangle only part of file that was modified (diff), especially not touched files
 - [ ] kill shell buffer with C-d if first char?
 - [ ] https://github.com/SqrtMinusOne/pomm.el?tab=readme-ov-file
-- [ ] olivetti mode
 - [ ] automatically update percentage in todo list
 - [ ] make undo work like vim (u0?)
 - [ ] gz operator to narrow
@@ -628,6 +627,16 @@ Highlight cursor position when switching windows or scrolling.
         (beacon--post-command)))))
 (mapc #'beacon-do-blink-command beacon-do-blink-commands))
      )
+#+end_src
+
+** OLIVETTI
+Center text for distraction-free writing.
+
+#+begin_src elisp
+(use-package olivetti
+  :ensure t
+  :custom
+  (olivetti-body-width 100))
 #+end_src
 
 ** DIRED
