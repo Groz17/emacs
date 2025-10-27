@@ -130,11 +130,10 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] C-c C- ->localleader in normal mode?
 - [ ] fixa f keys terminal
 - [ ] also put ~/dotfiles in org agend for all Todos
-- [ ] reload this config?
+- [X] reload this config?
 - [ ] use space as l in operator mode
 - [ ] u could also use c-w as prefix since u use a/l for that, but don't since vim doesn't have function for windows... maybe wincmd though?
 - [ ] text-scale-increase
-- [ ] recompile
 - [ ] C-l as enter for imenu, etc...?
 - [ ] is perspectie a global minor mode since it used c-c m-... as prefix?
 - [ ] n/l text objects
@@ -142,7 +141,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] (beacon-mode 1)
 - [ ] search in this todo lists?
 - [ ] automatically jump if symlink... (libraries)
-- [ ] reload config?
 - [X] quickfix/loclist equivalent? kinda, c-c c-o
 - [ ] % match also comments (FIX)
 - [ ] use i to go to emacs mode from normal mode? like tridactyl
@@ -283,6 +281,12 @@ Defining the various fonts that Emacs will use.
 
 ;; benchmark
 ;; profiler-{start,stop}
+
+(defun gz/reload-config ()
+  "Reload Emacs configuration by loading init.el"
+  (interactive)
+  (load-file (expand-file-name "~/.config/emacs/init.el"))
+  (message "Config reloaded!"))
 #+end_src
 
 
@@ -1173,6 +1177,11 @@ Install =luacheck= from your Linux distro's repositories for flycheck to work co
   "g" '(:ignore t :wk "Git")
   "g s" '(git-gutter:stage-hunk :wk "Stage hunk")
   "g u" '(git-gutter:revert-hunk :wk "Unstage hunk ")
+  )
+
+(gz/leader-keys
+  "r" '(:ignore t :wk "Reload")
+  "r r" '(gz/reload-config :wk "Reload config")
   )
 )
 #+end_src
