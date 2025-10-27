@@ -112,7 +112,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] tangle only part of file that was modified (diff), especially not touched files
 - [ ] kill shell buffer with C-d if first char?
 - [ ] https://github.com/SqrtMinusOne/pomm.el?tab=readme-ov-file
-- [ ] emmet?
 - [ ] olivetti mode
 - [ ] automatically update percentage in todo list
 - [ ] make undo work like vim (u0?)
@@ -1424,6 +1423,16 @@ Emacs has built-in programming language modes for Lisp, Scheme, DSSSL, Ada, ASM,
 
 (use-package tridactyl-mode
   :ensure (:host github :repo "Fuco1/tridactyl-mode"))
+
+(use-package emmet-mode
+  :ensure t
+  :hook ((html-mode . emmet-mode)
+         (css-mode . emmet-mode)
+         (web-mode . emmet-mode)
+         (typescript-mode . emmet-mode))
+  :bind (:map emmet-mode-keymap
+         ("C-j" . nil)
+         ("C-<return>" . emmet-expand-line)))
 
 ;;    (with-eval-after-load 'org
 ;; (add-to-list 'org-src-lang-modes '("tridactylrc" . tridactyl-mode)))
