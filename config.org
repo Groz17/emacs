@@ -108,7 +108,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] git@github.com:ag91/moldable-emacs.git"))
 - [ ] https://github.com/tarsius/keychain-environment/blob/main/keychain-environment.el#L27-L48
 - [X] rooter? autochdir?
-- [X] automatically focus split on mouse
 - [ ] HOOKS # when exiting emacs open terminal?
 - [ ] dotfiles dirs in projects/bookmarks?
 - [ ] tangle only part of file that was modified (diff), especially not touched files
@@ -119,7 +118,7 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] gz operator to narrow
 - [ ] c-o in help buffers?
 - [ ] ts textobjects
-- [ ] reload pdf on save?
+- [X] reload pdf on save?
 - [ ] if cursor is after last char line, M-l should uppercase last (current) word
 - [ ] text object for orgmode block?
 - [ ] vip non comprende begin_src?
