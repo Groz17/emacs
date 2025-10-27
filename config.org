@@ -109,7 +109,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [X] automatically focus split on mouse
 - [ ] HOOKS # when exiting emacs open terminal?
 - [ ] dotfiles dirs in projects/bookmarks?
-- [ ] avy-goto
 - [ ] tangle only part of file that was modified (diff), especially not touched files
 - [ ] kill shell buffer with C-d if first char?
 - [ ] https://github.com/SqrtMinusOne/pomm.el?tab=readme-ov-file
@@ -954,9 +953,6 @@ evil-toggle-key
   (define-key evil-normal-state-map (kbd "g O") #'counsel-outline )
   ;;  region? C-u g K for <CWORD>?
   (define-key evil-normal-state-map (kbd "g K") #'dictionary-lookup-definition)
-
-  ;; (define-key evil-insert-state-map (kbd "M-g g") #'avy-goto-line )
-  ;; (define-key evil-normal-state-map (kbd "M-g g") #'avy-goto-line )
 
   (define-key evil-normal-state-map (kbd "C-i") 'evil-jump-forward)
 
