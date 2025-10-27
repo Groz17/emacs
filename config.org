@@ -917,7 +917,7 @@ evil-toggle-key
    ("gc" . evil-commentary)))
 
 (use-package goto-chg :defer t)
-
+; https://github.com/hchbaw/vim-empty-lines-mode/tree/thb
 (use-package vi-tilde-fringe
   :ensure t
   :config
