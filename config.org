@@ -147,7 +147,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] readline in shell
 - [ ] whatsapp
 - [ ] indent/dedent in insert/emacs mode?
-- [ ] tilde eof
 - [-] doom modeline at the top? or at least tabline?
 - [ ] vim insert mode equivalents in emacs?
 - [ ] fixa eol behaviour?
@@ -401,7 +400,6 @@ The following settings are simple modes that are enabled (or disabled) so that E
 
 (setq which-key-idle-delay 0.1)
 (setq confirm-kill-emacs nil)
-(setq-default indicate-empty-lines t)  ; i also don't want to Go beyond last line
 
 (setq mu4e-view-use-gnus t) 
 
@@ -914,6 +912,12 @@ evil-toggle-key
    ("gc" . evil-commentary)))
 
 (use-package goto-chg :defer t)
+
+(use-package vi-tilde-fringe
+  :ensure t
+  :config
+  (global-vi-tilde-fringe-mode 1))
+
 ;; https://github.com/roman/evil-paredit
 
 (use-package evil-exchange
