@@ -617,7 +617,19 @@ Highlight cursor position when switching windows or scrolling.
 (use-package beacon
   :ensure t
   :config
-  (beacon-mode 1))
+  (beacon-mode 1)
+; https://github.com/Malabarba/beacon/issues/81
+(setq beacon-do-blink-commands
+  '(evil-scroll-up evil-scroll-down
+     evil-goto-line evil-goto-last-line))
+(defun beacon-do-blink-command (func)
+  (advice-add func
+    :after
+    (lambda (func &rest args)
+      (let ((beacon-dont-blink-commands '()))
+        (beacon--post-command)))))
+(mapc #'beacon-do-blink-command beacon-do-blink-commands))
+     )
 #+end_src
 
 ** DIRED
