@@ -37,6 +37,8 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
   - [[#company][COMPANY]]
   - [[#dashboard][DASHBOARD]]
   - [[#diminish][DIMINISH]]
+  - [[#beacon][BEACON]]
+  - [[#olivetti][OLIVETTI]]
   - [[#dired][DIRED]]
   - [[#ediff][EDIFF]]
   - [[#elfeed][ELFEED]]
@@ -631,8 +633,8 @@ Highlight cursor position when switching windows or scrolling.
     (lambda (func &rest args)
       (let ((beacon-dont-blink-commands '()))
         (beacon--post-command)))))
-(mapc #'beacon-do-blink-command beacon-do-blink-commands))
-     )
+(mapc #'beacon-do-blink-command beacon-do-blink-commands)
+)
 #+end_src
 
 ** OLIVETTI
