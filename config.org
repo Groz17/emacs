@@ -10,8 +10,8 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 
 * TABLE OF CONTENTS :toc:
 - [[#task-list][TASK LIST]]
-  - [[#vim-feature-parity-16-16][Vim feature parity]]
-  - [[#emacs-662-9][Emacs]]
+  - [[#vim-feature-parity-14-25][Vim feature parity]]
+  - [[#emacs-148-2][Emacs]]
   - [[#emacsvim-interaction-evil-mode][Emacs/vim interaction (Evil Mode)]]
 - [[#universal-argument][Universal argument]]
 - [[#authinfo][Authinfo]]
@@ -94,13 +94,13 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
   - [[#gists][Gists]]
 
 * TODO TASK LIST
-** Vim feature parity [1/6] [16%]
+** Vim feature parity [1/4] [25%]
 - [ ] gf shows popup for some reason
 - [ ] v:count tab doesn't work in org mode tables? also how to make column same width?
 - [ ] lazy ui for slowest plugins?
 - [X] C-j indents, C-m doesn't
 
-** Emacs [6/62] [9%]
+** Emacs [1/48] [2%]
 - [ ] https://github.com/MArpogaus/auto-tab-groups
 - [ ] emacs terminal show title
 - [ ] emacs can i change directory for the Next command
@@ -420,7 +420,7 @@ The following settings are simple modes that are enabled (or disabled) so that E
 (setq dictionary-server "dict.org")
 
 (setq bookmark-default-file (concat user-emacs-directory "bookmarks"))
-(bookmark-maybe-load-default-file)
+; (bookmark-maybe-load-default-file)
 (setq bookmark-set-fringe-mark nil)
 
 #+end_src
