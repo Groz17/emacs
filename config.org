@@ -318,6 +318,7 @@ The following settings are simple modes that are enabled (or disabled) so that E
 (electric-pair-mode 1)       ;; Turns on automatic parens pairing
 (global-auto-revert-mode t)  ;; Automatically show changes if the file has changed
 (setq global-auto-revert-non-file-buffers t)  ;; Automatically show changes if the file has changed in dired
+(setq revert-without-query '(".*"))  ;; Revert all files without asking
 (column-number-mode)
 ;; t and 1 difference here?
 (global-display-line-numbers-mode 1) ;; Display line numbers
