@@ -94,8 +94,8 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
   - [[#gists][Gists]]
 
 * TODO TASK LIST
-** Vim feature parity [1/4] [25%]
-- [ ] gf shows popup for some reason
+** Vim feature parity [2/4] [50%]
+- [X] gf shows popup for some reason
 - [ ] v:count tab doesn't work in org mode tables? also how to make column same width?
 - [ ] lazy ui for slowest plugins?
 - [X] C-j indents, C-m doesn't
@@ -966,6 +966,16 @@ evil-toggle-key
   (evil-define-key 'normal help-mode-map
     (kbd "C-o") 'evil-jump-backward)
 
+  ;; Make gf work like Vim - directly open file without completion
+  (defun evil-find-file-at-point-no-prompt ()
+    "Find file at point without showing completion prompts."
+    (interactive)
+    (let ((filename (ffap-file-at-point)))
+      (if filename
+          (find-file filename)
+        (message "No file at point"))))
+  
+  (define-key evil-normal-state-map (kbd "g f") 'evil-find-file-at-point-no-prompt)
 
   ;; would nice that it resptected v:count like 2gO to show only 2nd level header?
   ;; (define-key evil-normal-state-map (kbd "g O") #'counsel-imenu )
