@@ -94,9 +94,7 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
   - [[#gists][Gists]]
 
 * TODO TASK LIST
-** Vim feature parity [2/4] [50%]
-- [ ] lazy ui for slowest plugins?
-- [X] C-j indents, C-m doesn't
+** Vim feature parity
 
 ** Emacs [1/48] [2%]
 - [ ] https://github.com/MArpogaus/auto-tab-groups
@@ -115,45 +113,34 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] c-o in help buffers?
 - [ ] ts textobjects
 - [ ] if cursor is after last char line, M-l should uppercase last (current) word
-- [ ] text object for orgmode block?
 - [ ] vip non comprende begin_src?
 - [ ] make emacs same ts and lsp as mason? or just use guix
 - [ ] whenever u put ^, use it as control vim prefix (for picker loclist, etc... and stuff like ^y in insert mode)
 - [ ] C-c C- ->localleader in normal mode?
-- [ ] fixa f keys terminal
-- [ ] also put ~/dotfiles in org agend for all Todos
+- [ ] also put ~/dots in org agend for all Todos
 - [ ] use space as l in operator mode
 - [ ] u could also use c-w as prefix since u use a/l for that, but don't since vim doesn't have function for windows... maybe wincmd though?
-- [ ] C-l as enter for imenu, etc...?
-- [ ] is perspectie a global minor mode since it used c-c m-... as prefix?
 - [ ] n/l text objects
 - [ ] for some reason c-o doesn't work in minibuffer
 - [ ] search in this todo lists?
 - [ ] automatically jump if symlink... (libraries)
-- [X] quickfix/loclist equivalent? kinda, c-c c-o
 - [ ] % match also comments (FIX)
-- [ ] use i to go to emacs mode from normal mode? like tridactyl
-- [ ] use o to go to one shot emacs mode from normal mode? like C-o in vim
 - [ ] M-spc and C-M-spc as set mark kinda like universal-argument?
 - [ ] 'EtiamNullam/deferred-clipboard.nvim', (x-select-enable-clipboard-manager)
 - [ ] use localleader in normal mode for emacs keybindings? like localleder vi for identify matrix in emacs calc
 - [ ] use C-o in emacs mode to one shot insert mode?
 - [ ] using vimscript for scripting/mapping? like %s? create transpiler
-- [ ] make insert mode be like emacs mode? get rid of insert mode
 - [ ] whatsapp
 - [-] doom modeline at the top? or at least tabline?
 - [ ] vim insert mode equivalents in emacs?
 - [ ] fixa eol behaviour?
-- [ ] emacs terminal fn keys
 - [ ] org mode headers colored like chakras
 
 ** Emacs/vim interaction (Evil Mode)
 - [ ] swap file or notify when working on the same file?
 - [X] zj and zk in evil?
 - [ ] set ft should work like for emacs modes
-- [ ] c-r and c-y comparison?
 - [ ] in emacs/insert mode, use c-x pressed as k and then x for vim insert, and l/s for emacs c-x
-- [ ] use c/m for vim insert mode mappings?
 - [ ] syncronize shada/command history
 - [ ] from normal mode, go to insert mode after certain keybindings like M-; or M-RET
 - [ ] go to normal mode for pickers?
