@@ -27,6 +27,7 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
   - [[#adding-the-scripts-directory-to-path][Adding the scripts directory to path]]
   - [[#sourcing-the-scripts][Sourcing the scripts]]
 - [[#sane-defaults][SANE DEFAULTS]]
+  - [[#deferred-clipboard][Deferred clipboard]]
   - [[#prettier-vertical-window-divider-in-terminal][Prettier vertical window divider in terminal]]
 - [[#personal-information][Personal information]]
 - [[#multilingual-editing][MULTILINGUAL EDITING]]
@@ -132,7 +133,7 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] set ft should work like for emacs modes
 - [ ] in emacs/insert mode, use c-x pressed as k and then x for vim insert, and l/s for emacs c-x
 - [ ] syncronize shada/command history
-- [ ] from normal mode, go to insert mode after certain keybindings like M-; or M-RET
+
 - [ ] go to normal mode for pickers?
 
 * Universal argument
@@ -800,6 +801,26 @@ evil-toggle-key
 ;; Indent/dedent in insert mode
 (define-key evil-insert-state-map (kbd "C-S-d") 'evil-shift-left-line)
 (define-key evil-insert-state-map (kbd "C-S-t") 'evil-shift-right-line)
+
+;; Go to insert mode after M-; (comment) from normal mode
+(defvar gz/inside-comment-advice nil)
+
+(defun gz/evil-insert-after-comment (orig-fun &rest args)
+  (if gz/inside-comment-advice
+      (apply orig-fun args)
+    (let ((was-normal (evil-normal-state-p)))
+      (setq gz/inside-comment-advice t)
+      (unwind-protect
+          (apply orig-fun args)
+        (setq gz/inside-comment-advice nil))
+      (when was-normal
+        (unless (eq (char-before) ?\s)
+          (insert " "))
+        (evil-insert-state)))))
+
+(dolist (func '(comment-dwim comment-line org-comment-dwim))
+  (advice-remove func #'gz/evil-insert-after-comment)
+  (advice-add func :around #'gz/evil-insert-after-comment))
 
   )
 
