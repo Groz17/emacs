@@ -121,7 +121,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] for some reason c-o doesn't work in minibuffer
 - [ ] search in this todo lists?
 - [ ] automatically jump if symlink... (libraries)
-- [ ] use C-o in emacs mode to one shot insert mode?
 - [ ] using vimscript for scripting/mapping? like %s? create transpiler
 - [ ] whatsapp
 - [-] doom modeline at the top? or at least tabline?
