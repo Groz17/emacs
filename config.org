@@ -122,7 +122,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] for some reason c-o doesn't work in minibuffer
 - [ ] search in this todo lists?
 - [ ] automatically jump if symlink... (libraries)
-- [ ] % match also comments (FIX)
 - [ ] M-spc and C-M-spc as set mark kinda like universal-argument?
 - [ ] 'EtiamNullam/deferred-clipboard.nvim', (x-select-enable-clipboard-manager)
 - [ ] use localleader in normal mode for emacs keybindings? like localleder vi for identify matrix in emacs calc
@@ -900,6 +899,12 @@ evil-toggle-key
    ("gc" . evil-commentary)))
 
 (use-package goto-chg :defer t)
+
+(use-package evil-matchit
+  :ensure t
+  :config
+  (global-evil-matchit-mode 1))
+
 ; https://github.com/hchbaw/vim-empty-lines-mode/tree/thb
 (use-package vi-tilde-fringe
   :ensure t
