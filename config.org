@@ -10,7 +10,7 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 
 * TABLE OF CONTENTS :toc:
 - [[#task-list][TASK LIST]]
-  - [[#vim-feature-parity-14-25][Vim feature parity]]
+  - [[#vim-feature-parity][Vim feature parity]]
   - [[#emacs-148-2][Emacs]]
   - [[#emacsvim-interaction-evil-mode][Emacs/vim interaction (Evil Mode)]]
 - [[#universal-argument][Universal argument]]
@@ -427,6 +427,7 @@ The following settings are simple modes that are enabled (or disabled) so that E
 ;; Private Stuff
 (setq user-full-name "")
 (setq user-mail-address "")
+(setq sendmail-program (executable-find "msmtp"))
 #+end_src
 
 * MULTILINGUAL EDITING
