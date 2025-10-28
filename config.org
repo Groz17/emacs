@@ -95,8 +95,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 
 * TODO TASK LIST
 ** Vim feature parity [2/4] [50%]
-- [X] gf shows popup for some reason
-- [ ] v:count tab doesn't work in org mode tables? also how to make column same width?
 - [ ] lazy ui for slowest plugins?
 - [X] C-j indents, C-m doesn't
 
