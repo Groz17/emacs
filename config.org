@@ -117,7 +117,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] make emacs same ts and lsp as mason? or just use guix
 - [ ] whenever u put ^, use it as control vim prefix (for picker loclist, etc... and stuff like ^y in insert mode)
 - [ ] C-c C- ->localleader in normal mode?
-- [ ] also put ~/dots in org agend for all Todos
 - [ ] use space as l in operator mode
 - [ ] u could also use c-w as prefix since u use a/l for that, but don't since vim doesn't have function for windows... maybe wincmd though?
 - [ ] n/l text objects
@@ -1744,7 +1743,8 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
 
 (setq org-agenda-files
       '("~/notes/Tasks.org"
-  "~/notes/Habits.org"))
+  "~/notes/Habits.org"
+  "~/dots"))
 #+end_src
 
 **** Configure custom agenda views
