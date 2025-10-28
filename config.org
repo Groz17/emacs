@@ -107,7 +107,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] tangle only part of file that was modified (diff), especially not touched files
 - [ ] kill shell buffer with C-d if first char?
 - [ ] https://github.com/SqrtMinusOne/pomm.el?tab=readme-ov-file
-- [ ] automatically update percentage in todo list
 - [ ] make undo work like vim (u0?)
 - [ ] gz operator to narrow
 - [ ] c-o in help buffers?
@@ -137,7 +136,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 
 ** Emacs/vim interaction (Evil Mode)
 - [ ] swap file or notify when working on the same file?
-- [X] zj and zk in evil?
 - [ ] set ft should work like for emacs modes
 - [ ] in emacs/insert mode, use c-x pressed as k and then x for vim insert, and l/s for emacs c-x
 - [ ] syncronize shada/command history
