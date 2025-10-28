@@ -138,7 +138,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 - [ ] use o to go to one shot emacs mode from normal mode? like C-o in vim
 - [ ] M-spc and C-M-spc as set mark kinda like universal-argument?
 - [ ] 'EtiamNullam/deferred-clipboard.nvim', (x-select-enable-clipboard-manager)
-- [ ] surround doesn't work well
 - [ ] use localleader in normal mode for emacs keybindings? like localleder vi for identify matrix in emacs calc
 - [ ] use C-o in emacs mode to one shot insert mode?
 - [ ] using vimscript for scripting/mapping? like %s? create transpiler
