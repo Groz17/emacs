@@ -2766,14 +2766,6 @@ https://github.com/ecraven/ivy-pass
 
 #+end_src
 
-** STT
-#+begin_src elisp
-; (use-package whisper
-  ;; :bind ("C-H-r" . whisper-run)
-; :custom
-  ; (whisper-model "small"))
-#+end_src
-
 ** Info
 #+begin_src elisp
 (use-package info-variable-pitch
