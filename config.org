@@ -448,6 +448,7 @@ This is an icon set that can be used with dashboard, dired, ibuffer and other Em
 #+begin_src elisp
 (use-package all-the-icons
   :ensure t
+  :defer t
   :if (display-graphic-p))
 
 (use-package all-the-icons-dired
@@ -459,7 +460,7 @@ This is an icon set that can be used with dashboard, dired, ibuffer and other Em
 
 #+begin_src elisp
 (use-package company
-  :defer 2
+  :hook (prog-mode . company-mode)
   :diminish
   :custom
   (company-begin-commands '(self-insert-command))
@@ -467,7 +468,6 @@ This is an icon set that can be used with dashboard, dired, ibuffer and other Em
   (company-minimum-prefix-length 2)
   (company-show-numbers t)
   (company-tooltip-align-annotations 't)
-  (global-company-mode t)
   :bind(
   ;; :map evil-insert-state-map
   :map company-active-map
@@ -994,10 +994,11 @@ Install =luacheck= from your Linux distro's repositories for flycheck to work co
   :ensure t
   :defer t
   :diminish
-  :init (global-flycheck-mode))
+  :hook (prog-mode . flycheck-mode))
 
 (use-package flyover
   :ensure (:host github :repo "konrad1977/flyover")
+  :defer t
   :hook (flycheck-mode . flyover-mode)
   )
 #+end_src
@@ -1207,7 +1208,7 @@ how to go from diff to file w/ line num?
   )
 (use-package magit-todos
   :after magit
-  :config (magit-todos-mode 1))
+  :hook (magit-mode . magit-todos-mode))
 (use-package magit-delta
   :custom ( magit-delta-hide-plus-minus-markers nil)
   :hook (magit-mode . magit-delta-mode))
@@ -1620,7 +1621,7 @@ https://github.com/isamert/corg.el
 
 *** Org-ref
 #+begin_src elisp
-(use-package org-ref)
+(use-package org-ref :defer t)
 #+end_src
 
 *** Diminish Org Indent Mode
@@ -1702,7 +1703,8 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
 (setq org-agenda-files
       '("~/notes/Tasks.org"
   "~/notes/Habits.org"
-  "~/dots"))
+  ; "~/dots"
+      ))
 #+end_src
 
 **** Configure custom agenda views
