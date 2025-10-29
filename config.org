@@ -1195,6 +1195,7 @@ how to go from diff to file w/ line num?
 - [ ] Always open status on the right? I'd like To know how to do it with smth dumb like ^wL
 
 #+begin_src elisp
+(use-package cond-let)
 (use-package transient)
 (setq magit-define-global-key-bindings 'recommended)
 (use-package magit :after transient
@@ -2194,9 +2195,13 @@ The first line below designates the directory where will place all of our custom
 #+begin_src elisp
 ;; (add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
 
-;; (use-package ef-themes :ensure t :config(ef-themes-select 'ef-cyprus))
-; (use-package ef-themes :ensure t :config(ef-themes-select 'ef-summer))
-(use-package ef-themes :ensure t :config(ef-themes-select 'ef-dream))
+;; (use-package ef-themes :ensure t :config(modus-themes-load-theme 'ef-cyprus))
+; (use-package ef-themes :ensure t :config(modus-themes-load-theme 'ef-summer))
+(use-package modus-themes :ensure t)
+(use-package ef-themes 
+  :ensure (:host github :repo "protesilaos/ef-themes")
+  :after modus-themes
+  :config (modus-themes-load-theme 'ef-dream))
 
 (use-package auto-dark
   :ensure t
