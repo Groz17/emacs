@@ -210,8 +210,9 @@ The following settings are simple modes that are enabled (or disabled) so that E
 (unless (display-graphic-p)
   ;; Function to send OSC 2 escape sequence to terminal
   (defun my/update-terminal-title ()
-    (when-let ((title (concat (buffer-name) " - Emacs")))
-      (send-string-to-terminal (format "\033]2;%s\007" title))))
+    (when (not (display-graphic-p))
+      (when-let ((title (concat (buffer-name) " - Emacs")))
+        (send-string-to-terminal (format "\033]2;%s\007" title)))))
   ;; Run it every time you change buffers or commands
   (add-hook 'post-command-hook #'my/update-terminal-title))
 
