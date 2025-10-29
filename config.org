@@ -137,9 +137,6 @@ Defining the various fonts that Emacs will use.
 ;;   "s t" '(tldr :wk "Lookup TLDR docs for a command")
 ;;   "s w" '(woman :wk "Similar to man but doesn't require man"))
 
-;; benchmark
-;; profiler-{start,stop}
-
 (defun gz/reload-config ()
   "Reload Emacs configuration by loading init.el"
   (interactive)
@@ -2697,20 +2694,6 @@ Wait a few months
   )
 #+end_src
 
-,#+begin_src elisp
-; (use-package treemacs
-;       :after hydra
-;   :ensure t
-;   :bind
-;   (:map global-map
-;         ("M-0"       . treemacs-select-window)
-;         ("C-x t 1"   . treemacs-delete-other-windows)
-;         ("C-x t t"   . treemacs)
-;         ("C-x t B"   . treemacs-bookmark)
-;         ("C-x t C-t" . treemacs-find-file)
-;         ("C-x t M-t" . treemacs-find-tag)))
-,#+end_src
-
 ** Socials
 https://github.com/alphapapa/ement.el
 #+begin_src elisp
@@ -2839,7 +2822,4 @@ https://github.com/ecraven/ivy-pass
   )
 #+end_src
 
-** Gists
-,#+begin_src elisp
-(use-package ox-gist)
-,#+end_src
+
