@@ -238,6 +238,13 @@ Disable automatic clipboard sync and only sync to system clipboard when Emacs lo
     (sync-clipboard-on-focus-out)))
 
 (add-function :after after-focus-change-function #'sync-clipboard-on-focus-change)
+
+(defun interprogram-paste-function-with-clipboard ()
+  "Get clipboard content with clipboard temporarily enabled."
+  (let ((select-enable-clipboard t))
+    (gui-get-selection 'CLIPBOARD)))
+
+(setq interprogram-paste-function #'interprogram-paste-function-with-clipboard)
 #+end_src
 
 #+begin_src elisp
