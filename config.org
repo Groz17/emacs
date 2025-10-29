@@ -218,33 +218,33 @@ Disable automatic clipboard sync and only sync to system clipboard when Emacs lo
 #+begin_src elisp
 (setq select-enable-clipboard nil)
 
-(defun sync-clipboard-on-focus-out ()
-  "Sync kill-ring to system clipboard when losing focus."
-  (when kill-ring
-    (let ((select-enable-clipboard t))
-      (gui-select-text (car kill-ring)))))
+; (defun sync-clipboard-on-focus-out ()
+;   "Sync kill-ring to system clipboard when losing focus."
+;   (when kill-ring
+;     (let ((select-enable-clipboard t))
+;       (gui-select-text (car kill-ring)))))
+;
+; (defun sync-clipboard-on-focus-in ()
+;   "Sync system clipboard to kill-ring when gaining focus."
+;   (let ((select-enable-clipboard t))
+;     (when-let ((clipboard-content (gui-get-selection 'CLIPBOARD)))
+;       (unless (and kill-ring (string= clipboard-content (car kill-ring)))
+;         (kill-new clipboard-content)))))
+;
+; (defun sync-clipboard-on-focus-change ()
+;   "Sync clipboard when Emacs focus changes."
+;   (if (frame-focus-state)
+;       (sync-clipboard-on-focus-in)
+;     (sync-clipboard-on-focus-out)))
+;
+; (add-function :after after-focus-change-function #'sync-clipboard-on-focus-change)
 
-(defun sync-clipboard-on-focus-in ()
-  "Sync system clipboard to kill-ring when gaining focus."
-  (let ((select-enable-clipboard t))
-    (when-let ((clipboard-content (gui-get-selection 'CLIPBOARD)))
-      (unless (and kill-ring (string= clipboard-content (car kill-ring)))
-        (kill-new clipboard-content)))))
-
-(defun sync-clipboard-on-focus-change ()
-  "Sync clipboard when Emacs focus changes."
-  (if (frame-focus-state)
-      (sync-clipboard-on-focus-in)
-    (sync-clipboard-on-focus-out)))
-
-(add-function :after after-focus-change-function #'sync-clipboard-on-focus-change)
-
-(defun interprogram-paste-function-with-clipboard ()
-  "Get clipboard content with clipboard temporarily enabled."
-  (let ((select-enable-clipboard t))
-    (gui-get-selection 'CLIPBOARD)))
-
-(setq interprogram-paste-function #'interprogram-paste-function-with-clipboard)
+; (defun interprogram-paste-function-with-clipboard ()
+;   "Get clipboard content with clipboard temporarily enabled."
+;   (let ((select-enable-clipboard t))
+;     (gui-get-selection 'CLIPBOARD)))
+;
+; (setq interprogram-paste-function #'interprogram-paste-function-with-clipboard)
 #+end_src
 
 #+begin_src elisp
