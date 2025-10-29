@@ -306,6 +306,16 @@ The following settings are simple modes that are enabled (or disabled) so that E
 (tool-bar-mode -1)           ;; Disable the tool bar
 (setq xterm-extra-capabilities '(getSelection setSelection))
 
+;; Update terminal title when running in a terminal (not GUI)
+;; Only apply in terminal (not GUI)
+(unless (display-graphic-p)
+  ;; Function to send OSC 2 escape sequence to terminal
+  (defun my/update-terminal-title ()
+    (when-let ((title (concat (buffer-name) " - Emacs")))
+      (send-string-to-terminal (format "\033]2;%s\007" title))))
+  ;; Run it every time you change buffers or commands
+  (add-hook 'post-command-hook #'my/update-terminal-title))
+
 #+end_src
 
 ** Deferred clipboard
@@ -320,9 +330,17 @@ Disable automatic clipboard sync and only sync to system clipboard when Emacs lo
     (let ((select-enable-clipboard t))
       (gui-select-text (car kill-ring)))))
 
+(defun sync-clipboard-on-focus-in ()
+  "Sync system clipboard to kill-ring when gaining focus."
+  (let ((select-enable-clipboard t))
+    (when-let ((clipboard-content (gui-get-selection 'CLIPBOARD)))
+      (unless (and kill-ring (string= clipboard-content (car kill-ring)))
+        (kill-new clipboard-content)))))
+
 (defun sync-clipboard-on-focus-change ()
-  "Sync clipboard when Emacs loses focus."
-  (unless (frame-focus-state)
+  "Sync clipboard when Emacs focus changes."
+  (if (frame-focus-state)
+      (sync-clipboard-on-focus-in)
     (sync-clipboard-on-focus-out)))
 
 (add-function :after after-focus-change-function #'sync-clipboard-on-focus-change)
