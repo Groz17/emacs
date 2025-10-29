@@ -48,16 +48,16 @@ With Emacs version 29, true transparency has been added.  I have turned transpar
 (add-to-list 'default-frame-alist '(alpha-background . 87)) ; For all new frames henceforth
 
 ;; Terminal transparency (clears background to use terminal's transparency)
-(defun gz/terminal-transparency ()
-  (unless (display-graphic-p)
-    (set-face-background 'default "unspecified-bg")))
-
-(add-hook 'after-make-frame-functions
-          (lambda (frame)
-            (with-selected-frame frame
-              (gz/terminal-transparency))))
-
-(gz/terminal-transparency)
+; (defun gz/terminal-transparency ()
+;   (unless (display-graphic-p)
+;     (set-face-background 'default "unspecified-bg")))
+;
+; (add-hook 'after-make-frame-functions
+;           (lambda (frame)
+;             (with-selected-frame frame
+;               (gz/terminal-transparency))))
+;
+; (gz/terminal-transparency)
 #+end_src
 
 
