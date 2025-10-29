@@ -4,9 +4,6 @@
 #+STARTUP: overview
 #+property: header-args :tangle ~/.config/emacs/init.el
 
-Sync toc? Like modify here and reflect changes and viceversa
-https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4b0e3b2201c31/config.org#L8158
-
 * TODO TASK LIST
 ** Vim feature parity
 
@@ -35,12 +32,6 @@ https://github.com/darcamo/simple_emacs_config/blob/80e54c61e3b0f750403ff0ef9aa4
 
 - [ ] go to normal mode for pickers?
 
-* Universal argument
-basically space followed by a modifier should behave as C-u, otherwise as space (leader prefix for groups) (sadly doesn't work for stuff like c-u s in magit..., use hook?)
-lol, empty source blocks don't make emacs work...
-;;#+begin_src elisp
-;;#+end_src
-
 * Authinfo
 Use only the gpg-encrypted version of the file.
 
@@ -53,10 +44,20 @@ Use only the gpg-encrypted version of the file.
 * TRANSPARENCY
 With Emacs version 29, true transparency has been added.  I have turned transparency off by setting the alpha to '100'.  If you want some slight transparency, try setting alpha to '90'.  Of course, if you set alpha to '0', the background of Emacs would completely transparent.
 
-TODO: doesn't work in terminal
-
 #+begin_src elisp
 (add-to-list 'default-frame-alist '(alpha-background . 87)) ; For all new frames henceforth
+
+;; Terminal transparency (clears background to use terminal's transparency)
+(defun gz/terminal-transparency ()
+  (unless (display-graphic-p)
+    (set-face-background 'default "unspecified-bg")))
+
+(add-hook 'after-make-frame-functions
+          (lambda (frame)
+            (with-selected-frame frame
+              (gz/terminal-transparency))))
+
+(gz/terminal-transparency)
 #+end_src
 
 
@@ -65,17 +66,13 @@ TODO: doesn't work in terminal
 By default, Emacs requires you to hit ESC three times to escape quit the minibuffer.
 
 #+begin_src elisp
-;; mappa escape a c-g e c-g a original vim behaviour?
 (global-set-key [escape] 'keyboard-escape-quit)
 #+end_src
 
 **  READLINE SANITY
 #+begin_src elisp
-;; replica instert mappings in emacs state?
 (define-key minibuffer-local-map (kbd "C-h") #'backward-delete-char)
 (define-key minibuffer-local-map (kbd "C-w") #'backward-kill-word)
-
-;; is interactive necessary here?
 
 (with-eval-after-load 'evil-maps
   (define-key evil-insert-state-map (kbd "<ctl-x> C-?") (lambda () (interactive)(kill-line 0)))
