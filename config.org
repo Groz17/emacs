@@ -494,9 +494,7 @@ Emacs Dashboard is an extensible startup screen showing you recent files, bookma
   (setq dashboard-set-file-icons t)
   (setq dashboard-banner-logo-title "Emacs Is More Than A Text Editor!")
   ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
-  ;; TODO: make transparent
   ;; https://www.reddit.com/r/emacs/comments/1f068oi/i_have_commissioned_an_artist_to_draw_an_emacs/
-
   (setq dashboard-startup-banner "~/.config/emacs/images/emacs-dragon-small.png")  ;; use custom image as banner
   (setq dashboard-center-content t) ;; set to 't' for centered content
   (setq dashboard-items '((recents . 5)
@@ -2190,8 +2188,6 @@ The first line below designates the directory where will place all of our custom
 #+begin_src elisp
 ;; (add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
 
-;; (use-package ef-themes :ensure t :config(modus-themes-load-theme 'ef-cyprus))
-; (use-package ef-themes :ensure t :config(modus-themes-load-theme 'ef-summer))
 (use-package modus-themes :ensure t)
 (use-package ef-themes 
   :ensure (:host github :repo "protesilaos/ef-themes")
@@ -2267,16 +2263,12 @@ keycast
   (add-to-list 'org-src-lang-modes '("kbd" . kanata-kbd)))
 ;; would be cool (add-to-list 'org-babel-load-languages '(kanata . t))
 
-;; now get rid of c-x and c-c in normal mode?
-;; (define-key key-translation-map (kbd "<Launch6>") (kbd "C-x"))
 ;; (define-key key-translation-map (kbd "<clt-x>") (kbd "C-x"))
 ;; (define-key global-map (kbd "<clt-x>") ctl-x-map)
 ;; now i can use C-x behaviour in normal mode!
 ;; press f12 to show which-key i guess, u cannot do the same with modifiers or f13-f24 since they're not on the kbd
-;; TODO: make c-c c-x work
 (define-key key-translation-map (kbd "<f12>") [ctl-x]) ; hide translation in help files? don't really care
 (define-key global-map [ctl-x] ctl-x-map)
-;; (define-key key-translation-map (kbd "<Launch5>") [snacks])
 (global-set-key [f15]
   (lambda ()
     (interactive)
@@ -2284,16 +2276,6 @@ keycast
 
 ;; (define-key key-translation-map (kbd "<Launch5>") (lambda()(interactive)(universal-argument 0))) ;; doesn't even work
 ;; (define-key key-translation-map (kbd "<Launch5>") (kbd "M-0")) ;; basically u can use 0 for v:count now
-
-;; delta side by side?
-;; (define-key key-translation-map (kbd "<Launch5>") vc-prefix-map)
-
-
-;; TODO: hide translated from...
-;;(define-key key-translation-map (kbd "<Launch5>") (kbd "C-c"))
-;; can i make so it send the original C-h?
-;;(define-key key-translation-map (kbd "<Launch7>") (kbd "C-h"))
-;;(keymap-global-set "<Launch5>" ctl-x-map)
 #+end_src
 
 ** NOICE                                                                 :vim:
@@ -2682,15 +2664,13 @@ word count of the response."
 
 ** Tree-sitter
 *** Text-objects
-Wait a few months
 #+begin_src elisp :tangle no
 (use-package evil-textobj-tree-sitter :ensure t
   :after evil
   :config
-  ;; bind `function.outer`(entire function block) to `f` for use in things like `vaf`, `yaf`
   (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
   (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner"))
-  (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer")))
+  (define-key evil-outer-text-objects-map "o" (evil-textobj-tree-sitter-get-textobj ("loop.outer")))
   )
 #+end_src
 
@@ -2708,7 +2688,6 @@ https://github.com/alphapapa/ement.el
 https://www.youtube.com/watch?v=W-bRZlseNm0
 #+begin_src elisp
 (use-package yasnippet-snippets
-  ;; :disabled
   :ensure t)
 
 (use-package yasnippet
@@ -2785,15 +2764,6 @@ https://github.com/ecraven/ivy-pass
 ** Pages
 #+begin_src elisp
 (use-package page-break-lines)
-#+end_src
-
-** symex
-#+begin_src elisp
-; (use-package symex
-;  :after evil
-;   :config
-;   (symex-initialize)
-;   (evil-define-key 'normal 'global (kbd "<leader>;") 'symex-mode-interface))
 #+end_src
 
 ** Prism
