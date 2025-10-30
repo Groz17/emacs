@@ -2212,6 +2212,11 @@ The first line below designates the directory where will place all of our custom
   (auto-dark-mode t))
 #+end_src
 
+** NOTMUCH
+#+begin_src elisp
+(autoload 'notmuch "notmuch" "Notmuch mail" t)
+#+end_src
+
 ** TLDR
 
 #+begin_src elisp
