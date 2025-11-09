@@ -2201,12 +2201,13 @@ The first line below designates the directory where will place all of our custom
 (use-package ef-themes 
   :ensure (:host github :repo "protesilaos/ef-themes")
   :after modus-themes
-  :config (modus-themes-load-theme 'ef-dream))
+  ;; :config (modus-themes-load-theme 'ef-dream)
+)
 
 (use-package auto-dark
   :ensure t
   :custom
-  (auto-dark-dark-theme 'ef-dream)
+  (auto-dark-dark-theme 'ef-owl)
   (auto-dark-light-theme 'ef-summer)
   :config
   (auto-dark-mode t))
