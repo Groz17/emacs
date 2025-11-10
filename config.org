@@ -2799,4 +2799,8 @@ https://github.com/ecraven/ivy-pass
   )
 #+end_src
 
-
+** ACP
+#+begin_src elisp
+(use-package agent-shell
+  :ensure t)
+#+end_src
