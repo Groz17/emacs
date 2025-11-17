@@ -2824,3 +2824,9 @@ https://github.com/ecraven/ivy-pass
 (use-package agent-shell
   :ensure t)
 #+end_src
+
+** Matrix
+#+begin_src elisp
+(use-package ement
+  :ensure t)
+#+end_src
