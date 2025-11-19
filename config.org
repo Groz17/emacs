@@ -1462,7 +1462,17 @@ https://github.com/isamert/corg.el
     (evil-define-key 'normal org-mode-map (kbd "zj") 'org-forward-heading-same-level)
     (evil-define-key 'normal org-mode-map (kbd "zk") 'org-forward-heading-same-level)
     (evil-define-key '(normal visual) org-mode-map (kbd "}") 'evil-forward-paragraph)
-    (evil-define-key '(normal visual) org-mode-map (kbd "{") 'evil-backward-paragraph))
+    (evil-define-key '(normal visual) org-mode-map (kbd "{") 'evil-backward-paragraph)
+    
+    ;; Mirror M-{S,<arrow>} org structural editing with M-{h,j,k,l}
+    (evil-define-key 'normal org-mode-map (kbd "M-h") 'org-metaleft)
+    (evil-define-key 'normal org-mode-map (kbd "M-j") 'org-metadown)
+    (evil-define-key 'normal org-mode-map (kbd "M-k") 'org-metaup)
+    (evil-define-key 'normal org-mode-map (kbd "M-l") 'org-metaright)
+    (evil-define-key 'normal org-mode-map (kbd "M-H") 'org-shiftmetaleft)
+    (evil-define-key 'normal org-mode-map (kbd "M-J") 'org-shiftmetadown)
+    (evil-define-key 'normal org-mode-map (kbd "M-K") 'org-shiftmetaup)
+    (evil-define-key 'normal org-mode-map (kbd "M-L") 'org-shiftmetaright))
   )
 #+end_src
 
@@ -2303,6 +2313,8 @@ keycast
 ;; now i can use C-x behaviour in normal mode!
 ;; press f12 to show which-key i guess, u cannot do the same with modifiers or f13-f24 since they're not on the kbd
 (define-key key-translation-map (kbd "<f12>") [ctl-x]) ; hide translation in help files? don't really care
+(define-key function-key-map (kbd "<f12> @") 
+  (lookup-key function-key-map (kbd "C-x @")))
 (define-key global-map [ctl-x] ctl-x-map)
 (global-set-key [f15]
   (lambda ()
