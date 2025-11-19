@@ -1878,7 +1878,8 @@ https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892
   (add-to-list 'org-src-lang-modes '("nlua" . lua)))
 #+end_src
 
-*** Auto-tangle
+*** TODO Auto-tangle
+Also tangle when file's content externally modified (by command/LLM, ...), maybe use system'd path and modify AGENTS.md
 #+begin_src elisp
 ;; Automatically tangle our dotfiles when we save them
 (defun efs/org-babel-tangle-config ()
