@@ -441,6 +441,580 @@ By default, Emacs creates automatic backups of files in their original directori
 (setq backup-directory-alist '((".*" . "~/.local/share/Trash/files")))
 #+end_src
 
+* ORG MODE
+- [ ] https://github.com/alphapapa/org-web-tools
+https://github.com/isamert/corg.el
+#+begin_src elisp
+;; :pin org/gnu?
+(use-package org
+  :ensure nil
+  :bind (("C-c c" . counsel-org-capture)
+   ("C-c l" . org-store-link)
+   ("C-c a" . org-agenda)
+
+   ;;   "m i" '(org-toggle-item :wk "Org toggle item")
+   ;;   "m T" '(org-todo-list :wk "Org todo list")
+   ;;   "m d t" '(org-time-stamp :wk "Org time stamp")
+   )
+  :config ;; (message "test lazy loading")
+
+  (with-eval-after-load 'evil
+    (evil-define-key 'normal org-mode-map (kbd "gj") 'evil-next-visual-line)
+    (evil-define-key 'normal org-mode-map (kbd "gk") 'evil-previous-visual-line)
+    (evil-define-key 'normal org-mode-map (kbd "zj") 'org-forward-heading-same-level)
+    (evil-define-key 'normal org-mode-map (kbd "zk") 'org-forward-heading-same-level)
+    (evil-define-key '(normal visual) org-mode-map (kbd "}") 'evil-forward-paragraph)
+    (evil-define-key '(normal visual) org-mode-map (kbd "{") 'evil-backward-paragraph)
+    
+    ;; Mirror M-{S,<arrow>} org structural editing with M-{h,j,k,l}
+    (evil-define-key 'normal org-mode-map (kbd "M-h") 'org-metaleft)
+    (evil-define-key 'normal org-mode-map (kbd "M-j") 'org-metadown)
+    (evil-define-key 'normal org-mode-map (kbd "M-k") 'org-metaup)
+    (evil-define-key 'normal org-mode-map (kbd "M-l") 'org-metaright)
+    (evil-define-key 'normal org-mode-map (kbd "M-H") 'org-shiftmetaleft)
+    (evil-define-key 'normal org-mode-map (kbd "M-J") 'org-shiftmetadown)
+    (evil-define-key 'normal org-mode-map (kbd "M-K") 'org-shiftmetaup)
+    (evil-define-key 'normal org-mode-map (kbd "M-L") 'org-shiftmetaright))
+  )
+#+end_src
+
+** Make more appealing
+#+begin_src elisp
+;; https://github.com/A7R7/org-popup-posframe
+(setq org-ellipsis " ▼"
+  org-hide-emphasis-markers t)
+
+;; Replace list hyphen with dot
+;; (font-lock-add-keywords 'org-mode
+;; '(("^ *\\([-]\\) "
+;;
+;; (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "·"))))))
+
+;; Ensure that anything that should be fixed-pitch in Org files appears that way
+;; (set-face-attribute 'org-block nil :foreground 'unspecified :inherit 'fixed-pitch)
+;; (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+;; (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+;; (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+;; (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+;; (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+;; (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+;; )
+
+#+end_src
+
+*** visual-fill-column
+#+begin_src elisp
+(defun efs/org-mode-visual-fill ()
+  (setq visual-fill-column-width 100
+        visual-fill-column-center-text t)
+  (visual-fill-column-mode 1))
+
+(use-package visual-fill-column
+  :hook (org-mode . efs/org-mode-visual-fill))
+#+end_src
+
+** Log
+
+#+begin_src elisp
+(setq org-agenda-start-with-log-mode t)
+(setq org-log-done 'time)
+(setq org-log-into-drawer t)
+#+end_src
+
+** States
+
+#+begin_src elisp
+(setq org-todo-keywords
+      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+  (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
+;; #+TODO: TODO IN-PROGRESS WAITING | DONE CANCELLED
+#+end_src
+
+** Set of commonly known tags
+#+begin_src elisp
+(setq org-tag-alist
+      '((:startgroup)
+          ; Put mutually exclusive tags here
+  (:endgroup)
+  ("@errand" . ?E)
+  ("@home" . ?H)
+  ("@work" . ?W)
+  ("agenda" . ?a)
+  ("planning" . ?p)
+  ("publish" . ?P)
+  ("batch" . ?b)
+  ("note" . ?n)
+  ("idea" . ?i)
+  ("thinking" . ?t)
+  ("recurring" . ?r)))
+#+end_src
+
+** Refiling
+#+begin_src elisp
+(setq org-refile-targets
+      '(("~/notes/refile.org" :maxlevel . 1)
+	;; (nil :maxlevel . 1)
+	))
+
+  ;; (setq org-refile-targets '((org-agenda-files :maxlevel . 1)))
+
+;; Save Org buffers after refiling!
+(advice-add 'org-refile :after 'org-save-all-org-buffers)
+;; C-c M-r wrong number of arguments?
+#+end_src
+
+** Capture templates
+#+begin_src elisp
+;; start in insert mode?
+;; (setq org-default-notes-file "~/notes/inbox.org")
+;; (setq org-capture-templates
+;;       `(("t" "Tasks / Projects")
+;;   ("tt" "Task" entry (file+olp "~/notes/Tasks.org" "Inbox")
+;;          "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+;;   ("ts" "Clocked Entry Subtask" entry (clock)
+;;    "* TODO %?\n %U\n %a\n %i" :empty-lines 1)
+;; 
+;;   ("j" "Journal Entries")
+;;   ("jj" "Journal" entry
+;;          (file+olp+datetree "~/notes/Journal.org")
+;;          "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
+;;          ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
+;;          :clock-in :clock-resume
+;;          :empty-lines 1)
+;;   ("jm" "Meeting" entry
+;;          (file+olp+datetree "~/notes/Journal.org")
+;;          "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
+;;          :clock-in :clock-resume
+;;          :empty-lines 1)
+;; 
+;;   ("w" "Workflows")
+;;   ("we" "Checking Email" entry (file+olp+datetree "~/notes/Journal.org")
+;;          "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
+;; 
+;;   ("m" "Metrics Capture")
+;;   ("mw" "Weight" table-line (file+headline "~/notes/Metrics.org" "Weight")
+;;    "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
+
+#+end_src
+
+** Habit tracking
+#+begin_src elisp
+
+(with-eval-after-load 'org
+(require 'org-habit)
+(add-to-list 'org-modules 'org-habit)
+(setq org-habit-graph-column 60)
+)
+#+end_src
+
+** Enabling Table of Contents
+#+begin_src elisp
+(use-package toc-org
+  :commands toc-org-enable
+  :hook (org-mode . toc-org-enable))
+#+end_src
+
+** Yank
+#+begin_src elisp
+(use-package org-rich-yank
+  :ensure t
+  :demand t
+  :bind (:map org-mode-map
+              ("C-M-y" . org-rich-yank))
+  :config
+  (defun my-org-rich-yank-format-paste (language contents link)
+    "Based on `org-rich-yank--format-paste-default'."
+    (format "#+BEGIN_SRC %s\n%s\n#+END_SRC\n#+comment: %s"
+            language
+            (org-rich-yank--trim-nl contents)
+            link))
+  (customize-set-variable 'org-rich-yank-format-paste #'my-org-rich-yank-format-paste))
+#+end_src
+
+** Org-ref
+#+begin_src elisp
+(use-package org-ref :defer t)
+#+end_src
+** Org-fragtog
+
+#+begin_src elisp
+(use-package org-fragtog
+  :ensure (:host github :repo "io12/org-fragtog")
+  :hook (org-mode . org-fragtog-mode)
+  :config
+  ; (plist-put org-format-latex-options :scale 1.5)
+(add-to-list 'org-preview-latex-process-alist
+	     '(tectonic :programs ("tectonic" "convert") 
+			:description "pdf > png"
+			:message "you need install the programs: tectonic and imagemagick."
+			:image-input-type "pdf" 
+			:image-output-type "png"
+			:image-size-adjust (1.0 . 1.0) 
+			:latex-compiler
+			("tectonic -Z shell-escape-cwd=%o --outfmt pdf --outdir %o %f")
+			:image-converter
+			("convert -density %D -trim -antialias %f -quality 300 %O")))
+(setq org-preview-latex-default-process 'tectonic))
+#+end_src
+** Diminish Org Indent Mode
+Removes "Ind" from showing in the modeline.
+
+#+begin_src elisp
+(add-hook 'org-mode-hook 'org-indent-mode)
+(eval-after-load 'org-indent '(diminish 'org-indent-mode))
+#+end_src
+
+** Org Level Headers
+#+begin_src elisp
+(custom-set-faces
+ '(org-level-1 ((t (:inherit outline-1 :height 1.7))))
+ '(org-level-2 ((t (:inherit outline-2 :height 1.6))))
+ '(org-level-3 ((t (:inherit outline-3 :height 1.5))))
+ '(org-level-4 ((t (:inherit outline-4 :height 1.4))))
+ '(org-level-5 ((t (:inherit outline-5 :height 1.3))))
+ '(org-level-6 ((t (:inherit outline-5 :height 1.2))))
+ '(org-level-7 ((t (:inherit outline-5 :height 1.1)))))
+#+end_src
+
+** Source Code Block Tag Expansion
+Org-tempo is not a separate package but a module within org that can be enabled.  Org-tempo allows for '<s' followed by TAB to expand to a begin_src tag.  Other expansions available include:
+
+| Typing the below + TAB | Expands to ...                           |
+| ---------------------- + ---------------------------------------- |
+| <a                     | '#+BEGIN_EXPORT ascii' … '#+END_EXPORT   |
+| <c                     | '#+BEGIN_CENTER'       … '#+END_CENTER'  |
+| <C                     | '#+BEGIN_COMMENT'      … '#+END_COMMENT' |
+| <e                     | '#+BEGIN_EXAMPLE'      … '#+END_EXAMPLE' |
+| <E                     | '#+BEGIN_EXPORT'       … '#+END_EXPORT'  |
+| <h                     | '#+BEGIN_EXPORT html'  … '#+END_EXPORT'  |
+| <l                     | '#+BEGIN_EXPORT latex' … '#+END_EXPORT'  |
+| <q                     | '#+BEGIN_QUOTE'        … '#+END_QUOTE'   |
+| <s                     | '#+BEGIN_SRC'          … '#+END_SRC'     |
+| <v                     | '#+BEGIN_VERSE'        … '#+END_VERSE'   |
+
+
+I'm using the file extension here.
+Automate with rg --type-list
+
+#+begin_src vimrc :tangle no
+echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute(line->split(":")[1:][0]->split(",")->sort({a,b->len(a)>len(b)})[0],'\W','','g')}})
+#+end_src
+
+#+begin_src elisp
+(with-eval-after-load 'org
+  ;; This is needed as of Org 9.2
+  (require 'org-tempo)
+
+  (add-to-list 'org-structure-template-alist '("sh"  . "src shell"))
+  (add-to-list 'org-structure-template-alist '("bash"  . "src bash"))
+  (add-to-list 'org-structure-template-alist '("el"  . "src elisp"))
+  (add-to-list 'org-structure-template-alist '("py"  . "src python"))
+  (add-to-list 'org-structure-template-alist '("pl"  . "src perl"))
+  (add-to-list 'org-structure-template-alist '("lua" . "src lua"))
+  (add-to-list 'org-structure-template-alist '("conf" . "src conf"))
+  (add-to-list 'org-structure-template-alist '("js" . "src js")))
+
+;; The following prevents <> from auto-pairing when electric-pair-mode is on.
+;; Otherwise, org-tempo is broken when you try to <s TAB...
+(add-hook 'org-mode-hook (lambda ()
+         (setq-local electric-pair-inhibit-predicate
+               `(lambda (c)
+            (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
+#+end_src
+
+
+** ORG AGENDA
+#+begin_src elisp
+(with-eval-after-load 'org
+  (setq org-agenda-files (list org-directory "~/dots")))
+;; (setq org-log-done 'note)
+(setq org-support-shift-select t)   ;; always?
+;; https://github.com/legalnonsense/elgantt
+
+#+end_src
+
+*** Configure custom agenda views
+#+begin_src elisp
+(setq org-agenda-custom-commands
+      '(("d" "Dashboard"
+   ((agenda "" ((org-deadline-warning-days 7)))
+    (todo "NEXT"
+    ((org-agenda-overriding-header "Next Tasks")))
+    (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
+
+  ("n" "Next Tasks"
+   ((todo "NEXT"
+    ((org-agenda-overriding-header "Next Tasks")))))
+
+  ("W" "Work Tasks" tags-todo "+work-email")
+
+  ;; Low-effort next actions
+  ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
+   ((org-agenda-overriding-header "Low Effort Tasks")
+    (org-agenda-max-todos 20)
+    (org-agenda-files org-agenda-files)))
+
+  ("w" "Workflow Status"
+   ((todo "WAIT"
+    ((org-agenda-overriding-header "Waiting on External")
+     (org-agenda-files org-agenda-files)))
+    (todo "REVIEW"
+    ((org-agenda-overriding-header "In Review")
+     (org-agenda-files org-agenda-files)))
+    (todo "PLAN"
+    ((org-agenda-overriding-header "In Planning")
+     (org-agenda-todo-list-sublevels nil)
+     (org-agenda-files org-agenda-files)))
+    (todo "BACKLOG"
+    ((org-agenda-overriding-header "Project Backlog")
+     (org-agenda-todo-list-sublevels nil)
+     (org-agenda-files org-agenda-files)))
+    (todo "READY"
+    ((org-agenda-overriding-header "Ready for Work")
+     (org-agenda-files org-agenda-files)))
+    (todo "ACTIVE"
+    ((org-agenda-overriding-header "Active Projects")
+     (org-agenda-files org-agenda-files)))
+    (todo "COMPLETED"
+    ((org-agenda-overriding-header "Completed Projects")
+     (org-agenda-files org-agenda-files)))
+    (todo "CANC"
+    ((org-agenda-overriding-header "Cancelled Projects")
+     (org-agenda-files org-agenda-files)))))))
+#+end_src
+
+** ORG BABEL
+#+begin_src elisp
+(setq org-confirm-babel-evaluate nil)
+;;(use-package ob-mermaid)
+(with-eval-after-load 'org
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   ;; how To make all langs true?
+   '(;; other Babel languages
+     (plantuml . t)
+                                        ; (typst . t)
+     (ditaa . t)
+     (python . t)
+     (gnuplot . t)
+                                        ; (php . t)
+     (sqlite . t)
+     (perl . t)
+     (octave . t)
+     (calc . t)
+     (lua . t)
+     (C . t)
+     (java . t)
+     (js . t)
+     ;; how does this work?
+     (sed . t)
+     (shell . t)
+     ;;(mermaid . t)
+     ;;(scheme . t)
+     )))
+(setq org-plantuml-jar-path (expand-file-name "/usr/share/java/plantuml/plantuml.jar"))
+(setq org-ditaa-jar-path (expand-file-name "/usr/share/java/ditaa.jar"))
+                                        ; (add-to-list 'org-structure-template-alist '("ditaa" . "src ditaa :file ./images/.png :cmdline -E"))
+;;(setq ob-mermaid-cli-cpath "/usr/bin/mmdc")
+
+;; Highlight Conf Files
+(with-eval-after-load 'org
+  (push '("conf-unix" . conf-unix) org-src-lang-modes))
+
+#+end_src
+
+https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892d569f19fd66a/contrib/lisp/ob-php.el
+*** html
+#+begin_src elisp
+(use-package ob-html
+  :ensure (:host github :repo "misohena/ob-html")
+:config
+(with-eval-after-load "org"
+  (require 'ob-html)
+  (org-babel-html-enable-open-src-block-result-temporary)) ;;Enable C-c C-o on html code block
+)
+#+end_src
+
+*** Neovim
+#+begin_src elisp
+(defun org-babel-execute:vimrc (body params)
+  "Execute VimL BODY according to PARAMS."
+  (let ((script-file (org-babel-temp-file "nvim-script-" ".vim")))
+    (with-temp-file script-file
+      (insert body))
+    (let ((output (org-babel-eval
+                   (format "nvim -V1 -es -u NONE -i NONE -c \"source %s\" -c \"quit\" 2>&1"
+                           (org-babel-process-file-name script-file))
+                   "")))
+      ;; Remove carriage returns
+      (replace-regexp-in-string "\r" "" output))))
+
+
+(with-eval-after-load 'org
+  (add-to-list 'org-babel-load-languages '(vimrc . t))
+  (add-to-list 'org-structure-template-alist '("vim" . "src vimrc")))
+
+(defun org-babel-execute:nlua (body params)
+  "Execute Nlua BODY according to PARAMS."
+  (let ((script-file (org-babel-temp-file "nvim-script-" ".lua")))
+    (with-temp-file script-file
+      (insert body))
+    (let ((output (org-babel-eval
+                   (format "nvim -V1 -es -u NONE -i NONE -c \"luafile %s\" -c \"quit\" 2>&1"
+                           (org-babel-process-file-name script-file))
+                   "")))
+      ;; Remove carriage returns
+      (replace-regexp-in-string "\r" "" output))))
+
+
+(with-eval-after-load 'org
+  (add-to-list 'org-babel-load-languages '(nlua . t))
+  (add-to-list 'org-structure-template-alist '("nlua" . "src nlua"))
+  (add-to-list 'auto-mode-alist '("\\.nlua\\'" . lua-mode))
+  (add-to-list 'org-src-lang-modes '("nlua" . lua)))
+#+end_src
+
+** TODO Auto-tangle
+Also tangle when file's content externally modified (by command/LLM, ...), maybe use system'd path and modify AGENTS.md
+#+begin_src elisp
+;; Automatically tangle our dotfiles when we save them
+(defun efs/org-babel-tangle-config ()
+  (when (or
+   (string-match-p "dots/.*[^|]\\.org\\'" (buffer-file-name))
+   ;; (string-equal (concat user-emacs-directory "config.org") (buffer-file-name)))
+   (string-equal (expand-file-name "~/.config/emacs/config.org") (buffer-file-name))
+   (string-equal (expand-file-name "~/.config/nvim/config.org") (buffer-file-name))
+)
+
+    ;; Dynamic scoping to the rescue
+    (let ((org-confirm-babel-evaluate nil))
+      (org-babel-tangle))))
+
+(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
+
+#+end_src
+
+** IMAGES
+#+begin_src elisp
+(setq org-image-actual-width '(1200))  ;; so i can use :width attribute
+(setq org-startup-with-inline-images t) ;; would be nice if automatically open if over line like neovim/snacks
+;; (setq org-latex-pdf-process '("tectonic %f")) ;; https://www.reddit.com/r/emacs/comments/jf9hzm/use_tectonic_in_latex_and_orgmode/
+;;https://github.com/tectonic-typesetting/tectonic/discussions/928
+(setq org-latex-pdf-process '("tectonic -X compile --outdir=%o -Z shell-escape -Z continue-on-errors %f"))
+#+end_src
+
+
+** org-mpv-note
+usa with yt-dlp
+#+begin_src elisp
+(use-package smartrep
+  :ensure t
+  :demand t)
+
+(use-package org-mpv-notes
+  :ensure t
+  :commands (org-mpv-notes-mode org-mpv-notes-open)
+  :hook (org-mode . org-mpv-notes-setup-link)
+  :config
+  (define-key org-mpv-notes-mode-map (kbd "M-n") (smartrep-map org-mpv-notes-key-bindings))
+  (add-to-list 'org-mpv-notes-mpv-args "--keep-open=yes")
+  )
+
+
+;; https://github.com/isamert/empv.el
+(use-package mpv :defer t
+  :ensure t)
+#+end_src
+
+** org-autolist
+#+begin_src elisp
+(use-package org-autolist :diminish :hook (org-mode . org-autolist-mode))
+#+end_src
+
+org-cheatsheet, org-reveal.js? mindmaps?
+
+** org modern
+#+begin_src elisp
+(use-package org-modern
+  :hook (org-mode . org-modern-mode))
+#+end_src
+
+** Settings
+#+begin_src elisp
+(setq org-edit-src-content-indentation 0) ;; Set src block automatic indent to 0 instead of 2.
+
+(setq org-imenu-depth 3)
+;; Setting RETURN key in org-mode to follow links
+(setq org-return-follows-link  t)
+
+;; Automatically update TODO statistics cookies [/] and [%]
+; (setq org-hierarchical-todo-statistics nil)
+; (add-hook 'org-after-todo-state-change-hook 'org-update-parent-todo-statistics)
+
+(with-eval-after-load 'org
+(add-to-list 'org-file-apps '("\\.pdf\\'" . emacs)))
+#+end_src
+
+** org-noter
+https://github.com/novoid/Memacs
+https://github.com/novoid/extract_pdf_annotations_to_orgmode
+https://github.com/fuxialexander/org-pdftools
+#+begin_src elisp
+;; (use-package djvu)			; doesn't work?
+(use-package org-noter
+    :ensure (:repo "org-noter/org-noter" :host github)
+  :after djvu
+  :custom
+  ;; org-noter-highlight-selected-text to t
+  (org-noter-always-create-frame nil)
+(org-noter-notes-window-location 'vertical-split)
+;; :init  (setq org-noter-always-create-frame nil)
+ ;; (setq org-noter-notes-search-path '("~/notes"))
+  :bind (:map pdf-view-mode-map
+        ("C-c n" . #'org-noter))
+  ;; :load-path "~/notes/pdfs/"
+  ;; :ensure t
+  ;;   :bind (:map evil-normal-state-map
+  ;;  ("i" . #'org-noter-insert-note) ;; also works for org buffer
+  ;; )
+  ;; :config
+  )
+(with-eval-after-load 'org-noter
+  (define-key org-noter-doc-mode-map (kbd "i")   'org-noter-insert-precise-note)
+  (define-key org-noter-doc-mode-map (kbd "C-i") 'org-noter-insert-note)
+  (define-key org-noter-doc-mode-map (kbd "I")   'org-noter-insert-precise-note-toggle-no-questions)
+  (define-key org-noter-doc-mode-map (kbd "M-i") 'org-noter-insert-note-toggle-no-questions))
+(with-eval-after-load 'org-noter
+  (define-key org-noter-doc-mode-map (kbd "M-p") 'org-noter-sync-prev-note)
+  (define-key org-noter-doc-mode-map (kbd "M-.") 'org-noter-sync-current-note)
+  (define-key org-noter-doc-mode-map (kbd "M-n") 'org-noter-sync-next-note)
+  (define-key org-noter-doc-mode-map (kbd "C-M-p") 'org-noter-sync-prev-page-or-chapter)
+  (define-key org-noter-doc-mode-map (kbd "C-M-.") 'org-noter-sync-current-page-or-chapter)
+  (define-key org-noter-doc-mode-map (kbd "C-M-n") 'org-noter-sync-next-page-or-chapter)
+
+  (define-key org-noter-notes-mode-map (kbd "M-p") 'org-noter-sync-prev-note)
+  (define-key org-noter-notes-mode-map (kbd "M-.") 'org-noter-sync-current-note)
+  (define-key org-noter-notes-mode-map (kbd "M-n") 'org-noter-sync-next-note)
+  (define-key org-noter-notes-mode-map (kbd "C-M-p") 'org-noter-sync-prev-page-or-chapter)
+  (define-key org-noter-notes-mode-map (kbd "C-M-.") 'org-noter-sync-current-page-or-chapter)
+  (define-key org-noter-notes-mode-map (kbd "C-M-n") 'org-noter-sync-next-page-or-chapter))
+#+end_src
+
+** Unfold when ediffing
+#+begin_src elisp
+;; https://narkive.com/3rhdeunW:5.744.172
+(defun ora-ediff-prepare-buffer ()
+(when (memq major-mode '(org-mode emacs-lisp-mode))
+(outline-show-all)))
+
+(add-hook 'ediff-prepare-buffer-hook 'ora-ediff-prepare-buffer)
+#+end_src
+
+#+begin_src elisp
+(use-package shrface)
+#+end_src
+
+
 * Plugins
 ** ALL THE ICONS
 This is an icon set that can be used with dashboard, dired, ibuffer and other Emacs programs.
@@ -1437,585 +2011,6 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
 (use-package spacious-padding :ensure t :if (display-graphic-p) :config (spacious-padding-mode))
 (display-time)
 
-#+end_src
-
-** ORG MODE
-- [ ] https://github.com/alphapapa/org-web-tools
-https://github.com/isamert/corg.el
-#+begin_src elisp
-;; :pin org/gnu?
-(use-package org
-  :ensure nil
-  :bind (("C-c c" . counsel-org-capture)
-   ("C-c l" . org-store-link)
-   ("C-c a" . org-agenda)
-
-   ;;   "m i" '(org-toggle-item :wk "Org toggle item")
-   ;;   "m T" '(org-todo-list :wk "Org todo list")
-   ;;   "m d t" '(org-time-stamp :wk "Org time stamp")
-   )
-  :config ;; (message "test lazy loading")
-
-  (with-eval-after-load 'evil
-    (evil-define-key 'normal org-mode-map (kbd "gj") 'evil-next-visual-line)
-    (evil-define-key 'normal org-mode-map (kbd "gk") 'evil-previous-visual-line)
-    (evil-define-key 'normal org-mode-map (kbd "zj") 'org-forward-heading-same-level)
-    (evil-define-key 'normal org-mode-map (kbd "zk") 'org-forward-heading-same-level)
-    (evil-define-key '(normal visual) org-mode-map (kbd "}") 'evil-forward-paragraph)
-    (evil-define-key '(normal visual) org-mode-map (kbd "{") 'evil-backward-paragraph)
-    
-    ;; Mirror M-{S,<arrow>} org structural editing with M-{h,j,k,l}
-    (evil-define-key 'normal org-mode-map (kbd "M-h") 'org-metaleft)
-    (evil-define-key 'normal org-mode-map (kbd "M-j") 'org-metadown)
-    (evil-define-key 'normal org-mode-map (kbd "M-k") 'org-metaup)
-    (evil-define-key 'normal org-mode-map (kbd "M-l") 'org-metaright)
-    (evil-define-key 'normal org-mode-map (kbd "M-H") 'org-shiftmetaleft)
-    (evil-define-key 'normal org-mode-map (kbd "M-J") 'org-shiftmetadown)
-    (evil-define-key 'normal org-mode-map (kbd "M-K") 'org-shiftmetaup)
-    (evil-define-key 'normal org-mode-map (kbd "M-L") 'org-shiftmetaright))
-  )
-#+end_src
-
-*** Make more appealing
-#+begin_src elisp
-;; https://github.com/A7R7/org-popup-posframe
-(setq org-ellipsis " ▼"
-  org-hide-emphasis-markers t)
-
-;; Replace list hyphen with dot
-;; (font-lock-add-keywords 'org-mode
-;; '(("^ *\\([-]\\) "
-;;
-;; (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "·"))))))
-
-;; Ensure that anything that should be fixed-pitch in Org files appears that way
-;; (set-face-attribute 'org-block nil :foreground 'unspecified :inherit 'fixed-pitch)
-;; (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-;; (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
-;; (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-;; (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-;; (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-;; (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
-;; )
-
-#+end_src
-
-**** visual-fill-column
-#+begin_src elisp
-(defun efs/org-mode-visual-fill ()
-  (setq visual-fill-column-width 100
-        visual-fill-column-center-text t)
-  (visual-fill-column-mode 1))
-
-(use-package visual-fill-column
-  :hook (org-mode . efs/org-mode-visual-fill))
-#+end_src
-
-*** Log
-
-#+begin_src elisp
-(setq org-agenda-start-with-log-mode t)
-(setq org-log-done 'time)
-(setq org-log-into-drawer t)
-#+end_src
-
-*** States
-
-#+begin_src elisp
-(setq org-todo-keywords
-      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-  (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
-;; #+TODO: TODO IN-PROGRESS WAITING | DONE CANCELLED
-#+end_src
-
-*** Set of commonly known tags
-#+begin_src elisp
-(setq org-tag-alist
-      '((:startgroup)
-          ; Put mutually exclusive tags here
-  (:endgroup)
-  ("@errand" . ?E)
-  ("@home" . ?H)
-  ("@work" . ?W)
-  ("agenda" . ?a)
-  ("planning" . ?p)
-  ("publish" . ?P)
-  ("batch" . ?b)
-  ("note" . ?n)
-  ("idea" . ?i)
-  ("thinking" . ?t)
-  ("recurring" . ?r)))
-#+end_src
-
-*** Refiling
-#+begin_src elisp
-(setq org-refile-targets
-      '(("~/notes/refile.org" :maxlevel . 1)
-	;; (nil :maxlevel . 1)
-	))
-
-  ;; (setq org-refile-targets '((org-agenda-files :maxlevel . 1)))
-
-;; Save Org buffers after refiling!
-(advice-add 'org-refile :after 'org-save-all-org-buffers)
-;; C-c M-r wrong number of arguments?
-#+end_src
-
-*** Capture templates
-#+begin_src elisp
-;; start in insert mode?
-;; (setq org-default-notes-file "~/notes/inbox.org")
-(setq org-capture-templates
-      `(("t" "Tasks / Projects")
-  ("tt" "Task" entry (file+olp "~/notes/Tasks.org" "Inbox")
-         "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
-  ("ts" "Clocked Entry Subtask" entry (clock)
-   "* TODO %?\n %U\n %a\n %i" :empty-lines 1)
-
-  ("j" "Journal Entries")
-  ("jj" "Journal" entry
-         (file+olp+datetree "~/notes/Journal.org")
-         "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
-         ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
-         :clock-in :clock-resume
-         :empty-lines 1)
-  ("jm" "Meeting" entry
-         (file+olp+datetree "~/notes/Journal.org")
-         "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
-         :clock-in :clock-resume
-         :empty-lines 1)
-
-  ("w" "Workflows")
-  ("we" "Checking Email" entry (file+olp+datetree "~/notes/Journal.org")
-         "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
-
-  ("m" "Metrics Capture")
-  ("mw" "Weight" table-line (file+headline "~/notes/Metrics.org" "Weight")
-   "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
-
-#+end_src
-
-*** Habit tracking
-#+begin_src elisp
-
-(with-eval-after-load 'org
-(require 'org-habit)
-(add-to-list 'org-modules 'org-habit)
-(setq org-habit-graph-column 60)
-)
-#+end_src
-
-*** Enabling Table of Contents
-#+begin_src elisp
-(use-package toc-org
-  :commands toc-org-enable
-  :hook (org-mode . toc-org-enable))
-#+end_src
-
-*** Yank
-#+begin_src elisp
-(use-package org-rich-yank
-  :ensure t
-  :demand t
-  :bind (:map org-mode-map
-              ("C-M-y" . org-rich-yank))
-  :config
-  (defun my-org-rich-yank-format-paste (language contents link)
-    "Based on `org-rich-yank--format-paste-default'."
-    (format "#+BEGIN_SRC %s\n%s\n#+END_SRC\n#+comment: %s"
-            language
-            (org-rich-yank--trim-nl contents)
-            link))
-  (customize-set-variable 'org-rich-yank-format-paste #'my-org-rich-yank-format-paste))
-#+end_src
-
-*** Org-ref
-#+begin_src elisp
-(use-package org-ref :defer t)
-#+end_src
-*** Org-fragtog
-
-#+begin_src elisp
-(use-package org-fragtog
-  :ensure (:host github :repo "io12/org-fragtog")
-  :hook (org-mode . org-fragtog-mode)
-  :config
-  ; (plist-put org-format-latex-options :scale 1.5)
-(add-to-list 'org-preview-latex-process-alist
-	     '(tectonic :programs ("tectonic" "convert") 
-			:description "pdf > png"
-			:message "you need install the programs: tectonic and imagemagick."
-			:image-input-type "pdf" 
-			:image-output-type "png"
-			:image-size-adjust (1.0 . 1.0) 
-			:latex-compiler
-			("tectonic -Z shell-escape-cwd=%o --outfmt pdf --outdir %o %f")
-			:image-converter
-			("convert -density %D -trim -antialias %f -quality 300 %O")))
-(setq org-preview-latex-default-process 'tectonic))
-#+end_src
-*** Diminish Org Indent Mode
-Removes "Ind" from showing in the modeline.
-
-#+begin_src elisp
-(add-hook 'org-mode-hook 'org-indent-mode)
-(eval-after-load 'org-indent '(diminish 'org-indent-mode))
-#+end_src
-
-*** Org Level Headers
-#+begin_src elisp
-(custom-set-faces
- '(org-level-1 ((t (:inherit outline-1 :height 1.7))))
- '(org-level-2 ((t (:inherit outline-2 :height 1.6))))
- '(org-level-3 ((t (:inherit outline-3 :height 1.5))))
- '(org-level-4 ((t (:inherit outline-4 :height 1.4))))
- '(org-level-5 ((t (:inherit outline-5 :height 1.3))))
- '(org-level-6 ((t (:inherit outline-5 :height 1.2))))
- '(org-level-7 ((t (:inherit outline-5 :height 1.1)))))
-#+end_src
-
-*** Source Code Block Tag Expansion
-Org-tempo is not a separate package but a module within org that can be enabled.  Org-tempo allows for '<s' followed by TAB to expand to a begin_src tag.  Other expansions available include:
-
-| Typing the below + TAB | Expands to ...                           |
-| ---------------------- + ---------------------------------------- |
-| <a                     | '#+BEGIN_EXPORT ascii' … '#+END_EXPORT   |
-| <c                     | '#+BEGIN_CENTER'       … '#+END_CENTER'  |
-| <C                     | '#+BEGIN_COMMENT'      … '#+END_COMMENT' |
-| <e                     | '#+BEGIN_EXAMPLE'      … '#+END_EXAMPLE' |
-| <E                     | '#+BEGIN_EXPORT'       … '#+END_EXPORT'  |
-| <h                     | '#+BEGIN_EXPORT html'  … '#+END_EXPORT'  |
-| <l                     | '#+BEGIN_EXPORT latex' … '#+END_EXPORT'  |
-| <q                     | '#+BEGIN_QUOTE'        … '#+END_QUOTE'   |
-| <s                     | '#+BEGIN_SRC'          … '#+END_SRC'     |
-| <v                     | '#+BEGIN_VERSE'        … '#+END_VERSE'   |
-
-
-I'm using the file extension here.
-Automate with rg --type-list
-
-#+begin_src vimrc :tangle no
-echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute(line->split(":")[1:][0]->split(",")->sort({a,b->len(a)>len(b)})[0],'\W','','g')}})
-#+end_src
-
-#+begin_src elisp
-(with-eval-after-load 'org
-  ;; This is needed as of Org 9.2
-  (require 'org-tempo)
-
-  (add-to-list 'org-structure-template-alist '("sh"  . "src shell"))
-  (add-to-list 'org-structure-template-alist '("bash"  . "src bash"))
-  (add-to-list 'org-structure-template-alist '("el"  . "src elisp"))
-  (add-to-list 'org-structure-template-alist '("py"  . "src python"))
-  (add-to-list 'org-structure-template-alist '("pl"  . "src perl"))
-  (add-to-list 'org-structure-template-alist '("lua" . "src lua"))
-  (add-to-list 'org-structure-template-alist '("conf" . "src conf"))
-  (add-to-list 'org-structure-template-alist '("js" . "src js")))
-
-;; The following prevents <> from auto-pairing when electric-pair-mode is on.
-;; Otherwise, org-tempo is broken when you try to <s TAB...
-(add-hook 'org-mode-hook (lambda ()
-         (setq-local electric-pair-inhibit-predicate
-               `(lambda (c)
-            (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
-#+end_src
-
-
-*** ORG AGENDA
-#+begin_src elisp
-;; (setq org-directory "~/notes")
-;; (setq org-agenda-files "~/notes/agenda.org")
-;; (setq org-agenda-files (list org-directory))
-;; (setq org-log-done 'note)
-(setq org-support-shift-select t)   ;; always?
-;; https://github.com/legalnonsense/elgantt
-
-(setq org-agenda-files
-      '("~/notes/Tasks.org"
-  "~/notes/Habits.org"
-  ; "~/dots"
-      ))
-#+end_src
-
-**** Configure custom agenda views
-#+begin_src elisp
-(setq org-agenda-custom-commands
-      '(("d" "Dashboard"
-   ((agenda "" ((org-deadline-warning-days 7)))
-    (todo "NEXT"
-    ((org-agenda-overriding-header "Next Tasks")))
-    (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
-
-  ("n" "Next Tasks"
-   ((todo "NEXT"
-    ((org-agenda-overriding-header "Next Tasks")))))
-
-  ("W" "Work Tasks" tags-todo "+work-email")
-
-  ;; Low-effort next actions
-  ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
-   ((org-agenda-overriding-header "Low Effort Tasks")
-    (org-agenda-max-todos 20)
-    (org-agenda-files org-agenda-files)))
-
-  ("w" "Workflow Status"
-   ((todo "WAIT"
-    ((org-agenda-overriding-header "Waiting on External")
-     (org-agenda-files org-agenda-files)))
-    (todo "REVIEW"
-    ((org-agenda-overriding-header "In Review")
-     (org-agenda-files org-agenda-files)))
-    (todo "PLAN"
-    ((org-agenda-overriding-header "In Planning")
-     (org-agenda-todo-list-sublevels nil)
-     (org-agenda-files org-agenda-files)))
-    (todo "BACKLOG"
-    ((org-agenda-overriding-header "Project Backlog")
-     (org-agenda-todo-list-sublevels nil)
-     (org-agenda-files org-agenda-files)))
-    (todo "READY"
-    ((org-agenda-overriding-header "Ready for Work")
-     (org-agenda-files org-agenda-files)))
-    (todo "ACTIVE"
-    ((org-agenda-overriding-header "Active Projects")
-     (org-agenda-files org-agenda-files)))
-    (todo "COMPLETED"
-    ((org-agenda-overriding-header "Completed Projects")
-     (org-agenda-files org-agenda-files)))
-    (todo "CANC"
-    ((org-agenda-overriding-header "Cancelled Projects")
-     (org-agenda-files org-agenda-files)))))))
-#+end_src
-
-*** ORG BABEL
-#+begin_src elisp
-(setq org-confirm-babel-evaluate nil)
-;;(use-package ob-mermaid)
-(with-eval-after-load 'org
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   ;; how To make all langs true?
-   '(;; other Babel languages
-     (plantuml . t)
-                                        ; (typst . t)
-     (ditaa . t)
-     (python . t)
-     (gnuplot . t)
-                                        ; (php . t)
-     (sqlite . t)
-     (perl . t)
-     (octave . t)
-     (calc . t)
-     (lua . t)
-     (C . t)
-     (java . t)
-     (js . t)
-     ;; how does this work?
-     (sed . t)
-     (shell . t)
-     ;;(mermaid . t)
-     ;;(scheme . t)
-     )))
-(setq org-plantuml-jar-path (expand-file-name "/usr/share/java/plantuml/plantuml.jar"))
-(setq org-ditaa-jar-path (expand-file-name "/usr/share/java/ditaa.jar"))
-                                        ; (add-to-list 'org-structure-template-alist '("ditaa" . "src ditaa :file ./images/.png :cmdline -E"))
-;;(setq ob-mermaid-cli-cpath "/usr/bin/mmdc")
-
-;; Highlight Conf Files
-(with-eval-after-load 'org
-  (push '("conf-unix" . conf-unix) org-src-lang-modes))
-
-#+end_src
-
-https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892d569f19fd66a/contrib/lisp/ob-php.el
-**** html
-#+begin_src elisp
-(use-package ob-html
-  :ensure (:host github :repo "misohena/ob-html")
-:config
-(with-eval-after-load "org"
-  (require 'ob-html)
-  (org-babel-html-enable-open-src-block-result-temporary)) ;;Enable C-c C-o on html code block
-)
-#+end_src
-
-**** Neovim
-#+begin_src elisp
-(defun org-babel-execute:vimrc (body params)
-  "Execute VimL BODY according to PARAMS."
-  (let ((script-file (org-babel-temp-file "nvim-script-" ".vim")))
-    (with-temp-file script-file
-      (insert body))
-    (let ((output (org-babel-eval
-                   (format "nvim -V1 -es -u NONE -i NONE -c \"source %s\" -c \"quit\" 2>&1"
-                           (org-babel-process-file-name script-file))
-                   "")))
-      ;; Remove carriage returns
-      (replace-regexp-in-string "\r" "" output))))
-
-
-(with-eval-after-load 'org
-  (add-to-list 'org-babel-load-languages '(vimrc . t))
-  (add-to-list 'org-structure-template-alist '("vim" . "src vimrc")))
-
-(defun org-babel-execute:nlua (body params)
-  "Execute Nlua BODY according to PARAMS."
-  (let ((script-file (org-babel-temp-file "nvim-script-" ".lua")))
-    (with-temp-file script-file
-      (insert body))
-    (let ((output (org-babel-eval
-                   (format "nvim -V1 -es -u NONE -i NONE -c \"luafile %s\" -c \"quit\" 2>&1"
-                           (org-babel-process-file-name script-file))
-                   "")))
-      ;; Remove carriage returns
-      (replace-regexp-in-string "\r" "" output))))
-
-
-(with-eval-after-load 'org
-  (add-to-list 'org-babel-load-languages '(nlua . t))
-  (add-to-list 'org-structure-template-alist '("nlua" . "src nlua"))
-  (add-to-list 'auto-mode-alist '("\\.nlua\\'" . lua-mode))
-  (add-to-list 'org-src-lang-modes '("nlua" . lua)))
-#+end_src
-
-*** TODO Auto-tangle
-Also tangle when file's content externally modified (by command/LLM, ...), maybe use system'd path and modify AGENTS.md
-#+begin_src elisp
-;; Automatically tangle our dotfiles when we save them
-(defun efs/org-babel-tangle-config ()
-  (when (or
-   (string-match-p "dots/.*[^|]\\.org\\'" (buffer-file-name))
-   ;; (string-equal (concat user-emacs-directory "config.org") (buffer-file-name)))
-   (string-equal (expand-file-name "~/.config/emacs/config.org") (buffer-file-name))
-   (string-equal (expand-file-name "~/.config/nvim/config.org") (buffer-file-name))
-)
-
-    ;; Dynamic scoping to the rescue
-    (let ((org-confirm-babel-evaluate nil))
-      (org-babel-tangle))))
-
-(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
-
-#+end_src
-
-*** IMAGES
-#+begin_src elisp
-(setq org-image-actual-width '(1200))  ;; so i can use :width attribute
-(setq org-startup-with-inline-images t) ;; would be nice if automatically open if over line like neovim/snacks
-;; (setq org-latex-pdf-process '("tectonic %f")) ;; https://www.reddit.com/r/emacs/comments/jf9hzm/use_tectonic_in_latex_and_orgmode/
-;;https://github.com/tectonic-typesetting/tectonic/discussions/928
-(setq org-latex-pdf-process '("tectonic -X compile --outdir=%o -Z shell-escape -Z continue-on-errors %f"))
-#+end_src
-
-
-*** org-mpv-note
-usa with yt-dlp
-#+begin_src elisp
-(use-package smartrep
-  :ensure t
-  :demand t)
-
-(use-package org-mpv-notes
-  :ensure t
-  :commands (org-mpv-notes-mode org-mpv-notes-open)
-  :hook (org-mode . org-mpv-notes-setup-link)
-  :config
-  (define-key org-mpv-notes-mode-map (kbd "M-n") (smartrep-map org-mpv-notes-key-bindings))
-  (add-to-list 'org-mpv-notes-mpv-args "--keep-open=yes")
-  )
-
-
-;; https://github.com/isamert/empv.el
-(use-package mpv :defer t
-  :ensure t)
-#+end_src
-
-*** org-autolist
-#+begin_src elisp
-(use-package org-autolist :diminish :hook (org-mode . org-autolist-mode))
-#+end_src
-
-org-cheatsheet, org-reveal.js? mindmaps?
-
-*** org modern
-#+begin_src elisp
-(use-package org-modern
-  :hook (org-mode . org-modern-mode))
-#+end_src
-
-*** Settings
-#+begin_src elisp
-(setq org-edit-src-content-indentation 0) ;; Set src block automatic indent to 0 instead of 2.
-
-(setq org-imenu-depth 3)
-;; Setting RETURN key in org-mode to follow links
-(setq org-return-follows-link  t)
-
-;; Automatically update TODO statistics cookies [/] and [%]
-; (setq org-hierarchical-todo-statistics nil)
-; (add-hook 'org-after-todo-state-change-hook 'org-update-parent-todo-statistics)
-
-(with-eval-after-load 'org
-(add-to-list 'org-file-apps '("\\.pdf\\'" . emacs)))
-#+end_src
-
-*** org-noter
-https://github.com/novoid/Memacs
-https://github.com/novoid/extract_pdf_annotations_to_orgmode
-https://github.com/fuxialexander/org-pdftools
-#+begin_src elisp
-;; (use-package djvu)			; doesn't work?
-(use-package org-noter
-    :ensure (:repo "org-noter/org-noter" :host github)
-  :after djvu
-  :custom
-  ;; org-noter-highlight-selected-text to t
-  (org-noter-always-create-frame nil)
-(org-noter-notes-window-location 'vertical-split)
-;; :init  (setq org-noter-always-create-frame nil)
- ;; (setq org-noter-notes-search-path '("~/notes"))
-  :bind (:map pdf-view-mode-map
-        ("C-c n" . #'org-noter))
-  ;; :load-path "~/notes/pdfs/"
-  ;; :ensure t
-  ;;   :bind (:map evil-normal-state-map
-  ;;  ("i" . #'org-noter-insert-note) ;; also works for org buffer
-  ;; )
-  ;; :config
-  )
-(with-eval-after-load 'org-noter
-  (define-key org-noter-doc-mode-map (kbd "i")   'org-noter-insert-precise-note)
-  (define-key org-noter-doc-mode-map (kbd "C-i") 'org-noter-insert-note)
-  (define-key org-noter-doc-mode-map (kbd "I")   'org-noter-insert-precise-note-toggle-no-questions)
-  (define-key org-noter-doc-mode-map (kbd "M-i") 'org-noter-insert-note-toggle-no-questions))
-(with-eval-after-load 'org-noter
-  (define-key org-noter-doc-mode-map (kbd "M-p") 'org-noter-sync-prev-note)
-  (define-key org-noter-doc-mode-map (kbd "M-.") 'org-noter-sync-current-note)
-  (define-key org-noter-doc-mode-map (kbd "M-n") 'org-noter-sync-next-note)
-  (define-key org-noter-doc-mode-map (kbd "C-M-p") 'org-noter-sync-prev-page-or-chapter)
-  (define-key org-noter-doc-mode-map (kbd "C-M-.") 'org-noter-sync-current-page-or-chapter)
-  (define-key org-noter-doc-mode-map (kbd "C-M-n") 'org-noter-sync-next-page-or-chapter)
-
-  (define-key org-noter-notes-mode-map (kbd "M-p") 'org-noter-sync-prev-note)
-  (define-key org-noter-notes-mode-map (kbd "M-.") 'org-noter-sync-current-note)
-  (define-key org-noter-notes-mode-map (kbd "M-n") 'org-noter-sync-next-note)
-  (define-key org-noter-notes-mode-map (kbd "C-M-p") 'org-noter-sync-prev-page-or-chapter)
-  (define-key org-noter-notes-mode-map (kbd "C-M-.") 'org-noter-sync-current-page-or-chapter)
-  (define-key org-noter-notes-mode-map (kbd "C-M-n") 'org-noter-sync-next-page-or-chapter))
-#+end_src
-
-*** Unfold when ediffing
-#+begin_src elisp
-;; https://narkive.com/3rhdeunW:5.744.172
-(defun ora-ediff-prepare-buffer ()
-(when (memq major-mode '(org-mode emacs-lisp-mode))
-(outline-show-all)))
-
-(add-hook 'ediff-prepare-buffer-hook 'ora-ediff-prepare-buffer)
-#+end_src
-
-#+begin_src elisp
-(use-package shrface)
 #+end_src
 
 ** PDFs
