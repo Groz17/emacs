@@ -61,6 +61,7 @@ With Emacs version 29, true transparency has been added.  I have turned transpar
 #+end_src
 
 
+
 * MINIBUFFER
 **  ESCAPE
 By default, Emacs requires you to hit ESC three times to escape quit the minibuffer.
@@ -441,6 +442,28 @@ By default, Emacs creates automatic backups of files in their original directori
 (setq backup-directory-alist '((".*" . "~/.local/share/Trash/files")))
 #+end_src
 
+
+* EDIFF
+'ediff' is a diff program that is built into Emacs.  By default, 'ediff' splits files vertically and places the 'help' frame in its own window.  I have changed this so the two files are split horizontally and the 'help' frame appears as a lower split within the existing window.  Also, I create my own 'dt-ediff-hook' where I add 'j/k' for moving to next/prev diffs.  By default, this is set to 'n/p'.
+
+automatically fold when moving j/k?
+(use-package ztree)
+
+#+begin_src elisp
+(setq ediff-split-window-function 'split-window-horizontally
+      ediff-window-setup-function 'ediff-setup-windows-plain)
+#+end_src
+
+** Unfold when ediffing
+#+begin_src elisp
+;; https://narkive.com/3rhdeunW:5.744.172
+(defun ora-ediff-prepare-buffer ()
+(when (memq major-mode '(org-mode emacs-lisp-mode))
+(outline-show-all)))
+
+(add-hook 'ediff-prepare-buffer-hook 'ora-ediff-prepare-buffer)
+#+end_src
+
 * ORG MODE
 - [ ] https://github.com/alphapapa/org-web-tools
 https://github.com/isamert/corg.el
@@ -607,56 +630,7 @@ https://github.com/isamert/corg.el
 )
 #+end_src
 
-** Enabling Table of Contents
-#+begin_src elisp
-(use-package toc-org
-  :commands toc-org-enable
-  :hook (org-mode . toc-org-enable))
-#+end_src
-
-** Yank
-#+begin_src elisp
-(use-package org-rich-yank
-  :ensure t
-  :demand t
-  :bind (:map org-mode-map
-              ("C-M-y" . org-rich-yank))
-  :config
-  (defun my-org-rich-yank-format-paste (language contents link)
-    "Based on `org-rich-yank--format-paste-default'."
-    (format "#+BEGIN_SRC %s\n%s\n#+END_SRC\n#+comment: %s"
-            language
-            (org-rich-yank--trim-nl contents)
-            link))
-  (customize-set-variable 'org-rich-yank-format-paste #'my-org-rich-yank-format-paste))
-#+end_src
-
-** Org-ref
-#+begin_src elisp
-(use-package org-ref :defer t)
-#+end_src
-** Org-fragtog
-
-#+begin_src elisp
-(use-package org-fragtog
-  :ensure (:host github :repo "io12/org-fragtog")
-  :hook (org-mode . org-fragtog-mode)
-  :config
-  ; (plist-put org-format-latex-options :scale 1.5)
-(add-to-list 'org-preview-latex-process-alist
-	     '(tectonic :programs ("tectonic" "convert") 
-			:description "pdf > png"
-			:message "you need install the programs: tectonic and imagemagick."
-			:image-input-type "pdf" 
-			:image-output-type "png"
-			:image-size-adjust (1.0 . 1.0) 
-			:latex-compiler
-			("tectonic -Z shell-escape-cwd=%o --outfmt pdf --outdir %o %f")
-			:image-converter
-			("convert -density %D -trim -antialias %f -quality 300 %O")))
-(setq org-preview-latex-default-process 'tectonic))
-#+end_src
-** Diminish Org Indent Mode
+*** Diminish Org Indent Mode
 Removes "Ind" from showing in the modeline.
 
 #+begin_src elisp
@@ -664,7 +638,7 @@ Removes "Ind" from showing in the modeline.
 (eval-after-load 'org-indent '(diminish 'org-indent-mode))
 #+end_src
 
-** Org Level Headers
+*** Org Level Headers
 #+begin_src elisp
 (custom-set-faces
  '(org-level-1 ((t (:inherit outline-1 :height 1.7))))
@@ -676,7 +650,7 @@ Removes "Ind" from showing in the modeline.
  '(org-level-7 ((t (:inherit outline-5 :height 1.1)))))
 #+end_src
 
-** Source Code Block Tag Expansion
+*** Source Code Block Tag Expansion
 Org-tempo is not a separate package but a module within org that can be enabled.  Org-tempo allows for '<s' followed by TAB to expand to a begin_src tag.  Other expansions available include:
 
 | Typing the below + TAB | Expands to ...                           |
@@ -723,7 +697,7 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
 #+end_src
 
 
-** ORG AGENDA
+*** ORG AGENDA
 #+begin_src elisp
 (with-eval-after-load 'org
   (setq org-agenda-files (list org-directory "~/dots")))
@@ -733,7 +707,7 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
 
 #+end_src
 
-*** Configure custom agenda views
+**** Configure custom agenda views
 #+begin_src elisp
 (setq org-agenda-custom-commands
       '(("d" "Dashboard"
@@ -783,7 +757,7 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
      (org-agenda-files org-agenda-files)))))))
 #+end_src
 
-** ORG BABEL
+*** ORG BABEL
 #+begin_src elisp
 (setq org-confirm-babel-evaluate nil)
 ;;(use-package ob-mermaid)
@@ -823,19 +797,7 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
 
 #+end_src
 
-https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892d569f19fd66a/contrib/lisp/ob-php.el
-*** html
-#+begin_src elisp
-(use-package ob-html
-  :ensure (:host github :repo "misohena/ob-html")
-:config
-(with-eval-after-load "org"
-  (require 'ob-html)
-  (org-babel-html-enable-open-src-block-result-temporary)) ;;Enable C-c C-o on html code block
-)
-#+end_src
-
-*** Neovim
+**** Neovim
 #+begin_src elisp
 (defun org-babel-execute:vimrc (body params)
   "Execute VimL BODY according to PARAMS."
@@ -874,7 +836,7 @@ https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892
   (add-to-list 'org-src-lang-modes '("nlua" . lua)))
 #+end_src
 
-** TODO Auto-tangle
+*** TODO Auto-tangle
 Also tangle when file's content externally modified (by command/LLM, ...), maybe use system'd path and modify AGENTS.md
 #+begin_src elisp
 ;; Automatically tangle our dotfiles when we save them
@@ -894,7 +856,7 @@ Also tangle when file's content externally modified (by command/LLM, ...), maybe
 
 #+end_src
 
-** IMAGES
+*** IMAGES
 #+begin_src elisp
 (setq org-image-actual-width '(1200))  ;; so i can use :width attribute
 (setq org-startup-with-inline-images t) ;; would be nice if automatically open if over line like neovim/snacks
@@ -904,7 +866,93 @@ Also tangle when file's content externally modified (by command/LLM, ...), maybe
 #+end_src
 
 
-** org-mpv-note
+*** Settings
+#+begin_src elisp
+(setq org-edit-src-content-indentation 0) ;; Set src block automatic indent to 0 instead of 2.
+
+(setq org-imenu-depth 3)
+;; Setting RETURN key in org-mode to follow links
+(setq org-return-follows-link  t)
+
+;; Automatically update TODO statistics cookies [/] and [%]
+; (setq org-hierarchical-todo-statistics nil)
+; (add-hook 'org-after-todo-state-change-hook 'org-update-parent-todo-statistics)
+
+(with-eval-after-load 'org
+(add-to-list 'org-file-apps '("\\.pdf\\'" . emacs)))
+#+end_src
+
+
+
+** Packages
+*** Enabling Table of Contents
+#+begin_src elisp
+(use-package toc-org
+  :commands toc-org-enable
+  :hook (org-mode . toc-org-enable))
+#+end_src
+
+** shrface
+#+begin_src elisp
+(use-package shrface)
+#+end_src
+
+*** Yank
+#+begin_src elisp
+(use-package org-rich-yank
+  :ensure t
+  :demand t
+  :bind (:map org-mode-map
+              ("C-M-y" . org-rich-yank))
+  :config
+  (defun my-org-rich-yank-format-paste (language contents link)
+    "Based on `org-rich-yank--format-paste-default'."
+    (format "#+BEGIN_SRC %s\n%s\n#+END_SRC\n#+comment: %s"
+            language
+            (org-rich-yank--trim-nl contents)
+            link))
+  (customize-set-variable 'org-rich-yank-format-paste #'my-org-rich-yank-format-paste))
+#+end_src
+
+*** Org-ref
+#+begin_src elisp
+(use-package org-ref :defer t)
+#+end_src
+*** Org-fragtog
+
+#+begin_src elisp
+(use-package org-fragtog
+  :ensure (:host github :repo "io12/org-fragtog")
+  :hook (org-mode . org-fragtog-mode)
+  :config
+  ; (plist-put org-format-latex-options :scale 1.5)
+(add-to-list 'org-preview-latex-process-alist
+	     '(tectonic :programs ("tectonic" "convert") 
+			:description "pdf > png"
+			:message "you need install the programs: tectonic and imagemagick."
+			:image-input-type "pdf" 
+			:image-output-type "png"
+			:image-size-adjust (1.0 . 1.0) 
+			:latex-compiler
+			("tectonic -Z shell-escape-cwd=%o --outfmt pdf --outdir %o %f")
+			:image-converter
+			("convert -density %D -trim -antialias %f -quality 300 %O")))
+(setq org-preview-latex-default-process 'tectonic))
+#+end_src
+https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892d569f19fd66a/contrib/lisp/ob-php.el
+**** html
+#+begin_src elisp
+(use-package ob-html
+  :ensure (:host github :repo "misohena/ob-html")
+:config
+(with-eval-after-load "org"
+  (require 'ob-html)
+  (org-babel-html-enable-open-src-block-result-temporary)) ;;Enable C-c C-o on html code block
+)
+#+end_src
+
+
+*** org-mpv-note
 usa with yt-dlp
 #+begin_src elisp
 (use-package smartrep
@@ -926,36 +974,20 @@ usa with yt-dlp
   :ensure t)
 #+end_src
 
-** org-autolist
+*** org-autolist
 #+begin_src elisp
 (use-package org-autolist :diminish :hook (org-mode . org-autolist-mode))
 #+end_src
 
 org-cheatsheet, org-reveal.js? mindmaps?
 
-** org modern
+*** org modern
 #+begin_src elisp
 (use-package org-modern
   :hook (org-mode . org-modern-mode))
 #+end_src
 
-** Settings
-#+begin_src elisp
-(setq org-edit-src-content-indentation 0) ;; Set src block automatic indent to 0 instead of 2.
-
-(setq org-imenu-depth 3)
-;; Setting RETURN key in org-mode to follow links
-(setq org-return-follows-link  t)
-
-;; Automatically update TODO statistics cookies [/] and [%]
-; (setq org-hierarchical-todo-statistics nil)
-; (add-hook 'org-after-todo-state-change-hook 'org-update-parent-todo-statistics)
-
-(with-eval-after-load 'org
-(add-to-list 'org-file-apps '("\\.pdf\\'" . emacs)))
-#+end_src
-
-** org-noter
+*** org-noter
 https://github.com/novoid/Memacs
 https://github.com/novoid/extract_pdf_annotations_to_orgmode
 https://github.com/fuxialexander/org-pdftools
@@ -999,19 +1031,11 @@ https://github.com/fuxialexander/org-pdftools
   (define-key org-noter-notes-mode-map (kbd "C-M-.") 'org-noter-sync-current-page-or-chapter)
   (define-key org-noter-notes-mode-map (kbd "C-M-n") 'org-noter-sync-next-page-or-chapter))
 #+end_src
-
-** Unfold when ediffing
-#+begin_src elisp
-;; https://narkive.com/3rhdeunW:5.744.172
-(defun ora-ediff-prepare-buffer ()
-(when (memq major-mode '(org-mode emacs-lisp-mode))
-(outline-show-all)))
-
-(add-hook 'ediff-prepare-buffer-hook 'ora-ediff-prepare-buffer)
-#+end_src
+git clone https://github.com/.git
 
 #+begin_src elisp
-(use-package shrface)
+(use-package org-graphviz-mindmap
+  :ensure (:host github :repo "nowislewis/org-graphviz-mindmap"))
 #+end_src
 
 
@@ -1173,17 +1197,6 @@ Bookmarks like in mini.files?
           ; (define-key dired-mode-map (kbd "c") 'dired-create-directory)
           ; ))
 
-#+end_src
-
-** EDIFF
-'ediff' is a diff program that is built into Emacs.  By default, 'ediff' splits files vertically and places the 'help' frame in its own window.  I have changed this so the two files are split horizontally and the 'help' frame appears as a lower split within the existing window.  Also, I create my own 'dt-ediff-hook' where I add 'j/k' for moving to next/prev diffs.  By default, this is set to 'n/p'.
-
-automatically fold when moving j/k?
-(use-package ztree)
-
-#+begin_src elisp
-(setq ediff-split-window-function 'split-window-horizontally
-      ediff-window-setup-function 'ediff-setup-windows-plain)
 #+end_src
 
 ** ELFEED
@@ -1649,8 +1662,6 @@ Install =luacheck= from your Linux distro's repositories for flycheck to work co
 
 *** <Leader>
 #+begin_src elisp
-
-
 ;; set up 'SPC' as the global leader key
 (general-create-definer gz/leader-keys
   :states '(normal insert visual emacs)
@@ -1660,23 +1671,12 @@ Install =luacheck= from your Linux distro's repositories for flycheck to work co
   :global-prefix "<f19>";; i wanna use m-spc in insert mode... per il momento ignora, magari usa S-spc
   )
 
-
 (gz/leader-keys
-
-  ;;"=" '(perspective-map :wk "Perspective") ;; Lists all the perspective keybindings
   "u" '(universal-argument :wk "Universal argument") ; doesn't work for (C-u){2,}
 
   ;;"RET"
   ;;'((lambda ()
   ;;(vterm)))
-
-  "SPC"
-  '((lambda ()
-      (interactive)
-      (start-process
-       "send-clipboard" nil
-       "hyprctl" "dispatch" "exec" "[float;size 30% 30%] ghostty -e nvim -c \"norm 1 Qd\""))
-    :wk "Send clipboard")
 
   ;; would be cool if worked in visual mode ala narrowing
   ;; also match modes (if insert stays in insert) in both editors
@@ -1756,7 +1756,6 @@ Install =luacheck= from your Linux distro's repositories for flycheck to work co
   "r r" '(gz/reload-config :wk "Reload config")
   "r R" '(gz/restart-emacs :wk "Restart Emacs")
   )
-
 )
 #+end_src
 
@@ -2661,20 +2660,6 @@ word count of the response."
       (call-interactively #'gptel-quick)))
 
 (define-key global-map (kbd "C-c t") 'gptel-quick-translate)
-#+end_src
-
-*** MCP
-*** ECA
-#+begin_src elisp
-(use-package eca :ensure(:host github :repo "editor-code-assistant/eca-emacs")
-  :config
-    (evil-define-key 'normal eca-chat-map (kbd "<return>") 'eca-chat--key-pressed-return)
-  )
-#+end_src
-** EOF
-
-#+begin_src elisp
-;; (use-package vi-tilde-fringe-mode)
 #+end_src
 
 ** [#A] LSP
