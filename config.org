@@ -589,7 +589,7 @@ https://github.com/isamert/corg.el
 ** Capture templates
 #+begin_src elisp
 ;; start in insert mode?
-;; (setq org-default-notes-file "~/notes/inbox.org")
+(setq org-default-notes-file "~/org/inbox.org")
 ;; (setq org-capture-templates
 ;;       `(("t" "Tasks / Projects")
 ;;   ("tt" "Task" entry (file+olp "~/notes/Tasks.org" "Inbox")
