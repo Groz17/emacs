@@ -892,7 +892,7 @@ Also tangle when file's content externally modified (by command/LLM, ...), maybe
   :hook (org-mode . toc-org-enable))
 #+end_src
 
-** shrface
+*** shrface
 #+begin_src elisp
 (use-package shrface)
 #+end_src
@@ -1033,6 +1033,8 @@ https://github.com/fuxialexander/org-pdftools
 #+end_src
 git clone https://github.com/.git
 
+*** Org-graphviz
+https://github.com/the-ted/org-mind-map
 #+begin_src elisp
 (use-package org-graphviz-mindmap
   :ensure (:host github :repo "nowislewis/org-graphviz-mindmap"))
