@@ -185,6 +185,7 @@ The following settings are simple modes that are enabled (or disabled) so that E
 ;; (setq use-package-verbose t)
 (delete-selection-mode 1)    ;; You can select text and delete it by typing.
 (electric-indent-mode -1)    ;; Turn off the weird indenting that Emacs does by default.
+;; TODO: Make electric-pair-mode respect numeric prefix arguments (e.g., M-3 { inserts 3 pairs)
 (electric-pair-mode 1)       ;; Turns on automatic parens pairing
 (global-auto-revert-mode t)  ;; Automatically show changes if the file has changed
 (setq global-auto-revert-non-file-buffers t)  ;; Automatically show changes if the file has changed in dired
