@@ -979,6 +979,7 @@ usa with yt-dlp
 
 
 ;; https://github.com/isamert/empv.el
+; https://github.com/yuchen-lea/org-media-note
 (use-package mpv :defer t
   :ensure t)
 #+end_src
