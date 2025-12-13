@@ -249,6 +249,15 @@ Disable automatic clipboard sync and only sync to system clipboard when Emacs lo
 ; (setq interprogram-paste-function #'interprogram-paste-function-with-clipboard)
 #+end_src
 
+** Rooter
+#+begin_src elisp
+(add-hook 'find-file-hook
+	  (lambda ()
+	    (when (and buffer-file-name
+		       (locate-dominating-file default-directory ".git"))
+	      (cd (locate-dominating-file default-directory ".git")))))
+#+end_src
+
 #+begin_src elisp
 ;;  [[https://www.masteringemacs.org/article/find-files-faster-recent-files-package][RECENT FILES]]
 ;; enable recent files mode.
@@ -279,12 +288,6 @@ Disable automatic clipboard sync and only sync to system clipboard when Emacs lo
 (setq mouse-autoselect-window t)
 (setq focus-follows-mouse t)
 
-(add-hook 'find-file-hook
-  (lambda ()
-    (when (and buffer-file-name
-               (locate-dominating-file default-directory ".git"))
-      (cd (locate-dominating-file default-directory ".git")))))
-
 ;; (setq display-buffer-alist
 ;;       '(
 ;;         ("\\*Occur\\*"
@@ -298,7 +301,7 @@ Disable automatic clipboard sync and only sync to system clipboard when Emacs lo
 
 ;;         ))
 
-; Move customization variables to a separate file and load it
+;; Move customization variables to a separate file and load it
 (setq custom-file (locate-user-emacs-file "custom-vars.el"))
 (load custom-file 'noerror 'nomessage)
 
@@ -339,9 +342,8 @@ Disable automatic clipboard sync and only sync to system clipboard when Emacs lo
 (setq dictionary-server "dict.org")
 
 (setq bookmark-default-file (concat user-emacs-directory "bookmarks"))
-; (bookmark-maybe-load-default-file)
+;; (bookmark-maybe-load-default-file)
 (setq bookmark-set-fringe-mark nil)
-
 #+end_src
 
 ** [[https://www.reddit.com/r/emacs/comments/3u0d0u/how_do_i_make_the_vertical_window_divider_more/][Prettier vertical window divider in terminal]]
