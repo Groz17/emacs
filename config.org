@@ -778,12 +778,13 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
    ;; how To make all langs true?
    '(;; other Babel languages
      (plantuml . t)
-                                        ; (typst . t)
+     ; (typst . t)
      (ditaa . t)
      (python . t)
      (gnuplot . t)
-                                        ; (php . t)
+     ; (php . t)
      (sqlite . t)
+     (scad . t)
      (perl . t)
      (octave . t)
      (calc . t)
@@ -2836,4 +2837,11 @@ https://github.com/ecraven/ivy-pass
 #+begin_src elisp
 (use-package ement
   :ensure t)
+#+end_src
+
+* TODO OpenSCAD
+Add LSP as well
+#+begin_src elisp
+(use-package scad-mode
+  :ensure (:host github :repo "openscad/emacs-scad-mode"))
 #+end_src
