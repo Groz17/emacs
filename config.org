@@ -194,7 +194,7 @@ The following settings are simple modes that are enabled (or disabled) so that E
 ;; t and 1 difference here?
 (global-display-line-numbers-mode 1) ;; Display line numbers
 ;; Disable line numbers for some modes
-(dolist(mode '(org-mode-hook vterm-mode-hook term-mode-hook shell-mode-hook eshell-mode-hook))(add-hook mode (lambda()(display-line-numbers-mode 0))))
+(dolist(mode '(org-mode-hook vterm-mode-hook term-mode-hook shell-mode-hook eshell-mode-hook scad-preview-mode-hook))(add-hook mode (lambda()(display-line-numbers-mode 0))))
 (global-visual-line-mode t)  ;; Enable truncated lines
 (menu-bar-mode -1)           ;; Disable the menu bar
 (scroll-bar-mode -1)         ;; Disable the scroll bar
@@ -2841,6 +2841,7 @@ https://github.com/ecraven/ivy-pass
 
 * TODO OpenSCAD
 Add LSP as well
+Works with stdin as well :)
 #+begin_src elisp
 (use-package scad-mode
   :ensure (:host github :repo "openscad/emacs-scad-mode"))
