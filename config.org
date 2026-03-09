@@ -23,6 +23,7 @@
 - [ ] using vimscript for scripting/mapping? like %s? create transpiler
 - [-] doom modeline at the top? or at least tabline?
 - [ ] org mode headers colored like chakras
+- [ ] use i to start typing right away in dashboard-mode
 
 ** Emacs/vim interaction (Evil Mode)
 - [ ] swap file or notify when working on the same file?
@@ -2675,6 +2676,16 @@ word count of the response."
       (call-interactively #'gptel-quick)))
 
 (define-key global-map (kbd "C-c t") 'gptel-quick-translate)
+#+end_src
+
+** MCP
+#+begin_src elisp
+(use-package mcp-server
+  :ensure (:host github :repo "rhblind/emacs-mcp-server"
+           :files ("*.el" "tools/*.el" "mcp-wrapper.py" "mcp-wrapper.sh"))
+   :load-path ("elpaca/repos/emacs-mcp-server"
+              "elpaca/repos/emacs-mcp-server/tools")
+  :hook (emacs-startup . mcp-server-start-unix))
 #+end_src
 
 ** [#A] LSP
