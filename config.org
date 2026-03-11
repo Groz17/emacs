@@ -1009,7 +1009,7 @@ https://github.com/fuxialexander/org-pdftools
 ;; (use-package djvu)			; doesn't work?
 (use-package org-noter
     :ensure (:repo "org-noter/org-noter" :host github)
-  :after djvu
+  ;; :after djvu
   :custom
   ;; org-noter-highlight-selected-text to t
   (org-noter-always-create-frame nil)
