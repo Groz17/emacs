@@ -369,7 +369,7 @@ Disable automatic clipboard sync and only sync to system clipboard when Emacs lo
 
 * MULTILINGUAL EDITING
 #+begin_src elisp
-(setq default-input-method "devanagari-itrans")
+(setq default-input-method "bengali-itrans")
 #+end_src
 
 * VIM PARITY
@@ -782,6 +782,7 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
      ; (typst . t)
      (ditaa . t)
      (python . t)
+     ; (scala . t)
      (gnuplot . t)
      ; (php . t)
      (sqlite . t)
@@ -2850,10 +2851,25 @@ https://github.com/ecraven/ivy-pass
   :ensure t)
 #+end_src
 
+#+begin_src elisp
+(use-package scala-mode
+  :interpreter
+    ("scala" . scala-mode))
+#+end_src
+
 * TODO OpenSCAD
 Add LSP as well
 Works with stdin as well :)
 #+begin_src elisp
 (use-package scad-mode
   :ensure (:host github :repo "openscad/emacs-scad-mode"))
+#+end_src
+
+#+begin_src elisp
+(defun use-urdu-nastaliq ()
+  (when (and current-input-method
+             (string-prefix-p "urdu" current-input-method))
+    (set-fontset-font t 'arabic (font-spec :family "Awami Nastaliq") nil 'prepend)))
+
+(add-hook 'input-method-activate-hook #'use-urdu-nastaliq)
 #+end_src
