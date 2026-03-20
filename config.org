@@ -1530,6 +1530,7 @@ evil-toggle-key
   (define-key evil-normal-state-map (kbd "g K") #'dictionary-lookup-definition)
 
   (define-key evil-normal-state-map (kbd "C-i") 'evil-jump-forward)
+  (define-key evil-ex-completion-map (kbd "C-u") 'universal-argument)
 
   ;; like snacks bindings
   ;;(define-key evil-normal-state-map (kbd "C-k") (kbd "C-x C-+"))
