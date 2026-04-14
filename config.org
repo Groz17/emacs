@@ -191,6 +191,32 @@ The following settings are simple modes that are enabled (or disabled) so that E
 (global-auto-revert-mode t)  ;; Automatically show changes if the file has changed
 (setq global-auto-revert-non-file-buffers t)  ;; Automatically show changes if the file has changed in dired
 (setq revert-without-query '(".*"))  ;; Revert all files without asking
+(setq redisplay-skip-fontification-on-input t)
+(setq kill-do-not-save-duplicates t)
+(setq ffap-machine-p-known 'reject)
+(setq window-combination-resize t)
+(setq help-window-select t)
+
+(winner-mode +1)
+(defun toggle-delete-other-windows ()
+  "Delete other windows in frame if any, or restore previous window config."
+  (interactive)
+  (if (and winner-mode
+           (equal (selected-window) (next-window)))
+      (winner-undo)
+    (delete-other-windows)))
+(global-set-key (kbd "C-x 1") #'toggle-delete-other-windows)
+
+(advice-add 'save-place-find-file-hook :after
+            (lambda (&rest _)
+              (when buffer-file-name (ignore-errors (recenter)))))
+
+(add-hook 'after-save-hook
+          #'executable-make-buffer-file-executable-if-script-p)
+
+(setq-default cursor-in-non-selected-windows nil)
+(setq highlight-nonselected-windows nil)
+
 (column-number-mode)
 ;; t and 1 difference here?
 (global-display-line-numbers-mode 1) ;; Display line numbers
