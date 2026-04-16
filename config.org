@@ -1995,6 +1995,13 @@ also check out helm/etc... keybindings
 (use-package orderless
   :ensure t
   :custom
+
+  (orderless-matching-styles
+        '(orderless-flex         ; "o" matches "f[o]obar"
+          orderless-literal      ; exact substring
+          orderless-prefixes     ; match word beginnings
+          orderless-initialism   ; "fb" matches "[f]oo[b]ar"
+          orderless-regexp))
   (completion-styles '(orderless flex))
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
