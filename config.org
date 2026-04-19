@@ -221,7 +221,7 @@ The following settings are simple modes that are enabled (or disabled) so that E
 ;; t and 1 difference here?
 (global-display-line-numbers-mode 1) ;; Display line numbers
 ;; Disable line numbers for some modes
-(dolist(mode '(org-mode-hook vterm-mode-hook term-mode-hook shell-mode-hook eshell-mode-hook scad-preview-mode-hook))(add-hook mode (lambda()(display-line-numbers-mode 0))))
+(dolist(mode '(org-mode-hook ghostel-mode-hook term-mode-hook shell-mode-hook eshell-mode-hook scad-preview-mode-hook))(add-hook mode (lambda()(display-line-numbers-mode 0))))
 (global-visual-line-mode t)  ;; Enable truncated lines
 (menu-bar-mode -1)           ;; Disable the menu bar
 (scroll-bar-mode -1)         ;; Disable the scroll bar
@@ -2207,14 +2207,16 @@ Eshell is an Emacs 'shell' that is written in Elisp.
       eshell-visual-commands'("bash" "fish" "htop" "ssh" "top" "zsh"))
 #+end_src
 
-*** Vterm
-Vterm is a terminal emulator within Emacs.  The 'shell-file-name' setting sets the shell to be used in M-x shell, M-x term, M-x ansi-term and M-x vterm.  By default, the shell is set to 'fish' but could change it to 'bash' or 'zsh' if you prefer.
+*** Ghostel
+ The 'shell-file-name' setting sets the shell to be used in M-x shell, M-x term, M-x ansi-term and M-x vterm.  By default, the shell is set to 'fish' but could change it to 'bash' or 'zsh' if you prefer.
 
 #+begin_src elisp
-(use-package vterm
+
+#+begin_src elisp
+(use-package ghostel
   :config
   (setq shell-file-name "/bin/sh"
-  vterm-max-scrollback 5000)
+ghostel-max-scrollback 5000)
 
 (general-define-key
  :states 'normal
@@ -2222,7 +2224,7 @@ Vterm is a terminal emulator within Emacs.  The 'shell-file-name' setting sets t
              (interactive)
              (split-window-right)
              (other-window 1)
-             (vterm)
+             (ghostel)
 	     ;; (vterm-other-window)
   
   ))
@@ -2233,7 +2235,7 @@ Vterm is a terminal emulator within Emacs.  The 'shell-file-name' setting sets t
              (interactive)
              (split-window-below)
              (other-window 1)
-             (vterm)
+             (ghostel)
 	     ;; (vterm-other-window)
   
   )))
@@ -2907,3 +2909,4 @@ Works with stdin as well :)
 
 (add-hook 'input-method-activate-hook #'use-urdu-nastaliq)
 #+end_src
+
