@@ -2211,8 +2211,6 @@ Eshell is an Emacs 'shell' that is written in Elisp.
  The 'shell-file-name' setting sets the shell to be used in M-x shell, M-x term, M-x ansi-term and M-x vterm.  By default, the shell is set to 'fish' but could change it to 'bash' or 'zsh' if you prefer.
 
 #+begin_src elisp
-
-#+begin_src elisp
 (use-package ghostel
   :config
   (setq shell-file-name "/bin/sh"
