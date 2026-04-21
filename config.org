@@ -1748,6 +1748,8 @@ Install =luacheck= from your Linux distro's repositories for flycheck to work co
                       (line-number-at-pos)
                       (shell-quote-argument buffer-file-name)))
            (message "Current buffer is not visiting a file."))) :wk "Open in Emacs GUI"
+
+  "SPC" '(emskin-open-native-app :wk "Open app")
   )
 
 ;; how to show the descriptions in c-h l (lossage)?
