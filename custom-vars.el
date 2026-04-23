@@ -4,6 +4,11 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(company-show-quick-access t nil nil "Customized with use-package company")
+ '(custom-safe-themes
+   '("58a6d3dd62eae891c457b8ab754358b3b15cad723ef26b207909fba832dcdc5c"
+     "270e299f7e377f42685b6c179985302f4dce2afdf1d45bb170ea0dc47864d0c9"
+     default))
  '(safe-local-variable-directories `(,(expand-file-name "~/dots"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

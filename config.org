@@ -1549,7 +1549,7 @@ evil-toggle-key
   
   (define-key evil-normal-state-map (kbd "g f") 'evil-find-file-at-point-no-prompt)
 
-  ;; would nice that it resptected v:count like 2gO to show only 2nd level header?
+  ;; would nice that it respected v:count like 2gO to show only 2nd level header?
   ;; (define-key evil-normal-state-map (kbd "g O") #'counsel-imenu )
   (define-key evil-normal-state-map (kbd "g O") #'counsel-outline )
   ;;  region? C-u g K for <CWORD>?
@@ -2285,10 +2285,9 @@ The first line below designates the directory where will place all of our custom
 (use-package auto-dark
   :ensure t
   :custom
-  (auto-dark-dark-theme 'ef-owl)
-  (auto-dark-light-theme 'ef-summer)
-  :config
-  (auto-dark-mode t))
+  (auto-dark-themes '((ef-owl) (ef-summer))) ; first = dark, second = light
+  :init
+  (auto-dark-mode))
 #+end_src
 
 ** NOTMUCH
