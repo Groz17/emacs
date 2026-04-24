@@ -23,7 +23,6 @@
 - [ ] using vimscript for scripting/mapping? like %s? create transpiler
 - [-] doom modeline at the top? or at least tabline?
 - [ ] org mode headers colored like chakras
-- [ ] use i to start typing right away in dashboard-mode
 
 ** Emacs/vim interaction (Evil Mode)
 - [ ] swap file or notify when working on the same file?
@@ -1134,6 +1133,15 @@ This is an icon set that can be used with dashboard, dired, ibuffer and other Em
 Emacs Dashboard is an extensible startup screen showing you recent files, bookmarks, agenda items and an Emacs banner.
 
 #+begin_src elisp
+(defun gz/dashboard-new-buffer-insert ()
+  (interactive)
+  (switch-to-buffer (generate-new-buffer "untitled"))
+  (evil-insert-state))
+
+(defun gz/dashboard-setup-evil-keys ()
+  (when (boundp 'dashboard-mode-map)
+    (evil-define-key 'normal dashboard-mode-map (kbd "i") #'gz/dashboard-new-buffer-insert)))
+
 (use-package dashboard
   :ensure t
   :init
@@ -1154,7 +1162,11 @@ Emacs Dashboard is an extensible startup screen showing you recent files, bookma
   (dashboard-modify-heading-icons '((recents . "file-text")
             (bookmarks . "book")))
   :config
-  (dashboard-setup-startup-hook))
+  (dashboard-setup-startup-hook)
+  (with-eval-after-load 'evil
+    (gz/dashboard-setup-evil-keys))
+  (with-eval-after-load 'evil-collection
+    (gz/dashboard-setup-evil-keys)))
 
 #+end_src
 
@@ -2908,4 +2920,3 @@ Works with stdin as well :)
 
 (add-hook 'input-method-activate-hook #'use-urdu-nastaliq)
 #+end_src
-
