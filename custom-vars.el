@@ -6,7 +6,8 @@
  ;; If there is more than one, they won't work right.
  '(company-show-quick-access t nil nil "Customized with use-package company")
  '(custom-safe-themes
-   '("38e6cfcd0936bf491547c7b0bd0fc4dacaac65306fe19b3f2a66acbd195151a4"
+   '("dc2c2362c97ea9e14b94a0b2cb475987e43d96e8c7a92a7ca8937488cb0a9149"
+     "38e6cfcd0936bf491547c7b0bd0fc4dacaac65306fe19b3f2a66acbd195151a4"
      "b89b6d95670712b8742f4391416483a29d4315323a218600590160e132c70ec8"
      "71b688e7ef7c844512fa7c4de7e99e623de99a2a8b3ac3df4d02f2cd2c3215e7"
      "b9c002dc827fb75b825da3311935c9f505d48d7ee48f470f0aa7ac5d2a595ab2"

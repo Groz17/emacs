@@ -2284,20 +2284,31 @@ ghostel-max-scrollback 5000)
 ** THEME
 The first line below designates the directory where will place all of our custom-made themes, which I have created only one (dtmacs).  You can create your own Emacs themes with the help of the [[https://emacsfodder.github.io/emacs-theme-editor/][Emacs Theme Editor]].  I am also installing =doom-themes= because it contains a huge collection of themes.  M-x load-theme will list all of the themes available.
 
-#+begin_src elisp
+#+begin_src elisp :noweb yes
 ;; (add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
 
 (use-package modus-themes :ensure t)
 (use-package ef-themes 
   :ensure (:host github :repo "protesilaos/ef-themes")
+  :bind
+  (("<f5>" . modus-themes-rotate)
+   ("C-<f5>" . modus-themes-select)
+   ("M-<f5>" . modus-themes-load-random))
   :after modus-themes
   ;; :config (modus-themes-load-theme 'ef-dream)
+  :config
+  ;; All customisations here.
+  (setq modus-themes-mixed-fonts t)
+  (setq modus-themes-italic-constructs t)
+
 )
 
 (use-package auto-dark
   :ensure t
   :custom
-  (auto-dark-themes '((ef-owl) (ef-summer))) ; first = dark, second = light
+  (auto-dark-themes ; first = dark, second = light
+    '((<<~/dots/_lib|.org:theme(color_scheme="dark")>>)
+     (<<~/dots/_lib|.org:theme(color_scheme="light")>>)))
   :init
   (auto-dark-mode))
 #+end_src
