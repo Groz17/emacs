@@ -1498,13 +1498,13 @@ evil-toggle-key
 ;; https://github.com/roman/evil-paredit
 
 (use-package evil-exchange
-  :bind (
-   :map evil-normal-state-map
-   ("cx" . evil-exchange)
-   :map evil-visual-state-map
-   ("X" . evil-exchange)
-   :map evil-normal-state-map
-   ("X" . evil-exchange-cancel))	; cxc?
+  ; :bind (
+  ;  :map evil-normal-state-map
+  ;  ("cx" . evil-exchange)
+  ;  :map evil-visual-state-map
+  ;  ("X" . evil-exchange)
+  ;  :map evil-normal-state-map
+  ;  ("X" . evil-exchange-cancel))	; cxc?
 
   :config
   (evil-exchange-cx-install)
@@ -2719,8 +2719,8 @@ word count of the response."
 (use-package mcp-server
   :ensure (:host github :repo "rhblind/emacs-mcp-server"
            :files ("*.el" "tools/*.el" "mcp-wrapper.py" "mcp-wrapper.sh"))
-   :load-path ("elpaca/repos/emacs-mcp-server"
-              "elpaca/repos/emacs-mcp-server/tools")
+   :load-path ("elpaca/sources/emacs-mcp-server"
+              "elpaca/sources/emacs-mcp-server/tools")
   :hook (emacs-startup . mcp-server-start-unix))
 #+end_src
 
@@ -2847,7 +2847,7 @@ https://github.com/ecraven/ivy-pass
 (use-package immersive-translate
   :ensure t
   :custom (immersive-translate-backend 'trans)
-  (immersive-translate-trans-target-language "hi")
+  (immersive-translate-trans-target-language "bn")
 )
 #+end_src
 
