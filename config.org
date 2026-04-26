@@ -128,6 +128,12 @@ Defining the various fonts that Emacs will use.
 ;; Uncomment the following line if line spacing needs adjusting.
 (setq-default line-spacing 0.12)
 
+(defun use-urdu-nastaliq ()
+  (when (and current-input-method
+             (string-prefix-p "urdu" current-input-method))
+    (set-fontset-font t 'arabic (font-spec :family "Awami Nastaliq") nil 'prepend)))
+
+(add-hook 'input-method-activate-hook #'use-urdu-nastaliq)
 #+end_src
 
 * Keybindings
@@ -2291,9 +2297,9 @@ The first line below designates the directory where will place all of our custom
 (use-package ef-themes 
   :ensure (:host github :repo "protesilaos/ef-themes")
   :bind
-  (("<f5>" . modus-themes-rotate)
-   ("C-<f5>" . modus-themes-select)
-   ("M-<f5>" . modus-themes-load-random))
+  (("<f5>" . ef-themes-rotate)
+   ("C-<f5>" . ef-themes-select)
+   ("M-<f5>" . ef-themes-load-random))
   :after modus-themes
   ;; :config (modus-themes-load-theme 'ef-dream)
   :config
@@ -2921,13 +2927,4 @@ Works with stdin as well :)
 #+begin_src elisp
 (use-package scad-mode
   :ensure (:host github :repo "openscad/emacs-scad-mode"))
-#+end_src
-
-#+begin_src elisp
-(defun use-urdu-nastaliq ()
-  (when (and current-input-method
-             (string-prefix-p "urdu" current-input-method))
-    (set-fontset-font t 'arabic (font-spec :family "Awami Nastaliq") nil 'prepend)))
-
-(add-hook 'input-method-activate-hook #'use-urdu-nastaliq)
 #+end_src
