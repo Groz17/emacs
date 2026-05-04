@@ -2232,7 +2232,7 @@ Eshell is an Emacs 'shell' that is written in Elisp.
 
 #+begin_src elisp
 (use-package ghostel
-  :custom (ghostel-module-auto-install 'compile)) ;; This is just my preference ofc 
+  :custom (ghostel-module-auto-install 'compile)
   :config
   (setq shell-file-name "/bin/sh"
 ghostel-max-scrollback 5000)
