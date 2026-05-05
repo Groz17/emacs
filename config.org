@@ -2927,10 +2927,21 @@ https://github.com/ecraven/ivy-pass
     ("scala" . scala-mode))
 #+end_src
 
-* TODO OpenSCAD
+** TODO OpenSCAD
 Add LSP as well
 Works with stdin as well :)
 #+begin_src elisp
 (use-package scad-mode
   :ensure (:host github :repo "openscad/emacs-scad-mode"))
+#+end_src
+
+** Buffer-to-pdf
+#+begin_src elisp
+(use-package buffer-to-pdf
+  :elpaca (:host github :repo "protesilaos/buffer-to-pdf")
+  ;; :commands (buffer-to-pdf buffer-to-pdf-black-on-white buffer-to-pdf-white-on-black)
+  :custom
+  ;; Configure `buffer-to-pdf-directory' to specify where PDF files are stored.
+  ;; This is the default value:
+  (buffer-to-pdf-directory (expand-file-name "~/Documents/")))
 #+end_src
