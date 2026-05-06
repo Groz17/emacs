@@ -143,7 +143,57 @@ Defining the various fonts that Emacs will use.
 ;;   "s m" '(man :wk "Man pages")
 ;;   "s t" '(tldr :wk "Lookup TLDR docs for a command")
 ;;   "s w" '(woman :wk "Similar to man but doesn't require man"))
+#+end_src
 
+** Bengali IPA
+#+begin_src elisp
+(require 'subr-x)
+
+(defun gz/bangla-ipa--query-async (text)
+  "Fetch Bangla IPA for TEXT asynchronously and show in minibuffer."
+  (let* ((url "https://ipa.bangla.gov.bd/post_text_bangla_ipa")
+         (user-agent "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:148.0) Gecko/20100101 Firefox/148.0")
+         (payload (concat "bangla_ipa=" text))
+         (command (string-join
+                   (list "curl -s -G -k"
+                         (shell-quote-argument url)
+                         "-H"
+                         (shell-quote-argument user-agent)
+                         "--data-urlencode"
+                         (shell-quote-argument payload)
+                         "| jq -r '.data[0]'")
+                   " "))
+         (buffer (generate-new-buffer " *bangla-ipa*")))
+    (message "Bangla IPA: fetching...")
+    (make-process
+     :name "bangla-ipa"
+     :buffer buffer
+     :command (list "bash" "-lc" command)
+     :noquery t
+     :sentinel
+     (lambda (proc _event)
+       (when (eq (process-status proc) 'exit)
+         (let* ((out (with-current-buffer (process-buffer proc)
+                       (buffer-string)))
+                (result (string-trim out)))
+           (kill-buffer (process-buffer proc))
+           (if (string-empty-p result)
+               (message "Bangla IPA: no result")
+             (message "%s" result))))))))
+
+(defun gz/bangla-ipa-at-point-or-region ()
+  "Show Bangla IPA for region or word at point in the minibuffer."
+  (interactive)
+  (let* ((text (if (use-region-p)
+                   (buffer-substring-no-properties (region-beginning) (region-end))
+                 (thing-at-point 'word t)))
+         (trimmed (and text (string-trim text))))
+    (if (and trimmed (not (string-empty-p trimmed)))
+        (gz/bangla-ipa--query-async trimmed)
+      (message "No text to convert"))))
+#+end_src
+
+#+begin_src elisp
 (defun gz/reload-config ()
   "Reload Emacs configuration by loading init.el"
   (interactive)
@@ -432,6 +482,8 @@ Disable automatic clipboard sync and only sync to system clipboard when Emacs lo
   ;; terminal trick
   (define-key evil-insert-state-map (kbd "M-o") #'open-line-below)
   (define-key evil-insert-state-map (kbd "M-O") #'open-line-above)
+
+  (evil-define-key '(normal visual) 'global (kbd "<leader>b") #'gz/bangla-ipa-at-point-or-region)
   )
 #+end_src
 
