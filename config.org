@@ -199,7 +199,14 @@ Defining the various fonts that Emacs will use.
 (defun gz/transliterate-to-latin (start end)
   "Replace region with jq pretty-printed JSON, non-interactively."
   (interactive "r")
-  (shell-command-on-region start end "uconv -x 'Any-Latin;Latin-ASCII'" (current-buffer) t))
+(call-process-region
+ start end
+ "uconv"
+ t
+ (current-buffer)
+ nil
+ "-x"
+ "Any-Latin;Latin-ASCII;['] Remove"))
 #+end_src
 
 ** Reload config
