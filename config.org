@@ -193,13 +193,26 @@ Defining the various fonts that Emacs will use.
       (message "No text to convert"))))
 #+end_src
 
-#+begin_src elisp
-(defun gz/reload-config ()
-  "Reload Emacs configuration by loading init.el"
-  (interactive)
-  (load-file (expand-file-name "~/.config/emacs/init.el"))
-  (message "Config reloaded!"))
+** Transliterate region to Latin
 
+#+begin_src elisp
+(defun gz/transliterate-to-latin (start end)
+  "Replace region with jq pretty-printed JSON, non-interactively."
+  (interactive "r")
+  (shell-command-on-region start end "uconv -x 'Any-Latin;Latin-ASCII'" (current-buffer) t))
+#+end_src
+
+** Reload config
+#+begin_src elisp
+(defun gz/reload-config () "Reload Emacs configuration by loading init.el"
+       (interactive)
+       (load-file (expand-file-name "~/.config/emacs/init.el"))
+       (message "Config reloaded!"))
+#+end_src
+
+** Restart Emacs
+
+#+begin_src elisp
 ;; :restart command/keybinding... (maybe C-x C-S-c?)
 (defun gz/restart-emacs ()
   "Restart Emacs"
@@ -484,6 +497,7 @@ Disable automatic clipboard sync and only sync to system clipboard when Emacs lo
   (define-key evil-insert-state-map (kbd "M-O") #'open-line-above)
 
   (evil-define-key '(normal visual) 'global (kbd "<leader>b") #'gz/bangla-ipa-at-point-or-region)
+  (evil-define-key 'visual 'global (kbd "<leader>l") #'gz/transliterate-to-latin)
   )
 #+end_src
 
