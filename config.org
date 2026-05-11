@@ -386,6 +386,14 @@ Disable automatic clipboard sync and only sync to system clipboard when Emacs lo
 (savehist-mode 1)
 (save-place-mode 1)
 (repeat-mode 1)
+(with-eval-after-load 'face-remap
+  (let ((m (make-sparse-keymap)))
+    (dolist (k '("+" "=" "C-+" "C-=")) (define-key m (kbd k) #'text-scale-increase))
+    (dolist (k '("-" "C--")) (define-key m (kbd k) #'text-scale-decrease))
+    (dolist (c '(text-scale-increase text-scale-decrease text-scale-adjust))
+      (put c 'repeat-map m))
+    (dolist (s '(text-scale-mode-map text-scale-mode-repeat-map text-scale-adjust-repeat-map text-scale-repeat-map))
+      (when (boundp s) (define-key (symbol-value s) (kbd "0") nil)))))
 (add-hook 'dired-mode-hook (lambda () (repeat-mode -1)))
 
 (setq mouse-autoselect-window t)
