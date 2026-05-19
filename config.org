@@ -604,7 +604,7 @@ https://github.com/isamert/corg.el
     (evil-define-key 'normal org-mode-map (kbd "zj") 'org-forward-heading-same-level)
     (evil-define-key 'normal org-mode-map (kbd "zk") 'org-forward-heading-same-level)
     (evil-define-key '(normal visual) org-mode-map (kbd "}") 'evil-forward-paragraph)
-    (evil-define-key '(normal visual) org-mode-map (kbd "{") 'evil-backward-paragraph)
+    (evil-define-key '(normal visual) org-mode-map (kbd "{") 'evil-backward-paragraph))
   )
 #+end_src
 
