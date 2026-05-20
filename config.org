@@ -207,7 +207,21 @@ Defining the various fonts that Emacs will use.
  nil
  "-x"
  "Any-Latin;Latin-ASCII;['] Remove"))
+
 #+end_src
+
+** Any-IPA
+#+begin_src elisp
+(defun gz/region-to-ipa (start end)
+  (interactive "r")
+  (let ((raw (shell-command-to-string
+              (concat "espeak-ng -q --ipa=2 <<< "
+                      (shell-quote-argument
+                       (buffer-substring start end))))))
+    (delete-region start end)
+    (insert (replace-regexp-in-string "(\\([^)]*\\))" "/" raw))))
+#+end_src
+
 
 ** Reload config
 #+begin_src elisp
@@ -512,6 +526,7 @@ Disable automatic clipboard sync and only sync to system clipboard when Emacs lo
   (define-key evil-insert-state-map (kbd "M-O") #'open-line-above)
 
   (evil-define-key '(normal visual) 'global (kbd "<leader>b") #'gz/bangla-ipa-at-point-or-region)
+  (evil-define-key '(normal visual) 'global (kbd "<leader>i") #'gz/region-to-ipa)
   (evil-define-key 'visual 'global (kbd "<leader>l") #'gz/transliterate-to-latin)
   )
 #+end_src
