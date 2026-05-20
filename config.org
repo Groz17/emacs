@@ -128,6 +128,9 @@ Defining the various fonts that Emacs will use.
 ;; Uncomment the following line if line spacing needs adjusting.
 (setq-default line-spacing 0.12)
 
+(set-fontset-font t 'kannada
+                  (font-spec :family "Nudi 16 e") nil 'prepend)
+
 (defun use-urdu-nastaliq ()
   (when (and current-input-method
              (string-prefix-p "urdu" current-input-method))
