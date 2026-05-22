@@ -2105,7 +2105,7 @@ also check out helm/etc... keybindings
 (use-package orderless
   :ensure t
   :custom
-
+;; Per-candidate input: Use Orderless dispatchers (e.g., = literal, ~ flex, ! not, ^ prefix, $ suffix) to switch styles inside the minibuffer query.
   (orderless-matching-styles
         '(orderless-flex         ; "o" matches "f[o]obar"
           orderless-literal      ; exact substring
