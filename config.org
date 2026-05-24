@@ -606,7 +606,7 @@ https://github.com/isamert/corg.el
 ;; :pin org/gnu?
 (use-package org
   :ensure nil
-  :bind (("C-c c" . counsel-org-capture)
+  :bind (("C-c c" . org-capture)
    ("C-c l" . org-store-link)
    ("C-c a" . org-agenda)
 
@@ -1658,8 +1658,8 @@ evil-toggle-key
   (define-key evil-normal-state-map (kbd "g f") 'evil-find-file-at-point-no-prompt)
 
   ;; would nice that it respected v:count like 2gO to show only 2nd level header?
-  ;; (define-key evil-normal-state-map (kbd "g O") #'counsel-imenu )
-  (define-key evil-normal-state-map (kbd "g O") #'counsel-outline )
+  ;; (define-key evil-normal-state-map (kbd "g O") #'consult-imenu )
+  (define-key evil-normal-state-map (kbd "g O") #'consult-outline )
   ;;  region? C-u g K for <CWORD>?
   (define-key evil-normal-state-map (kbd "g K") #'dictionary-lookup-definition)
 
@@ -1795,20 +1795,20 @@ Install =luacheck= from your Linux distro's repositories for flycheck to work co
 
 (gz/picker
   "m" 'man
-  "/" 'swiper
+  "/" 'consult-line
   ;; zen/zoom?
-  "r" 'counsel-recentf
-  "c" 'counsel-load-theme ; make this refresh theme?
-  "C" 'counsel-colors-web
+  "r" 'consult-recent-file
+  "c" 'consult-theme ; make this refresh theme?
+  "C" 'list-colors-display
   ;; library and packages difference?
-  "p" 'counsel-find-library
-  "h" 'counsel-faces
+  "p" 'find-library
+  "h" 'describe-face
   ;; "m" 'counsel-rhythmbox
   ;; "M" 'counsel-rhythmbox-playpause-current-song
   ;; "h" 'counsel-command-history
   ;; "h" 'counsel-minibuffer-history
-  "d" 'consult-flymake ; consult???
-  "l" 'counsel-locate
+  "d" 'consult-flymake
+  "l" 'consult-locate
 )
 #+end_src
 
@@ -1985,10 +1985,12 @@ Adding highlights to TODO and related words.
 
 #+end_src
 
-** IVY (COUNSEL)
-+ Ivy, a generic completion mechanism for Emacs.
-+ Counsel, a collection of Ivy-enhanced versions of common Emacs commands.
-+ Ivy-rich allows us to add descriptions alongside the commands in M-x.
+** VERTICO (CONSULT)
++ Vertico, a minimal completion UI for Emacs.
++ Consult, a collection of completion-enhanced commands.
++ Marginalia adds annotations alongside minibuffer candidates.
+
+*** TODO Embark + consult-embark + consult-flymake bindings
 
   M-v doesn't work if first item...
   does wk work?
@@ -1999,113 +2001,60 @@ ivy-occur copy the whole line, not just selected?
 also check out helm/etc... keybindings
 
 #+begin_src elisp
-(use-package counsel
-  :after ivy
-  :diminish
-  :bind (
-   :map evil-normal-state-map
+(use-package compat
+  :ensure (:host github :repo "emacs-compat/compat")
+  :demand t)
 
-;;'(find-grep-dired :wk "Search for string in files in DIR")
-;;'(counsel-grep-or-swiper :wk "Search for string current file")
-   ("C-p" . counsel-fzf) ;; current cwd
-   ;; '(counsel-file-jump :wk "Jump to a file below current directory")
-   ("C-S-p" . project-find-file)       ; project?
-   ("C-q" . counsel-rg) ;; current cwd
-   ("C-S-q" . counsel-git-grep) ;; current cwd
-   ;; ("C-q" . counsel-grep like vim?)
-   ;; ("C-x b" . counsel-ibuffer)
-   ;; ([ctl-x] "b" . counsel-ibuffer)
-
-   ;; ("<clt-x> b" . counsel-ibuffer)
-
-   )
-  :config
-  (counsel-mode)
-  (add-to-list 'ivy-more-chars-alist '(counsel-rg . 0))
-  (add-to-list 'ivy-more-chars-alist '(counsel-git-grep . 0))
-  (setq ivy-initial-inputs-alist nil) ;; removes starting ^ regex in M-x
-  (setq ivy-auto-select-single-candidate t)) ;; useful for gptel
-
-(use-package swiper
-  :after ivy
-  :bind (
-         :map swiper-map
-         ("C-l" . ivy-done))
-  )
-
-(use-package ivy
-  :bind
-  ;; ivy-resume resumes the last Ivy-based completion.
-  (
-   ; ("C-c C-r" . ivy-resume) (check out embark/helm mappings for this...)
-   ;; ("C-x B" . ivy-switch-buffer-other-window)
-   :map ivy-minibuffer-map
-   ;; ("TAB" . ivy-alt-done)
-   ;; <cr>? C-l is nice because u alredy use jk/<cr> for invoking it (anzi, usalo per quickfix)
-   ;; ("C-l" . ivy-alt-done)
-   ("C-j" . ivy-next-line)
-   ("C-k" . ivy-previous-line)
-   ("C-l" . ivy-alt-done)
-   ("C-'" . ivy-avy)
-   ("C-h" . backward-delete-char-untabify)
-   ("C-w" . backward-kill-word)
-   :map ivy-switch-buffer-map
-   ("C-k" . ivy-previous-line)
-   ("C-l" . ivy-done)
-   ;;("C-l" . (lambda() (ivy-done)(ivy-posframe-hide))
-   ("C-d" . ivy-switch-buffer-kill)
-   ("C-h" . backward-delete-char-untabify)
-   ("C-w" . backward-kill-word)
-   :map ivy-reverse-i-search-map
-   ("C-k" . ivy-previous-line)
-   ("C-d" . ivy-reverse-i-search-kill)
-   ("C-h" . backward-delete-char-untabify)
-   ("C-w" . backward-kill-word)
-   )
-  :diminish
-  :custom
-  (ivy-use-virtual-buffers t)
-  (ivy-count-format "(%d/%d) ")
-  (enable-recursive-minibuffers t)
-  (ivy-wrap t) ;; doesn't work for C-v et al
-  :config
-  ;;  keybinding to toggle fuzzy/regex?
-  ;; (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)) )
-  (ivy-mode 1)
-  (setq ivy-re-builders-alist '((t . orderless-ivy-re-builder)))
-  (add-to-list 'ivy-highlight-functions-alist '(orderless-ivy-re-builder . orderless-ivy-highlight))
-  )
-
-(use-package all-the-icons-ivy-rich
-  :after ivy-rich
+(use-package vertico
   :ensure t
-  :config (all-the-icons-ivy-rich-mode 1))
+  :init
+  (vertico-mode 1)
+  :bind (:map vertico-map
+              ("C-j" . vertico-next)
+              ("C-k" . vertico-previous)
+              ("C-l" . vertico-exit))
+  :custom
+  (enable-recursive-minibuffers t))
 
-(use-package ivy-rich
-  :after ivy
+(use-package vertico-carousel
+  :ensure (:host github :repo "kn66/vertico-carousel")
+  :after vertico
+  :init
+  (vertico-carousel-mode 1)
+  :custom
+  (vertico-carousel-cycle nil)
+  (vertico-carousel-groups nil))
+
+
+(use-package vertico-buffer-frame
+  :ensure (:host github :repo "kn66/vertico-buffer-frame")
+;;                 :ref "4858299566573b9de6ee2ef91963c395b5552170")
+  :after vertico
+  :config
+  ;; (setq vertico-buffer-frame-preview-layout 'side-by-side)
+  ;; (setq vertico-buffer-frame-alpha-background 80)
+  (vertico-buffer-frame-mode 1))
+
+(use-package consult
   :ensure t
-  :custom
-  (ivy-virtual-abbreviate 'full
-        ivy-rich-switch-buffer-align-virtual-buffer t
-        ivy-rich-path-style 'abbrev)
-  :config
-  (ivy-rich-mode 1) ;; this gets us descriptions in M-x.
-  )
+  :bind (([remap switch-to-buffer] . consult-buffer)
+         ([remap switch-to-buffer-other-window] . consult-buffer-other-window)
+         :map evil-normal-state-map
+         ;; '(find-grep-dired :wk "Search for string in files in DIR")
+         ("C-p" . consult-find) ;; current cwd
+         ("C-S-p" . project-find-file)       ; project?
+         ("C-q" . consult-ripgrep) ;; current cwd
+         ("C-S-q" . consult-git-grep)))
 
-;; Improved Candidate Sorting
-(use-package ivy-prescient
-  :after counsel
-  :custom
-  (ivy-prescient-enable-filtering nil)
-  :config
-  ;; Uncomment the following line to have sorting remembered across sessions!
-          ;(prescient-persist-mode 1)
-  (ivy-prescient-mode 1))
+(use-package marginalia
+  :ensure t
+  :init
+  (marginalia-mode 1))
 
 (use-package orderless
   :ensure t
   :custom
-;; Per-candidate input: Use Orderless dispatchers (e.g., = literal, ~ flex, ! not, ^ prefix, $ suffix) to switch styles inside the minibuffer query.
+  ;; Per-candidate input: Use Orderless dispatchers (e.g., = literal, ~ flex, ! not, ^ prefix, $ suffix) to switch styles inside the minibuffer query.
   (orderless-matching-styles
         '(orderless-flex         ; "o" matches "f[o]obar"
           orderless-literal      ; exact substring
@@ -2504,33 +2453,43 @@ toggle full screen binding?
 ;;)
 ;; at cursor in insert mode and at center in normal mode
 ;; can't see last line though
-(use-package ivy-posframe
+(use-package vertico-posframe
+  :disabled t
   :ensure t
-  :after ivy
+  :after vertico
+  :demand t
   :config
-  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
-  ;; (setq ivy-posframe-height 70)
-  (defun my-ivy-posframe-get-size ()
-    "Set the ivy-posframe size according to the current frame."
-    (let ((height (+ 3(or ivy-posframe-height (or ivy-height 20))))
-          (width (min (or ivy-posframe-width 200) (round (* .75 (frame-width))))))
+  (defun gz/vertico-posframe--enable (frame)
+    (when (display-graphic-p frame)
+      (with-selected-frame frame
+        (vertico-posframe-mode 1))))
+  (add-hook 'after-make-frame-functions #'gz/vertico-posframe--enable)
+  (when (display-graphic-p)
+    (vertico-posframe-mode 1))
+  (setq vertico-posframe-poshandler #'posframe-poshandler-frame-center)
+  (setq vertico-posframe-fallback-mode 'vertico-buffer-mode)
+  (setq vertico-posframe-parameters
+        '((alpha-background . 100)
+          (border-width . 2)
+          (internal-border-width . 6)))
+  (defun gz/vertico-posframe-get-size (&rest _args)
+    "Set the vertico-posframe size according to the current frame."
+    (let ((height (+ 3 (or vertico-count 10)))
+          (width (min 200 (round (* .75 (frame-width))))))
       (list :height height :width width :min-height height :min-width width)))
 
-  (setq ivy-posframe-size-function 'my-ivy-posframe-get-size)
-  (ivy-posframe-mode 1))
+  (setq vertico-posframe-size-function #'gz/vertico-posframe-get-size)
+  )
 #+end_src
 
 ** HELPFUL
 #+begin_src elisp
 (use-package helpful
   :commands (helpful-callable helpful-variable helpful-command helpful-key)
-  :custom
-  (counsel-describe-function-function #'helpful-callable)
-  (counsel-describe-variable-function #'helpful-variable)
   :bind
-  ([remap describe-function] . counsel-describe-function)
+  ([remap describe-function] . helpful-callable)
   ([remap describe-command] . helpful-command)
-  ([remap describe-variable] . counsel-describe-variable)
+  ([remap describe-variable] . helpful-variable)
   ([remap describe-key] . helpful-key))
 
 #+end_src
@@ -2574,27 +2533,6 @@ key-quiz-use-mode
 (use-package key-quiz :commands key-quiz)
 #+end_src
 
-** THEMES
-
-doesn't work!
-https://www.reddit.com/r/emacs/comments/1kr94v4/automagic_dark_mode_automatically_create_a_dark/
-#+begin_src elisp
-;;(use-package auto-dark
-;;  :ensure t
-;;  :custom
-;;  (auto-dark-themes '((doom-feather-light) (doom-feather-dark)))
-;;  :hook
-;;  (auto-dark-dark-mode
-;;   . (lambda ()
-;;        (automagic-dark-mode t)    ;; HERE
-;;        ))
-;;  (auto-dark-light-mode
-;;   . (lambda ()
-;;        (automagic-dark-mode nil)  ;; and HERE
-;;        ))
-;;  :init (setq custom-safe-themes t)(auto-dark-mode))
-#+end_src
-
 ** DOCS
 #+begin_src elisp
 (use-package devdocs
@@ -2618,7 +2556,7 @@ https://www.reddit.com/r/emacs/comments/1kr94v4/automagic_dark_mode_automaticall
  css: #+setupfile: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
 https://github.com/chenyanming/paw?tab=readme-ov-file
 ** TODO Radio
-integrate w/ emms?
+integrate w/ emms? no only music, but news, etc...?
 #+begin_src elisp
 (use-package eradio
   :init
@@ -2872,7 +2810,8 @@ word count of the response."
 ;;:config
 ;;(lsp-treemacs-sync-mode 1))
 
-(use-package lsp-ivy)
+;; (use-package lsp-consult
+;;   :ensure (:host github :repo "gagbo/lsp-consult"))
 
 #+end_src
 

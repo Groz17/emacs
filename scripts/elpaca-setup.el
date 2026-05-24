@@ -39,6 +39,9 @@
 (add-hook 'after-init-hook #'elpaca-process-queues)
 (elpaca `(,@elpaca-order))
 
+;; Prefer SSH for GitHub to avoid HTTPS auth prompts.
+;; (setq elpaca-recipe-defaults '(:protocol ssh))
+
 ;; Install use-package support
 (elpaca elpaca-use-package
   ;; Enable :elpaca use-package keyword.
