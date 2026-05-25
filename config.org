@@ -1238,6 +1238,12 @@ Emacs Dashboard is an extensible startup screen showing you recent files, bookma
   (when (boundp 'dashboard-mode-map)
     (evil-define-key 'normal dashboard-mode-map (kbd "i") #'gz/dashboard-new-buffer-insert)))
 
+(defun gz/dashboard--goto-section-safe (orig section)
+  (when (symbolp section)
+    (funcall orig section)))
+
+(advice-add 'dashboard--goto-section :around #'gz/dashboard--goto-section-safe)
+
 (use-package dashboard
   :ensure t
   :init
@@ -1990,7 +1996,7 @@ Adding highlights to TODO and related words.
 + Consult, a collection of completion-enhanced commands.
 + Marginalia adds annotations alongside minibuffer candidates.
 
-*** TODO Embark + consult-embark + consult-flymake bindings
+*** Embark + embark-consult
 
   M-v doesn't work if first item...
   does wk work?
@@ -2012,7 +2018,8 @@ also check out helm/etc... keybindings
   :bind (:map vertico-map
               ("C-j" . vertico-next)
               ("C-k" . vertico-previous)
-              ("C-l" . vertico-exit))
+              ("C-l" . vertico-exit)
+              ("C-t" . vertico-buffer-frame-toggle-preview))
   :custom
   (enable-recursive-minibuffers t))
 
@@ -2025,10 +2032,10 @@ also check out helm/etc... keybindings
   (vertico-carousel-cycle nil)
   (vertico-carousel-groups nil))
 
-
+;; toggle full screen binding?
 (use-package vertico-buffer-frame
   :ensure (:host github :repo "kn66/vertico-buffer-frame")
-;;                 :ref "4858299566573b9de6ee2ef91963c395b5552170")
+  ;;                 :ref "4858299566573b9de6ee2ef91963c395b5552170")
   :after vertico
   :config
   ;; (setq vertico-buffer-frame-preview-layout 'side-by-side)
@@ -2056,13 +2063,25 @@ also check out helm/etc... keybindings
   :custom
   ;; Per-candidate input: Use Orderless dispatchers (e.g., = literal, ~ flex, ! not, ^ prefix, $ suffix) to switch styles inside the minibuffer query.
   (orderless-matching-styles
-        '(orderless-flex         ; "o" matches "f[o]obar"
-          orderless-literal      ; exact substring
-          orderless-prefixes     ; match word beginnings
-          orderless-initialism   ; "fb" matches "[f]oo[b]ar"
-          orderless-regexp))
+   '(orderless-flex         ; "o" matches "f[o]obar"
+     orderless-literal      ; exact substring
+     orderless-prefixes     ; match word beginnings
+     orderless-initialism   ; "fb" matches "[f]oo[b]ar"
+     orderless-regexp))
   (completion-styles '(orderless flex))
   (completion-category-overrides '((file (styles basic partial-completion)))))
+
+(use-package embark
+  :ensure t
+  :bind ("C-." . embark-act)
+  :bind ("C-;" . embark-dwim)
+  :bind ("C-h B" . embark-bindings)
+  :init
+  (setq prefix-help-command #'embark-prefix-help-command))
+
+(use-package embark-consult
+  :ensure t
+  :after (embark consult))
 
 #+end_src
 
@@ -2443,43 +2462,6 @@ keycast
 
 ;; (define-key key-translation-map (kbd "<Launch5>") (lambda()(interactive)(universal-argument 0))) ;; doesn't even work
 ;; (define-key key-translation-map (kbd "<Launch5>") (kbd "M-0")) ;; basically u can use 0 for v:count now
-#+end_src
-
-** NOICE                                                                 :vim:
-toggle full screen binding?
-#+begin_src elisp
-;;(use-package mini-frame
-;;:init (mini-frame-mode)
-;;)
-;; at cursor in insert mode and at center in normal mode
-;; can't see last line though
-(use-package vertico-posframe
-  :disabled t
-  :ensure t
-  :after vertico
-  :demand t
-  :config
-  (defun gz/vertico-posframe--enable (frame)
-    (when (display-graphic-p frame)
-      (with-selected-frame frame
-        (vertico-posframe-mode 1))))
-  (add-hook 'after-make-frame-functions #'gz/vertico-posframe--enable)
-  (when (display-graphic-p)
-    (vertico-posframe-mode 1))
-  (setq vertico-posframe-poshandler #'posframe-poshandler-frame-center)
-  (setq vertico-posframe-fallback-mode 'vertico-buffer-mode)
-  (setq vertico-posframe-parameters
-        '((alpha-background . 100)
-          (border-width . 2)
-          (internal-border-width . 6)))
-  (defun gz/vertico-posframe-get-size (&rest _args)
-    "Set the vertico-posframe size according to the current frame."
-    (let ((height (+ 3 (or vertico-count 10)))
-          (width (min 200 (round (* .75 (frame-width))))))
-      (list :height height :width width :min-height height :min-width width)))
-
-  (setq vertico-posframe-size-function #'gz/vertico-posframe-get-size)
-  )
 #+end_src
 
 ** HELPFUL
