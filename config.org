@@ -1239,10 +1239,15 @@ Emacs Dashboard is an extensible startup screen showing you recent files, bookma
     (evil-define-key 'normal dashboard-mode-map (kbd "i") #'gz/dashboard-new-buffer-insert)))
 
 (defun gz/dashboard--goto-section-safe (orig section)
-  (when (symbolp section)
-    (funcall orig section)))
+  (let* ((normalized (cond
+                      ((symbolp section) section)
+                      ((functionp section) (function-get section 'section))
+                      (t nil))))
+    (when (symbolp normalized)
+      (funcall orig normalized))))
 
-(advice-add 'dashboard--goto-section :around #'gz/dashboard--goto-section-safe)
+(with-eval-after-load 'dashboard
+  (advice-add 'dashboard--goto-section :around #'gz/dashboard--goto-section-safe))
 
 (use-package dashboard
   :ensure t
