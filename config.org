@@ -2074,7 +2074,9 @@ also check out helm/etc... keybindings
      orderless-initialism   ; "fb" matches "[f]oo[b]ar"
      orderless-regexp))
   (completion-styles '(orderless flex))
-  (completion-category-overrides '((file (styles basic partial-completion)))))
+  (completion-category-overrides '((file (styles basic partial-completion))))
+  :config (add-to-list 'orderless-style-dispatchers #'orderless-kwd-dispatch)
+  )
 
 (use-package embark
   :ensure t
