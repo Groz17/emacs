@@ -1027,6 +1027,11 @@ Also tangle when file's content externally modified (by command/LLM, ...), maybe
   :hook (org-mode . toc-org-enable))
 #+end_src
 
+*** Org-web-tools
+#+begin_src elisp
+(use-package org-web-tools)
+#+end_src
+
 *** shrface
 #+begin_src elisp
 (use-package shrface)
@@ -1237,17 +1242,6 @@ Emacs Dashboard is an extensible startup screen showing you recent files, bookma
 (defun gz/dashboard-setup-evil-keys ()
   (when (boundp 'dashboard-mode-map)
     (evil-define-key 'normal dashboard-mode-map (kbd "i") #'gz/dashboard-new-buffer-insert)))
-
-(defun gz/dashboard--goto-section-safe (orig section)
-  (let* ((normalized (cond
-                      ((symbolp section) section)
-                      ((functionp section) (function-get section 'section))
-                      (t nil))))
-    (when (symbolp normalized)
-      (funcall orig normalized))))
-
-(with-eval-after-load 'dashboard
-  (advice-add 'dashboard--goto-section :around #'gz/dashboard--goto-section-safe))
 
 (use-package dashboard
   :ensure t
@@ -1762,9 +1756,10 @@ Install =luacheck= from your Linux distro's repositories for flycheck to work co
 ** GENERAL KEYBINDINGS
 #+begin_src elisp
 (use-package general
-  :after evil
+  :demand t
   :config
-  (general-evil-setup)
+  (with-eval-after-load 'evil
+    (general-evil-setup))
 #+end_src
 
 *** Toggle
@@ -1880,10 +1875,10 @@ Install =luacheck= from your Linux distro's repositories for flycheck to work co
   ;; uppercase: containing directory/global
   ;; crea unico file e tangle in both vim & emacs?
   "e E" '((lambda () (interactive) (dired "~/.config/emacs/")) :wk "Emacs dir")
-  "e e" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "emacs ")
+  "e e" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "Emacs")
   "e k" '((lambda () (interactive) (find-file "~/dots/kanata.org")) :wk "kanata")
   "e v" '((lambda () (interactive) (find-file "~/.config/nvim/config.org")) :wk "Neovim config")
-  "e V" '((lambda () (interactive) (dired "~/.config/nvim/")) :wk " in dired")
+  "e V" '((lambda () (interactive) (dired "~/.config/nvim/")) :wk " Nvim dir")
   "e i" '((lambda () (interactive) (find-file "~/dots/inputrc.org")) :wk "inputrc")
   "e f" '((lambda () (interactive) (find-file "~/dots/fzf.org")) :wk "fzf")
   "e m" '((lambda () (interactive) (find-file "~/dots/mpv.org")) :wk "Mpv")
@@ -1896,25 +1891,10 @@ Install =luacheck= from your Linux distro's repositories for flycheck to work co
   "e s" '((lambda () (interactive) (find-file "~/dots/sioyek.org")) :wk "Sioyek")
   "e w" '((lambda () (interactive) (find-file "~/dots/waybar.org")) :wk "Waybar")
   "e b" '((lambda () (interactive) (find-file "~/dots/bash.org")) :wk "Bashrc")
-  "e z" '((lambda () (interactive) (find-file "~/dots/zsh.org")) :wk "Bashrc")
+  "e z" '((lambda () (interactive) (find-file "~/dots/zsh.org")) :wk "Zshrc")
   "e t" '((lambda () (interactive) (find-file "~/dots/tridactylrc.org")) :wk "Tridactyl")
 
   "e <RET>" '((lambda () (interactive) (find-file "~/dots/_ghostty.org")) :wk "ghostty config"))
-
-;; how to put these in use-package?
-(gz/leader-keys
-  "a" '(:ignore t :wk "AI")
-  "a a" '(gptel :wk "gptel")
-  "a m" '(gptel-menu :wk "gptel menu")
-  "a c" '(gptel-add :wk "gptel add context")
-  "a r" '(gptel-rewrite :wk "gptel rewrite")
-  )
-
-(gz/leader-keys
-  "g" '(:ignore t :wk "Git")
-  "g s" '(git-gutter:stage-hunk :wk "Stage hunk")
-  "g u" '(git-gutter:revert-hunk :wk "Unstage hunk ")
-  )
 
 (gz/leader-keys
   "r" '(:ignore t :wk "Reload")
@@ -1963,18 +1943,21 @@ how to go from diff to file w/ line num?
 (use-package git-gutter
   :demand t
   :bind
-  (
-   :map evil-normal-state-map
-   ("[g" . git-gutter:previous-hunk)
-   ("]g" . git-gutter:next-hunk)
-   )
-  :custom 
-	   
- (git-gutter:modified-sign (nerd-icons-octicon "nf-oct-diff_modified"))
-              (git-gutter:added-sign (nerd-icons-octicon "nf-oct-diff_added"))
-              (git-gutter:deleted-sign (nerd-icons-octicon "nf-oct-diff_removed"))
-	   
-  :config (global-git-gutter-mode +1))
+  (:map evil-normal-state-map
+        ("[g" . git-gutter:previous-hunk)
+        ("]g" . git-gutter:next-hunk))
+  :custom
+  (git-gutter:modified-sign (nerd-icons-octicon "nf-oct-diff_modified"))
+  (git-gutter:added-sign (nerd-icons-octicon "nf-oct-diff_added"))
+  (git-gutter:deleted-sign (nerd-icons-octicon "nf-oct-diff_removed"))
+  :init
+  (with-eval-after-load 'general
+    (gz/leader-keys
+      "g" '(:ignore t :wk "Git")
+      "g s" '(git-gutter:stage-hunk :wk "Stage hunk")
+      "g u" '(git-gutter:revert-hunk :wk "Unstage hunk ")))
+  :config
+  (global-git-gutter-mode +1))
 #+end_src
 
 ** HIGHLIGHT TODO
@@ -2025,6 +2008,11 @@ also check out helm/etc... keybindings
               ("C-k" . vertico-previous)
               ("C-l" . vertico-exit)
               ("C-t" . vertico-buffer-frame-toggle-preview))
+  :config
+  (defvar-keymap vertico-repeat-map
+    :repeat t
+    "j" #'vertico-next
+    "k" #'vertico-previous)
   :custom
   (enable-recursive-minibuffers t))
 
@@ -2668,7 +2656,17 @@ https://github.com/karthink/gptel/issues/165
   ;;         ("translate" . "Translate this text to {{language}}:\n\n{{text}}")
   ;;         ("improve" . "Improve this text for clarity and conciseness:\n\n{{text}}")))
 
+  :init
+  (with-eval-after-load 'general
+    (gz/leader-keys
+      "a" '(:ignore t :wk "AI")
+      "a a" '(gptel :wk "gptel")
+      "a m" '(gptel-menu :wk "gptel menu")
+      "a c" '(gptel-add :wk "gptel add context")
+      "a r" '(gptel-rewrite :wk "gptel rewrite")))
+
   :config
+
   (setq gptel-backend (gptel-make-gh-copilot "Copilot")) ;; BUG: non funge in :custom
   ;; (gptel-make-ollama "Ollama" :host "localhost:11434" :stream t :models '(gemma3:12b))
 
@@ -2899,7 +2897,8 @@ https://github.com/ecraven/ivy-pass
 (use-package immersive-translate
   :ensure t
   :custom (immersive-translate-backend 'trans)
-  (immersive-translate-trans-target-language "bn")
+  (immersive-translate-trans-target-language "en")
+  (immersive-translate-trans-source-language "bn")
 )
 #+end_src
 
@@ -2961,4 +2960,14 @@ Works with stdin as well :)
   ;; Configure `buffer-to-pdf-directory' to specify where PDF files are stored.
   ;; This is the default value:
   (buffer-to-pdf-directory (expand-file-name "~/Documents/")))
+#+end_src
+
+** Thesaurus
+
+#+begin_src elisp
+(use-package powerthesaurus
+  :init
+  (with-eval-after-load 'general
+    (gz/leader-keys
+      "t" '(powerthesaurus-transient :wk "Thesaurus"))))
 #+end_src
