@@ -425,6 +425,7 @@ automatically fold when moving j/k?
 #+end_src
 
 
+
 * KEYBINDINGS
 #+begin_src elisp
 (define-key global-map (kbd "C-c w") 'webjump)
@@ -530,6 +531,13 @@ automatically fold when moving j/k?
   (let ((kill-emacs-hook (append kill-emacs-hook (list (lambda () (call-process "emacsclient -a''" nil nil nil))))))
     (save-buffers-kill-emacs)))
 #+end_src
+* HOOKS
+** SUBWORD MODE
+use ij/aj for this?
+#+begin_src elisp
+(add-hook 'prog-mode-hook #'subword-mode)
+#+end_src
+
 * VIM PARITY
 
 #+begin_src elisp
@@ -1185,19 +1193,6 @@ https://github.com/the-ted/org-mind-map
 
 
 * PLUGINS
-** ALL THE ICONS
-This is an icon set that can be used with dashboard, dired, ibuffer and other Emacs programs.
-
-#+begin_src elisp
-(use-package all-the-icons
-  :ensure t
-  :defer t
-  :if (display-graphic-p))
-
-(use-package all-the-icons-dired
-  :hook (dired-mode . (lambda () (all-the-icons-dired-mode t))))
-#+end_src
-
 ** COMPANY
 [[https://company-mode.github.io/][Company]] is a text completion framework for Emacs. The name stands for "complete anything".  Completion will start automatically after you type a few letters. Use M-n and M-p to select, <return> to complete or <tab> to complete the common part.
 
@@ -1270,90 +1265,6 @@ Emacs Dashboard is an extensible startup screen showing you recent files, bookma
     (gz/dashboard-setup-evil-keys))
   (with-eval-after-load 'evil-collection
     (gz/dashboard-setup-evil-keys)))
-
-#+end_src
-
-** DIMINISH
-This package implements hiding or abbreviation of the modeline displays (lighters) of minor-modes.  With this package installed, you can add ':diminish' to any use-package block to hide that particular mode in the modeline.
-
-#+begin_src elisp
-(use-package diminish)
-#+end_src
-
-** BEACON
-Highlight cursor position when switching windows or scrolling.
-
-#+begin_src elisp
-(use-package beacon
-  :ensure t
-  :config
-  (beacon-mode 1)
-; https://github.com/Malabarba/beacon/issues/81
-(setq beacon-do-blink-commands
-  '(evil-scroll-up evil-scroll-down
-     evil-goto-line evil-goto-last-line))
-(defun beacon-do-blink-command (func)
-  (advice-add func
-    :after
-    (lambda (func &rest args)
-      (let ((beacon-dont-blink-commands '()))
-        (beacon--post-command)))))
-(mapc #'beacon-do-blink-command beacon-do-blink-commands)
-)
-#+end_src
-
-** OLIVETTI
-Center text for distraction-free writing.
-
-#+begin_src elisp
-(use-package olivetti
-  :ensure t
-  :custom
-  (olivetti-body-width 100))
-#+end_src
-
-** DIRED
-Bookmarks like in mini.files?
-#+begin_src elisp
-(use-package dired-open
-  :after dired
-  :config
-  (setq dired-open-extensions '(
-          ;; ("gif" . "sxiv")
-          ;; ("jpg" . "sxiv")
-          ;; ("png" . "sxiv")
-             ("mkv" . "mpv")
-             ("mp4" . "mpv"))))
-          ;; ("pdf" . "sioyek"))))
-
-(use-package dired
-  :after evil-collection
-  :ensure nil
-  ;; :commands (dired dired-jump)
-  :custom (
-     ;; (setq dired-dwim-target t)
-     (dired-listing-switches "-agho --group-directories-first")
-     ;; (setq dired-listing-switches "-lhgoBF --group-directories-first")
-     ;; (setq diredp-toggle-find-file-reuse-dir t)
-
-
-     )
-  :config
-  (evil-collection-define-key 'normal 'dired-mode-map
-    "h" 'dired-up-directory
-    "l" 'dired-find-file))
-
-          ; (eval-after-load "dired" '(progn
-          ;   (define-key dired-mode-map (kbd "q") 'kill-this-buffer)
-          ;   (define-key dired-mode-map (kbd "h") 'dired-up-directory)
-          ;   (define-key dired-mode-map (kbd "l") 'dired-open-file)
-          ;   ; (define-key dired-mode-map (kbd "o") 'dired-sort-toggle-or-edit)
-          ;   ; (define-key dired-mode-map (kbd "v") 'dired-toggle-marks)
-          ;   ; (define-key dired-mode-map (kbd "m") 'dired-mark)
-          ;   ; (define-key dired-mode-map (kbd "u") 'dired-unmark)
-          ;   ; (define-key dired-mode-map (kbd "U") 'dired-unmark-all-marks)
-          ; (define-key dired-mode-map (kbd "c") 'dired-create-directory)
-          ; ))
 
 #+end_src
 
@@ -1906,6 +1817,105 @@ Install =luacheck= from your Linux distro's repositories for flycheck to work co
 )
 #+end_src
 
+** UI
+*** ALL THE ICONS
+This is an icon set that can be used with dashboard, dired, ibuffer and other Emacs programs.
+
+#+begin_src elisp
+(use-package all-the-icons
+  :ensure t
+  :defer t
+  :if (display-graphic-p))
+
+(use-package all-the-icons-dired
+  :hook (dired-mode . (lambda () (all-the-icons-dired-mode t))))
+#+end_src
+
+*** MODELINE
+The modeline is the bottom status bar that appears in Emacs windows.  While you can create your own custom modeline, why go to the trouble when Doom Emacs already has a nice modeline package available.  For more information on what is available to configure in the Doom modeline, check out: [[https://github.com/seagle0128/doom-modeline][Doom Modeline]]
+
+#+begin_src elisp
+(use-package doom-modeline
+  :ensure t
+  :init
+  (doom-modeline-mode 1)
+  ;; change mode-line to the top (put on the left?)
+  ;; (setq-default mode-line-format nil)
+  ;; (setq-default header-line-format (doom-modeline-set-main-modeline))
+  ;; :config
+  :custom
+  (doom-modeline-height 35      ;; sets modeline height
+      doom-modeline-bar-width 5    ;; sets right bar width
+      ;;doom-modeline-persp-name t   ;; adds perspective name to modeline
+      doom-modeline-persp-icon t ;; adds folder icon next to persp name
+      doom-modeline-buffer-file-name-style 'relative-to-project)
+  (doom-modeline-lsp t)
+  )
+
+(use-package spacious-padding :ensure t :if (display-graphic-p) :config (spacious-padding-mode))
+(display-time)
+
+#+end_src
+
+*** OLIVETTI
+Center text for distraction-free writing.
+
+#+begin_src elisp
+(use-package olivetti
+  :ensure t
+  :custom
+  (olivetti-body-width 100))
+#+end_src
+
+*** RAINBOW DELIMITERS
+Adding rainbow coloring to parentheses.
+
+#+begin_src elisp
+(use-package rainbow-delimiters
+  ;; :hook ((emacs-lisp-mode . rainbow-delimiters-mode)
+  ;;        (clojure-mode . rainbow-delimiters-mode)))
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+#+end_src
+
+*** RAINBOW MODE
+Display the actual color as a background for any hex color value (ex. #ffffff).  The code block below enables rainbow-mode in all programming modes (prog-mode) as well as org-mode, which is why rainbow works in this document.
+
+#+begin_src elisp
+(use-package rainbow-mode
+  :diminish
+  :hook org-mode prog-mode)
+#+end_src
+
+
+*** BEACON
+Highlight cursor position when switching windows or scrolling.
+
+#+begin_src elisp
+(use-package beacon
+  :ensure t
+  :config
+  (beacon-mode 1)
+; https://github.com/Malabarba/beacon/issues/81
+(setq beacon-do-blink-commands
+  '(evil-scroll-up evil-scroll-down
+     evil-goto-line evil-goto-last-line))
+(defun beacon-do-blink-command (func)
+  (advice-add func
+    :after
+    (lambda (func &rest args)
+      (let ((beacon-dont-blink-commands '()))
+        (beacon--post-command)))))
+(mapc #'beacon-do-blink-command beacon-do-blink-commands)
+)
+#+end_src
+
+*** DIMINISH
+This package implements hiding or abbreviation of the modeline displays (lighters) of minor-modes.  With this package installed, you can add ':diminish' to any use-package block to hide that particular mode in the modeline.
+
+#+begin_src elisp
+(use-package diminish)
+#+end_src
 ** GIT
 *** Magit
 [[https://magit.vc/manual/][Magit]] is a full-featured git client for Emacs.
@@ -1917,7 +1927,8 @@ how to go from diff to file w/ line num?
 
 #+begin_src elisp
 (use-package cond-let)
-(use-package transient)
+(use-package transient :bind (:map transient-map ("<escape>" . transient-quit-one))) ;; Make escape quit magit prompts
+
 (setq magit-define-global-key-bindings 'recommended)
 (use-package magit :after transient
   ;; using just keys without fn like in lazy?
@@ -2112,148 +2123,17 @@ Emacs has built-in programming language modes for Lisp, Scheme, DSSSL, Ada, ASM,
 
 ;;    (with-eval-after-load 'org
 ;; (add-to-list 'org-src-lang-modes '("tridactylrc" . tridactyl-mode)))
-#+end_src
 
-#+begin_src elisp
 (use-package scala-mode
   :interpreter
     ("scala" . scala-mode))
+
+;; Add LSP as well
+;; Works with stdin as well :)
+(use-package scad-mode
+  :ensure (:host github :repo "openscad/emacs-scad-mode"))
 #+end_src
 
-** MODELINE
-The modeline is the bottom status bar that appears in Emacs windows.  While you can create your own custom modeline, why go to the trouble when Doom Emacs already has a nice modeline package available.  For more information on what is available to configure in the Doom modeline, check out: [[https://github.com/seagle0128/doom-modeline][Doom Modeline]]
-
-#+begin_src elisp
-(use-package doom-modeline
-  :ensure t
-  :init
-  (doom-modeline-mode 1)
-  ;; change mode-line to the top (put on the left?)
-  ;; (setq-default mode-line-format nil)
-  ;; (setq-default header-line-format (doom-modeline-set-main-modeline))
-  ;; :config
-  :custom
-  (doom-modeline-height 35      ;; sets modeline height
-      doom-modeline-bar-width 5    ;; sets right bar width
-      ;;doom-modeline-persp-name t   ;; adds perspective name to modeline
-      doom-modeline-persp-icon t ;; adds folder icon next to persp name
-      doom-modeline-buffer-file-name-style 'relative-to-project)
-  (doom-modeline-lsp t)
-  )
-
-(use-package spacious-padding :ensure t :if (display-graphic-p) :config (spacious-padding-mode))
-(display-time)
-
-#+end_src
-
-** PDFs
-[[https://github.com/vedang/pdf-tools][pdf-tools]] is a replacement of DocView for viewing PDF files inside Emacs.  It uses the =poppler= library, which also means that 'pdf-tools' can by used to modify PDFs.  I use to disable 'display-line-numbers-mode' in 'pdf-view-mode' because line numbers crash it.
-
-fit page to window size?
-invert colors?
-#+begin_src elisp
-(use-package pdf-tools
-    ; :ensure (:repo "aikrahguzar/pdf-tools" :host github :branch "upstream-pdf-roll")
-    :ensure (:repo "rahguzar/pdf-tools" :host codeberg)
-  :defer t
-  :commands (pdf-loader-install)
-  :mode "\\.pdf\\'"
-  ;; ("j" . pdf-view-next-line-or-next-page)
-  ;; ("k" . pdf-view-previous-line-or-previous-page)
-  ;; :general
-  ;; (general-define-key :states 'motion :keymaps 'pdf-view-mode-map
-  ;;                     "j" 'pdf-view-next-page
-  ;;                     "k" 'pdf-view-previous-page)
-
-  ;; (:keymaps '(pdf-view-mode-map)
-  ;;           "C-j" 'pdf-view-shrink
-  ;;           "C-k" 'pdf-view-enlarge)
-
-  :init (pdf-loader-install)
-  :config
-  (add-to-list 'revert-without-query ".pdf")
-  (general-define-key :states 'normal :keymaps 'pdf-view-mode-map
-                      ;; "j" 'pdf-view-next-page
-                      ;; "k" 'pdf-view-previous-page
-          "C-j" 'pdf-view-shrink
-          "C-k" 'pdf-view-enlarge
-
-
-          "&" '(lambda()(interactive)
-           (start-process
-            "open-in-sioyek" nil
-            "ghostty" "-e" "sioyek"
-            (format "+%d" (line-number-at-pos))
-            (shell-quote-argument buffer-file-name))
-           ) :wk "Open in sioyek"
-
-          )
-  ;; :hook  (pdf-view-mode-hook . (lambda()
-  ;;  (display-line-numbers-mode -1)
-  ;;  (blink-cursor-mode -1)
-  ;;  (doom-modeline-mode -1)     )
-  ;; (define-key pdf-view-mode-map (kbd "C-j")#'pdf-view-shrink)
-  ;; (define-key evil-normal-state-local-map (kbd "C-k")#'pdf-view-enlarge)
-  )
-
-(add-hook 'pdf-view-mode-hook #'(lambda () (interactive) (display-line-numbers-mode -1)
-                                  (blink-cursor-mode -1)
-                                  (doom-modeline-mode -1) ; revert when exiting?
-          ; (define-key evil-normal-state-local-map (kbd "C-j")#'pdf-view-shrink)
-          ;; (define-key evil-normal-state-map (kbd "C-j")#'pdf-view-shrink)
-          ;; (define-key evil-normal-state-map (kbd "C-k")#'pdf-view-enlarge)
-          )
-    )
-(add-hook 'pdf-view-mode-hook 'auto-revert-mode)
-
-;; difference above and below hook?
-;; (eval-after-load 'pdf-view '(add-hook 'pdf-view-mode-hook (lambda()define-key pdf-view-mode-map (kbd "C-j")#'pdf-view-shrink)))
-;; (eval-after-load 'pdf-view '(add-hook 'pdf-view-mode-hook (lambda()define-key pdf-view-mode-map (kbd "C-k")#'pdf-view-enlarge)))
-;; (with-eval-after-load 'pdf-view (evil-define-key 'normal pdf-view-mode-map (kbd "C-j")#'pdf-view-shrink))
-;; (with-eval-after-load 'pdf-view (evil-define-key 'normal pdf-view-mode-map (kbd "C-k")#'pdf-view-enlarge))
-
-;; (use-package doc-tools-toc
-;;   :ensure (:host github :repo "dalanicolai/doc-tools-toc")
-(use-package pdf-meta-edit
-  :ensure (:host github :repo "krisbalintona/pdf-meta-edit")
-  :mode "\\.pdf\\'")
-
-(use-package doc-toc
-  :mode "\\.pdf\\'")
-#+end_src
-
-** EPUBs
-#+begin_src elisp
- (use-package nov
-    :mode ("\\.epub\\'" . nov-mode)
-    :custom (nov-text-width 75))
-#+end_src
-
-** RAINBOW DELIMITERS
-Adding rainbow coloring to parentheses.
-
-#+begin_src elisp
-(use-package rainbow-delimiters
-  ;; :hook ((emacs-lisp-mode . rainbow-delimiters-mode)
-  ;;        (clojure-mode . rainbow-delimiters-mode)))
-  :hook (prog-mode . rainbow-delimiters-mode))
-
-#+end_src
-
-** RAINBOW MODE
-Display the actual color as a background for any hex color value (ex. #ffffff).  The code block below enables rainbow-mode in all programming modes (prog-mode) as well as org-mode, which is why rainbow works in this document.
-
-#+begin_src elisp
-(use-package rainbow-mode
-  :diminish
-  :hook org-mode prog-mode)
-#+end_src
-
-** SUBWORD MODE
-use ij/aj for this?
-#+begin_src elisp
-(add-hook 'prog-mode-hook #'subword-mode)
-#+end_src
 
 ** SHELLS AND TERMINALS
 In my configs, all of my shells (bash, fish, zsh and the ESHELL) require my shell-color-scripts-git package to be installed.  On Arch Linux, you can install it from the AUR.  Otherwise, go to my shell-color-scripts repository on GitLab to get it.
@@ -2346,6 +2226,12 @@ ghostel-max-scrollback 5000)
 ;;               (window-height . 0.4)))
 #+end_src
 
+*** TLDR
+
+#+begin_src elisp
+(use-package tldr :commands tldr)
+#+end_src
+
 ** SUDO EDIT
 [[https://github.com/nflath/sudo-edit][sudo-edit]] gives us the ability to open files with sudo privileges or switch over to editing with sudo privileges if we initially opened the file without such privileges.
 
@@ -2390,12 +2276,6 @@ The first line below designates the directory where will place all of our custom
 ** NOTMUCH
 #+begin_src elisp
 (autoload 'notmuch "notmuch" "Notmuch mail" t)
-#+end_src
-
-** TLDR
-
-#+begin_src elisp
-(use-package tldr :commands tldr)
 #+end_src
 
 ** WHICH-KEY
@@ -2467,18 +2347,6 @@ keycast
 
 ;; (define-key key-translation-map (kbd "<Launch5>") (lambda()(interactive)(universal-argument 0))) ;; doesn't even work
 ;; (define-key key-translation-map (kbd "<Launch5>") (kbd "M-0")) ;; basically u can use 0 for v:count now
-#+end_src
-
-** HELPFUL
-#+begin_src elisp
-(use-package helpful
-  :commands (helpful-callable helpful-variable helpful-command helpful-key)
-  :bind
-  ([remap describe-function] . helpful-callable)
-  ([remap describe-command] . helpful-command)
-  ([remap describe-variable] . helpful-variable)
-  ([remap describe-key] . helpful-key))
-
 #+end_src
 
 ** HYDRA
@@ -2773,7 +2641,7 @@ word count of the response."
 (define-key global-map (kbd "C-c t") 'gptel-quick-translate)
 #+end_src
 
-** MCP
+*** MCP
 #+begin_src elisp
 (use-package mcp-server
   :ensure (:host github :repo "rhblind/emacs-mcp-server"
@@ -2781,6 +2649,154 @@ word count of the response."
    :load-path ("elpaca/sources/emacs-mcp-server"
               "elpaca/sources/emacs-mcp-server/tools")
   :hook (emacs-startup . mcp-server-start-unix))
+#+end_src
+*** ACP
+#+begin_src elisp
+(use-package agent-shell
+  :ensure t)
+#+end_src
+
+** Media
+
+*** PDFs
+[[https://github.com/vedang/pdf-tools][pdf-tools]] is a replacement of DocView for viewing PDF files inside Emacs.  It uses the =poppler= library, which also means that 'pdf-tools' can by used to modify PDFs.  I use to disable 'display-line-numbers-mode' in 'pdf-view-mode' because line numbers crash it.
+
+fit page to window size?
+invert colors?
+#+begin_src elisp
+(use-package pdf-tools
+    ; :ensure (:repo "aikrahguzar/pdf-tools" :host github :branch "upstream-pdf-roll")
+    :ensure (:repo "rahguzar/pdf-tools" :host codeberg)
+  :defer t
+  :commands (pdf-loader-install)
+  :mode "\\.pdf\\'"
+  ;; ("j" . pdf-view-next-line-or-next-page)
+  ;; ("k" . pdf-view-previous-line-or-previous-page)
+  ;; :general
+  ;; (general-define-key :states 'motion :keymaps 'pdf-view-mode-map
+  ;;                     "j" 'pdf-view-next-page
+  ;;                     "k" 'pdf-view-previous-page)
+
+  ;; (:keymaps '(pdf-view-mode-map)
+  ;;           "C-j" 'pdf-view-shrink
+  ;;           "C-k" 'pdf-view-enlarge)
+
+  :init (pdf-loader-install)
+  :config
+  (add-to-list 'revert-without-query ".pdf")
+  (general-define-key :states 'normal :keymaps 'pdf-view-mode-map
+                      ;; "j" 'pdf-view-next-page
+                      ;; "k" 'pdf-view-previous-page
+          "C-j" 'pdf-view-shrink
+          "C-k" 'pdf-view-enlarge
+
+
+          "&" '(lambda()(interactive)
+           (start-process
+            "open-in-sioyek" nil
+            "ghostty" "-e" "sioyek"
+            (format "+%d" (line-number-at-pos))
+            (shell-quote-argument buffer-file-name))
+           ) :wk "Open in sioyek"
+
+          )
+  ;; :hook  (pdf-view-mode-hook . (lambda()
+  ;;  (display-line-numbers-mode -1)
+  ;;  (blink-cursor-mode -1)
+  ;;  (doom-modeline-mode -1)     )
+  ;; (define-key pdf-view-mode-map (kbd "C-j")#'pdf-view-shrink)
+  ;; (define-key evil-normal-state-local-map (kbd "C-k")#'pdf-view-enlarge)
+  )
+
+(add-hook 'pdf-view-mode-hook #'(lambda () (interactive) (display-line-numbers-mode -1)
+                                  (blink-cursor-mode -1)
+                                  (doom-modeline-mode -1) ; revert when exiting?
+          ; (define-key evil-normal-state-local-map (kbd "C-j")#'pdf-view-shrink)
+          ;; (define-key evil-normal-state-map (kbd "C-j")#'pdf-view-shrink)
+          ;; (define-key evil-normal-state-map (kbd "C-k")#'pdf-view-enlarge)
+          )
+    )
+(add-hook 'pdf-view-mode-hook 'auto-revert-mode)
+
+;; difference above and below hook?
+;; (eval-after-load 'pdf-view '(add-hook 'pdf-view-mode-hook (lambda()define-key pdf-view-mode-map (kbd "C-j")#'pdf-view-shrink)))
+;; (eval-after-load 'pdf-view '(add-hook 'pdf-view-mode-hook (lambda()define-key pdf-view-mode-map (kbd "C-k")#'pdf-view-enlarge)))
+;; (with-eval-after-load 'pdf-view (evil-define-key 'normal pdf-view-mode-map (kbd "C-j")#'pdf-view-shrink))
+;; (with-eval-after-load 'pdf-view (evil-define-key 'normal pdf-view-mode-map (kbd "C-k")#'pdf-view-enlarge))
+
+;; (use-package doc-tools-toc
+;;   :ensure (:host github :repo "dalanicolai/doc-tools-toc")
+(use-package pdf-meta-edit
+  :ensure (:host github :repo "krisbalintona/pdf-meta-edit")
+  :mode "\\.pdf\\'")
+
+(use-package doc-toc
+  :mode "\\.pdf\\'")
+#+end_src
+
+*** EPUBs
+#+begin_src elisp
+ (use-package nov
+    :mode ("\\.epub\\'" . nov-mode)
+    :custom (nov-text-width 75))
+#+end_src
+
+** Core
+*** DIRED
+Bookmarks like in mini.files?
+#+begin_src elisp
+(use-package dired-open
+  :after dired
+  :config
+  (setq dired-open-extensions '(
+          ;; ("gif" . "sxiv")
+          ;; ("jpg" . "sxiv")
+          ;; ("png" . "sxiv")
+             ("mkv" . "mpv")
+             ("mp4" . "mpv"))))
+          ;; ("pdf" . "sioyek"))))
+
+(use-package dired
+  :after evil-collection
+  :ensure nil
+  ;; :commands (dired dired-jump)
+  :custom (
+     ;; (setq dired-dwim-target t)
+     (dired-listing-switches "-agho --group-directories-first")
+     ;; (setq dired-listing-switches "-lhgoBF --group-directories-first")
+     ;; (setq diredp-toggle-find-file-reuse-dir t)
+
+
+     )
+  :config
+  (evil-collection-define-key 'normal 'dired-mode-map
+    "h" 'dired-up-directory
+    "l" 'dired-find-file))
+
+          ; (eval-after-load "dired" '(progn
+          ;   (define-key dired-mode-map (kbd "q") 'kill-this-buffer)
+          ;   (define-key dired-mode-map (kbd "h") 'dired-up-directory)
+          ;   (define-key dired-mode-map (kbd "l") 'dired-open-file)
+          ;   ; (define-key dired-mode-map (kbd "o") 'dired-sort-toggle-or-edit)
+          ;   ; (define-key dired-mode-map (kbd "v") 'dired-toggle-marks)
+          ;   ; (define-key dired-mode-map (kbd "m") 'dired-mark)
+          ;   ; (define-key dired-mode-map (kbd "u") 'dired-unmark)
+          ;   ; (define-key dired-mode-map (kbd "U") 'dired-unmark-all-marks)
+          ; (define-key dired-mode-map (kbd "c") 'dired-create-directory)
+          ; ))
+
+#+end_src
+
+*** HELPFUL
+#+begin_src elisp
+(use-package helpful
+  :commands (helpful-callable helpful-variable helpful-command helpful-key)
+  :bind
+  ([remap describe-function] . helpful-callable)
+  ([remap describe-command] . helpful-command)
+  ([remap describe-variable] . helpful-variable)
+  ([remap describe-key] . helpful-key))
+
 #+end_src
 
 ** [#A] LSP
@@ -2940,20 +2956,6 @@ https://github.com/ecraven/ivy-pass
   :ensure (:host github :repo "xiongtx/eros")
   :init (eros-mode 1)
   )
-#+end_src
-
-** ACP
-#+begin_src elisp
-(use-package agent-shell
-  :ensure t)
-#+end_src
-
-** TODO OpenSCAD
-Add LSP as well
-Works with stdin as well :)
-#+begin_src elisp
-(use-package scad-mode
-  :ensure (:host github :repo "openscad/emacs-scad-mode"))
 #+end_src
 
 ** Buffer-to-pdf
