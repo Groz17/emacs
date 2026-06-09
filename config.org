@@ -29,233 +29,8 @@
 - [ ] set ft should work like for emacs modes
 - [ ] in emacs/insert mode, use c-x pressed as k and then x for vim insert, and l/s for emacs c-x
 - [ ] syncronize shada/command history
-
 - [ ] go to normal mode for pickers?
 
-* Authinfo
-Use only the gpg-encrypted version of the file.
-
-#+begin_src elisp :tangle no
-(setq auth-source-debug nil)
-(setq auth-sources '("~/.authinfo.gpg"))
-#+end_src
-
-
-* TRANSPARENCY
-With Emacs version 29, true transparency has been added.  I have turned transparency off by setting the alpha to '100'.  If you want some slight transparency, try setting alpha to '90'.  Of course, if you set alpha to '0', the background of Emacs would completely transparent.
-
-#+begin_src elisp
-(add-to-list 'default-frame-alist '(alpha-background . 87)) ; For all new frames henceforth
-
-;; Terminal transparency (clears background to use terminal's transparency)
-; (defun gz/terminal-transparency ()
-;   (unless (display-graphic-p)
-;     (set-face-background 'default "unspecified-bg")))
-;
-; (add-hook 'after-make-frame-functions
-;           (lambda (frame)
-;             (with-selected-frame frame
-;               (gz/terminal-transparency))))
-;
-; (gz/terminal-transparency)
-#+end_src
-
-
-
-* MINIBUFFER
-**  ESCAPE
-By default, Emacs requires you to hit ESC three times to escape quit the minibuffer.
-
-#+begin_src elisp
-(global-set-key [escape] 'keyboard-escape-quit)
-#+end_src
-
-**  READLINE SANITY
-#+begin_src elisp
-(define-key minibuffer-local-map (kbd "C-h") #'backward-delete-char)
-(define-key minibuffer-local-map (kbd "C-w") #'backward-kill-word)
-
-(with-eval-after-load 'evil-maps
-  (define-key evil-insert-state-map (kbd "<ctl-x> C-?") (lambda () (interactive)(kill-line 0)))
-  ;; (define-key evil-insert-state-map (kbd "<C-]>") (lambda () (interactive)(evil-execute-in-normal-state)(execute-kbd-macro (kbd "f"))))
-
-  ;; (define-key evil-insert-state-map (kbd "<C-M-]>")
-  ;;   (lambda ()
-  ;;     (interactive)
-  ;;     (evil-execute-in-normal-state
-  ;;      (lambda ()
-  ;;        (call-interactively #'evil-find-char-backward)))))
-
-
-  )
-(define-key minibuffer-local-map (kbd "<ctl-x> C-?") (lambda () (interactive)(kill-line 0)))
-;; (define-key minibuffer-local-map (kbd "M-#") (lambda () (interactive)( 0)))
-#+end_src
-
-* FONTS
-Defining the various fonts that Emacs will use.
-
-** Setting the Font Face
-#+begin_src elisp
-(set-face-attribute 'default nil
-        ;; :font "JetBrains Mono"
-        ;; :font "Iosevka Term Curly-regular-normal"
-        :font "Aporetic Sans"
-        :height 110
-        :weight 'medium)
-(set-face-attribute 'variable-pitch nil
-        :font "Aporetic Sans"
-        :height 120
-        :weight 'medium)
-(set-face-attribute 'fixed-pitch nil
-        :font "Aporetic Sans Mono"
-        :height 110
-        :weight 'medium)
-;; Makes commented text and keywords italics.
-;; This is working in emacsclient but not emacs.
-;; Your font must have an italic face available.
-(set-face-attribute 'font-lock-comment-face nil
-        :slant 'italic)
-(set-face-attribute 'font-lock-keyword-face nil
-        :slant 'italic)
-
-;; This sets the default font on all graphical frames created after restarting Emacs.
-;; Does the same thing as 'set-face-attribute default' above, but emacsclient fonts
-;; are not right unless I also add this method of setting the default font.
-;; (add-to-list 'default-frame-alist '(font . "JetBrains Mono-11"))
-;; (add-to-list 'default-frame-alist '(font . "Aporetic Sans"))
-
-;; Uncomment the following line if line spacing needs adjusting.
-(setq-default line-spacing 0.12)
-
-(set-fontset-font t 'kannada
-                  (font-spec :family "Nudi 16 e") nil 'prepend)
-
-(defun use-urdu-nastaliq ()
-  (when (and current-input-method
-             (string-prefix-p "urdu" current-input-method))
-    (set-fontset-font t 'arabic (font-spec :family "Awami Nastaliq") nil 'prepend)))
-
-(add-hook 'input-method-activate-hook #'use-urdu-nastaliq)
-#+end_src
-
-* Keybindings
-#+begin_src elisp
-(define-key global-map (kbd "C-c w") 'webjump)
-;;   "s d" '(dictionary-search :wk "Search dictionary")
-;;   "s m" '(man :wk "Man pages")
-;;   "s t" '(tldr :wk "Lookup TLDR docs for a command")
-;;   "s w" '(woman :wk "Similar to man but doesn't require man"))
-#+end_src
-
-** Bengali IPA
-#+begin_src elisp
-(require 'subr-x)
-
-(defun gz/bangla-ipa--query-async (text)
-  "Fetch Bangla IPA for TEXT asynchronously and show in minibuffer."
-  (let* ((url "https://ipa.bangla.gov.bd/post_text_bangla_ipa")
-         (user-agent "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:148.0) Gecko/20100101 Firefox/148.0")
-         (payload (concat "bangla_ipa=" text))
-         (command (string-join
-                   (list "curl -s -G -k"
-                         (shell-quote-argument url)
-                         "-H"
-                         (shell-quote-argument user-agent)
-                         "--data-urlencode"
-                         (shell-quote-argument payload)
-                         "| jq -r '.data[0]'")
-                   " "))
-         (buffer (generate-new-buffer " *bangla-ipa*")))
-    (message "Bangla IPA: fetching...")
-    (make-process
-     :name "bangla-ipa"
-     :buffer buffer
-     :command (list "bash" "-lc" command)
-     :noquery t
-     :sentinel
-     (lambda (proc _event)
-       (when (eq (process-status proc) 'exit)
-         (let* ((out (with-current-buffer (process-buffer proc)
-                       (buffer-string)))
-                (result (string-trim out)))
-           (kill-buffer (process-buffer proc))
-           (if (string-empty-p result)
-               (message "Bangla IPA: no result")
-             (message "%s" result))))))))
-
-(defun gz/bangla-ipa-at-point-or-region ()
-  "Show Bangla IPA for region or word at point in the minibuffer."
-  (interactive)
-  (let* ((text (if (use-region-p)
-                   (buffer-substring-no-properties (region-beginning) (region-end))
-                 (thing-at-point 'word t)))
-         (trimmed (and text (string-trim text))))
-    (if (and trimmed (not (string-empty-p trimmed)))
-        (gz/bangla-ipa--query-async trimmed)
-      (message "No text to convert"))))
-#+end_src
-
-** Transliterate region to Latin
-
-#+begin_src elisp
-(defun gz/transliterate-to-latin (start end)
-  "Replace region with jq pretty-printed JSON, non-interactively."
-  (interactive "r")
-(call-process-region
- start end
- "uconv"
- t
- (current-buffer)
- nil
- "-x"
- "Any-Latin;Latin-ASCII;['] Remove"))
-
-#+end_src
-
-** Any-IPA
-#+begin_src elisp
-(defun gz/region-to-ipa (start end)
-  (interactive "r")
-  (let ((raw (shell-command-to-string
-              (concat "espeak-ng -q --ipa=2 <<< "
-                      (shell-quote-argument
-                       (buffer-substring start end))))))
-    (delete-region start end)
-    (insert (replace-regexp-in-string "(\\([^)]*\\))" "/" raw))))
-#+end_src
-
-
-** Reload config
-#+begin_src elisp
-(defun gz/reload-config () "Reload Emacs configuration by loading init.el"
-       (interactive)
-       (load-file (expand-file-name "~/.config/emacs/init.el"))
-       (message "Config reloaded!"))
-#+end_src
-
-** Restart Emacs
-
-#+begin_src elisp
-;; :restart command/keybinding... (maybe C-x C-S-c?)
-(defun gz/restart-emacs ()
-  "Restart Emacs"
-  (interactive)
-  (let ((kill-emacs-hook (append kill-emacs-hook (list (lambda () (call-process "emacsclient -a''" nil nil nil))))))
-    (save-buffers-kill-emacs)))
-#+end_src
-
-
-* Making deleted files go to trash can
-#+begin_src elisp
-(setq delete-by-moving-to-trash t trash-directory "~/.local/share/Trash/files/")
-#+end_src
-
-NOTE: For convenience, you may want to create a symlink to 'local/share/Trash' in your home directory:
-#+begin_example
-cd ~/
-ln -s ~/.local/share/Trash .
-#+end_example
 
 * IMPORTANT PROGRAMS TO LOAD FIRST
 To keep this =config.org= a reasonable length, I have moved a lot of code to individual scripts that will be sourced by this config.  These scripts are found in "~/.config/emacs/scripts" and do not contain any code that most people are likely to need to edit.
@@ -271,7 +46,7 @@ To keep this =config.org= a reasonable length, I have moved a lot of code to ind
 (require 'app-launchers) ;; Use emacs as a run launcher like dmenu (experimental)
 #+end_src
 
-* SANE DEFAULTS
+* OPTIONS
 The following settings are simple modes that are enabled (or disabled) so that Emacs functions more like you would expect a proper editor/IDE to function.
 
 #+begin_src elisp
@@ -332,6 +107,126 @@ The following settings are simple modes that are enabled (or disabled) so that E
   (add-hook 'post-command-hook #'my/update-terminal-title))
 
 #+end_src
+
+** Authinfo
+Use only the gpg-encrypted version of the file.
+
+#+begin_src elisp :tangle no
+(setq auth-source-debug nil)
+(setq auth-sources '("~/.authinfo.gpg"))
+#+end_src
+
+
+** Transparency
+With Emacs version 29, true transparency has been added.  I have turned transparency off by setting the alpha to '100'.  If you want some slight transparency, try setting alpha to '90'.  Of course, if you set alpha to '0', the background of Emacs would completely transparent.
+
+#+begin_src elisp
+(add-to-list 'default-frame-alist '(alpha-background . 87)) ; For all new frames henceforth
+
+;; Terminal transparency (clears background to use terminal's transparency)
+; (defun gz/terminal-transparency ()
+;   (unless (display-graphic-p)
+;     (set-face-background 'default "unspecified-bg")))
+;
+; (add-hook 'after-make-frame-functions
+;           (lambda (frame)
+;             (with-selected-frame frame
+;               (gz/terminal-transparency))))
+;
+; (gz/terminal-transparency)
+#+end_src
+
+
+
+** MINIBUFFER
+***  ESCAPE
+By default, Emacs requires you to hit ESC three times to escape quit the minibuffer.
+
+#+begin_src elisp
+(global-set-key [escape] 'keyboard-escape-quit)
+#+end_src
+
+***  READLINE SANITY
+#+begin_src elisp
+(define-key minibuffer-local-map (kbd "C-h") #'backward-delete-char)
+(define-key minibuffer-local-map (kbd "C-w") #'backward-kill-word)
+
+(with-eval-after-load 'evil-maps
+  (define-key evil-insert-state-map (kbd "<ctl-x> C-?") (lambda () (interactive)(kill-line 0)))
+  ;; (define-key evil-insert-state-map (kbd "<C-]>") (lambda () (interactive)(evil-execute-in-normal-state)(execute-kbd-macro (kbd "f"))))
+
+  ;; (define-key evil-insert-state-map (kbd "<C-M-]>")
+  ;;   (lambda ()
+  ;;     (interactive)
+  ;;     (evil-execute-in-normal-state
+  ;;      (lambda ()
+  ;;        (call-interactively #'evil-find-char-backward)))))
+
+
+  )
+(define-key minibuffer-local-map (kbd "<ctl-x> C-?") (lambda () (interactive)(kill-line 0)))
+;; (define-key minibuffer-local-map (kbd "M-#") (lambda () (interactive)( 0)))
+#+end_src
+
+** FONTS
+Defining the various fonts that Emacs will use.
+
+*** Setting the Font Face
+#+begin_src elisp
+(set-face-attribute 'default nil
+        ;; :font "JetBrains Mono"
+        ;; :font "Iosevka Term Curly-regular-normal"
+        :font "Aporetic Sans"
+        :height 110
+        :weight 'medium)
+(set-face-attribute 'variable-pitch nil
+        :font "Aporetic Sans"
+        :height 120
+        :weight 'medium)
+(set-face-attribute 'fixed-pitch nil
+        :font "Aporetic Sans Mono"
+        :height 110
+        :weight 'medium)
+;; Makes commented text and keywords italics.
+;; This is working in emacsclient but not emacs.
+;; Your font must have an italic face available.
+(set-face-attribute 'font-lock-comment-face nil
+        :slant 'italic)
+(set-face-attribute 'font-lock-keyword-face nil
+        :slant 'italic)
+
+;; This sets the default font on all graphical frames created after restarting Emacs.
+;; Does the same thing as 'set-face-attribute default' above, but emacsclient fonts
+;; are not right unless I also add this method of setting the default font.
+;; (add-to-list 'default-frame-alist '(font . "JetBrains Mono-11"))
+;; (add-to-list 'default-frame-alist '(font . "Aporetic Sans"))
+
+;; Uncomment the following line if line spacing needs adjusting.
+(setq-default line-spacing 0.12)
+
+(set-fontset-font t 'kannada
+                  (font-spec :family "Nudi 16 e") nil 'prepend)
+
+(defun use-urdu-nastaliq ()
+  (when (and current-input-method
+             (string-prefix-p "urdu" current-input-method))
+    (set-fontset-font t 'arabic (font-spec :family "Awami Nastaliq") nil 'prepend)))
+
+(add-hook 'input-method-activate-hook #'use-urdu-nastaliq)
+#+end_src
+
+
+** Making deleted files go to trash can
+#+begin_src elisp
+(setq delete-by-moving-to-trash t trash-directory "~/.local/share/Trash/files/")
+#+end_src
+
+NOTE: For convenience, you may want to create a symlink to 'local/share/Trash' in your home directory:
+#+begin_example
+cd ~/
+ln -s ~/.local/share/Trash .
+#+end_example
+
 
 ** Deferred clipboard
 Disable automatic clipboard sync and only sync to system clipboard when Emacs loses focus (like deferred-clipboard.nvim).
@@ -485,8 +380,7 @@ Disable automatic clipboard sync and only sync to system clipboard when Emacs lo
 (add-hook 'window-configuration-change-hook 'my-change-window-divider)
 #+end_src
 
-
-* Personal information
+** Personal information
 #+begin_src elisp :tangle no
 ;; Private Stuff
 (setq user-full-name "")
@@ -494,11 +388,148 @@ Disable automatic clipboard sync and only sync to system clipboard when Emacs lo
 (setq sendmail-program (executable-find "msmtp"))
 #+end_src
 
-* MULTILINGUAL EDITING
+
+** MULTILINGUAL EDITING
 #+begin_src elisp
 (setq default-input-method "bengali-itrans")
 #+end_src
 
+** BACKUP
+By default, Emacs creates automatic backups of files in their original directories, such "file.el" and the backup "file.el~".  This leads to a lot of clutter, so let's tell Emacs to put all backups that it creates in the =TRASH= directory.
+
+#+begin_src elisp
+(setq backup-directory-alist '((".*" . "~/.local/share/Trash/files")))
+#+end_src
+
+
+
+** EDIFF
+'ediff' is a diff program that is built into Emacs.  By default, 'ediff' splits files vertically and places the 'help' frame in its own window.  I have changed this so the two files are split horizontally and the 'help' frame appears as a lower split within the existing window.  Also, I create my own 'dt-ediff-hook' where I add 'j/k' for moving to next/prev diffs.  By default, this is set to 'n/p'.
+
+automatically fold when moving j/k?
+(use-package ztree)
+
+#+begin_src elisp
+(setq ediff-split-window-function 'split-window-horizontally
+      ediff-window-setup-function 'ediff-setup-windows-plain)
+#+end_src
+
+*** Unfold when ediffing
+#+begin_src elisp
+;; https://narkive.com/3rhdeunW:5.744.172
+(defun ora-ediff-prepare-buffer ()
+(when (memq major-mode '(org-mode emacs-lisp-mode))
+(outline-show-all)))
+
+(add-hook 'ediff-prepare-buffer-hook 'ora-ediff-prepare-buffer)
+#+end_src
+
+
+* KEYBINDINGS
+#+begin_src elisp
+(define-key global-map (kbd "C-c w") 'webjump)
+;;   "s d" '(dictionary-search :wk "Search dictionary")
+;;   "s m" '(man :wk "Man pages")
+;;   "s t" '(tldr :wk "Lookup TLDR docs for a command")
+;;   "s w" '(woman :wk "Similar to man but doesn't require man"))
+#+end_src
+
+** Bengali IPA
+#+begin_src elisp
+(require 'subr-x)
+
+(defun gz/bangla-ipa--query-async (text)
+  "Fetch Bangla IPA for TEXT asynchronously and show in minibuffer."
+  (let* ((url "https://ipa.bangla.gov.bd/post_text_bangla_ipa")
+         (user-agent "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:148.0) Gecko/20100101 Firefox/148.0")
+         (payload (concat "bangla_ipa=" text))
+         (command (string-join
+                   (list "curl -s -G -k"
+                         (shell-quote-argument url)
+                         "-H"
+                         (shell-quote-argument user-agent)
+                         "--data-urlencode"
+                         (shell-quote-argument payload)
+                         "| jq -r '.data[0]'")
+                   " "))
+         (buffer (generate-new-buffer " *bangla-ipa*")))
+    (message "Bangla IPA: fetching...")
+    (make-process
+     :name "bangla-ipa"
+     :buffer buffer
+     :command (list "bash" "-lc" command)
+     :noquery t
+     :sentinel
+     (lambda (proc _event)
+       (when (eq (process-status proc) 'exit)
+         (let* ((out (with-current-buffer (process-buffer proc)
+                       (buffer-string)))
+                (result (string-trim out)))
+           (kill-buffer (process-buffer proc))
+           (if (string-empty-p result)
+               (message "Bangla IPA: no result")
+             (message "%s" result))))))))
+
+(defun gz/bangla-ipa-at-point-or-region ()
+  "Show Bangla IPA for region or word at point in the minibuffer."
+  (interactive)
+  (let* ((text (if (use-region-p)
+                   (buffer-substring-no-properties (region-beginning) (region-end))
+                 (thing-at-point 'word t)))
+         (trimmed (and text (string-trim text))))
+    (if (and trimmed (not (string-empty-p trimmed)))
+        (gz/bangla-ipa--query-async trimmed)
+      (message "No text to convert"))))
+#+end_src
+
+** Transliterate region to Latin
+
+#+begin_src elisp
+(defun gz/transliterate-to-latin (start end)
+  "Replace region with jq pretty-printed JSON, non-interactively."
+  (interactive "r")
+(call-process-region
+ start end
+ "uconv"
+ t
+ (current-buffer)
+ nil
+ "-x"
+ "Any-Latin;Latin-ASCII;['] Remove"))
+
+#+end_src
+
+** Any-IPA
+#+begin_src elisp
+(defun gz/region-to-ipa (start end)
+  (interactive "r")
+  (let ((raw (shell-command-to-string
+              (concat "espeak-ng -q --ipa=2 <<< "
+                      (shell-quote-argument
+                       (buffer-substring start end))))))
+    (delete-region start end)
+    (insert (replace-regexp-in-string "(\\([^)]*\\))" "/" raw))))
+#+end_src
+
+
+** Reload config
+#+begin_src elisp
+(defun gz/reload-config () "Reload Emacs configuration by loading init.el"
+       (interactive)
+       (load-file (expand-file-name "~/.config/emacs/init.el"))
+       (message "Config reloaded!"))
+#+end_src
+
+** Restart Emacs
+
+#+begin_src elisp
+;; :restart command/keybinding... (maybe C-x C-S-c?)
+(defun gz/restart-emacs ()
+  "Restart Emacs"
+  (interactive)
+  (let ((kill-emacs-hook (append kill-emacs-hook (list (lambda () (call-process "emacsclient -a''" nil nil nil))))))
+    (save-buffers-kill-emacs)))
+#+end_src
 * VIM PARITY
 
 #+begin_src elisp
@@ -568,35 +599,6 @@ screenshots? https://github.com/tecosaur/screenshot
 
 ;; ;; Bind it to a key in evil visual mode
 ;; (evil-define-key '(visual) 'global (kbd "gi") 'evil-invert-comment-region)
-#+end_src
-
-* BACKUP
-By default, Emacs creates automatic backups of files in their original directories, such "file.el" and the backup "file.el~".  This leads to a lot of clutter, so let's tell Emacs to put all backups that it creates in the =TRASH= directory.
-
-#+begin_src elisp
-(setq backup-directory-alist '((".*" . "~/.local/share/Trash/files")))
-#+end_src
-
-
-* EDIFF
-'ediff' is a diff program that is built into Emacs.  By default, 'ediff' splits files vertically and places the 'help' frame in its own window.  I have changed this so the two files are split horizontally and the 'help' frame appears as a lower split within the existing window.  Also, I create my own 'dt-ediff-hook' where I add 'j/k' for moving to next/prev diffs.  By default, this is set to 'n/p'.
-
-automatically fold when moving j/k?
-(use-package ztree)
-
-#+begin_src elisp
-(setq ediff-split-window-function 'split-window-horizontally
-      ediff-window-setup-function 'ediff-setup-windows-plain)
-#+end_src
-
-** Unfold when ediffing
-#+begin_src elisp
-;; https://narkive.com/3rhdeunW:5.744.172
-(defun ora-ediff-prepare-buffer ()
-(when (memq major-mode '(org-mode emacs-lisp-mode))
-(outline-show-all)))
-
-(add-hook 'ediff-prepare-buffer-hook 'ora-ediff-prepare-buffer)
 #+end_src
 
 * ORG MODE
@@ -1182,7 +1184,7 @@ https://github.com/the-ted/org-mind-map
 #+end_src
 
 
-* Plugins
+* PLUGINS
 ** ALL THE ICONS
 This is an icon set that can be used with dashboard, dired, ibuffer and other Emacs programs.
 
@@ -2012,7 +2014,8 @@ also check out helm/etc... keybindings
   (defvar-keymap vertico-repeat-map
     :repeat t
     "j" #'vertico-next
-    "k" #'vertico-previous)
+    "k" #'vertico-previous
+    "l" #'vertico-exit)
   :custom
   (enable-recursive-minibuffers t))
 
@@ -2080,7 +2083,8 @@ also check out helm/etc... keybindings
 
 #+end_src
 
-** LANGUAGE SUPPORT
+** Programming languages
+
 Emacs has built-in programming language modes for Lisp, Scheme, DSSSL, Ada, ASM, AWK, C, C++, Fortran, Icon, IDL (CORBA), IDLWAVE, Java, Javascript, M4, Makefiles, Metafont, Modula2, Object Pascal, Objective-C, Octave, Pascal, Perl, Pike, PostScript, Prolog, Python, Ruby, Simula, SQL, Tcl, Verilog, and VHDL.  Other languages will require you to install additional modes.
 
 #+begin_src elisp
@@ -2108,6 +2112,12 @@ Emacs has built-in programming language modes for Lisp, Scheme, DSSSL, Ada, ASM,
 
 ;;    (with-eval-after-load 'org
 ;; (add-to-list 'org-src-lang-modes '("tridactylrc" . tridactyl-mode)))
+#+end_src
+
+#+begin_src elisp
+(use-package scala-mode
+  :interpreter
+    ("scala" . scala-mode))
 #+end_src
 
 ** MODELINE
@@ -2815,13 +2825,20 @@ word count of the response."
 #+end_src
 
 ** Socials
-https://github.com/alphapapa/ement.el
+*** Reddit
 #+begin_src elisp
 (use-package reddigg
   :commands reddigg-view-sub
   :config
   (setq org-confirm-elisp-link-function nil)
   )
+#+end_src
+
+*** Matrix
+https://github.com/alphapapa/ement.el
+#+begin_src elisp
+(use-package ement
+  :ensure t)
 #+end_src
 
 ** Snippets
@@ -2931,18 +2948,6 @@ https://github.com/ecraven/ivy-pass
   :ensure t)
 #+end_src
 
-** Matrix
-#+begin_src elisp
-(use-package ement
-  :ensure t)
-#+end_src
-
-#+begin_src elisp
-(use-package scala-mode
-  :interpreter
-    ("scala" . scala-mode))
-#+end_src
-
 ** TODO OpenSCAD
 Add LSP as well
 Works with stdin as well :)
@@ -2971,3 +2976,4 @@ Works with stdin as well :)
     (gz/leader-keys
       "t" '(powerthesaurus-transient :wk "Thesaurus"))))
 #+end_src
+
