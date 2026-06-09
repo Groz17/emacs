@@ -8,6 +8,7 @@
 ** Vim feature parity
 
 ** Emacs [2/48] [4%]
+- [ ] notes? css: #+setupfile: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup https://github.com/chenyanming/paw?tab=readme-ov-file
 - [ ] tangle only part of file that was modified (diff), especially not touched files
 - [ ] make undo work like vim (u0?)
 - [ ] gz operator to narrow
@@ -1227,114 +1228,6 @@ https://github.com/the-ted/org-mind-map
   :hook (company-mode . company-box-mode))
 #+end_src
 
-** DASHBOARD
-Emacs Dashboard is an extensible startup screen showing you recent files, bookmarks, agenda items and an Emacs banner.
-
-#+begin_src elisp
-(defun gz/dashboard-new-buffer-insert ()
-  (interactive)
-  (switch-to-buffer (generate-new-buffer "untitled"))
-  (evil-insert-state))
-
-(defun gz/dashboard-setup-evil-keys ()
-  (when (boundp 'dashboard-mode-map)
-    (evil-define-key 'normal dashboard-mode-map (kbd "i") #'gz/dashboard-new-buffer-insert)))
-
-(use-package dashboard
-  :ensure t
-  :init
-  (setq initial-buffer-choice 'dashboard-open)
-  (setq dashboard-set-heading-icons t)
-  (setq dashboard-set-file-icons t)
-  (setq dashboard-banner-logo-title "Emacs Is More Than A Text Editor!")
-  ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
-  ;; https://www.reddit.com/r/emacs/comments/1f068oi/i_have_commissioned_an_artist_to_draw_an_emacs/
-  (setq dashboard-startup-banner "~/.config/emacs/images/emacs-dragon-small.png")  ;; use custom image as banner
-  (setq dashboard-center-content t) ;; set to 't' for centered content
-  (setq dashboard-items '((recents . 5)
-                          (agenda . 5 )
-                          (bookmarks . 3)
-                          (projects . 3)
-                          (registers . 3)))
-  :custom
-  (dashboard-modify-heading-icons '((recents . "file-text")
-            (bookmarks . "book")))
-  :config
-  (dashboard-setup-startup-hook)
-  (with-eval-after-load 'evil
-    (gz/dashboard-setup-evil-keys))
-  (with-eval-after-load 'evil-collection
-    (gz/dashboard-setup-evil-keys)))
-
-#+end_src
-
-** ELFEED
-An RSS newsfeed reader for Emacs.  Move through the articles with 'j/k'.  Move through the stories with 'CTRL j/k' when in other frame.
-
-https://github.com/remyhonig/elfeed-org
-
-#+begin_src elisp
-(use-package elfeed
-  :bind (("C-c e" . elfeed))
-  :init
-  (setq elfeed-db-directory (concat user-emacs-directory "elfeed/db/")
-        elfeed-enclosure-default-dir (concat user-emacs-directory "elfeed/enclosures/"))
-  :config
-  (setq elfeed-search-feed-face ":foreground #ffffff :weight bold"
-        elfeed-feeds (quote
-                      (("https://www.reddit.com/r/linux.rss?sort=new" reddit linux)
-                       ("https://www.reddit.com/r/commandline.rss" reddit commandline)
-                       ("https://www.reddit.com/r/distrotube.rss" reddit distrotube)
-                       ("https://www.reddit.com/r/emacs.rss" reddit emacs)
-                       ("https://www.gamingonlinux.com/article_rss.php" gaming linux)
-                       ("https://hackaday.com/blog/feed/" hackaday linux)
-                       ("https://opensource.com/feed" opensource linux)
-                       ("https://linux.softpedia.com/backend.xml" softpedia linux)
-                       ("https://itsfoss.com/feed/" itsfoss linux)
-                       ("https://www.zdnet.com/topic/linux/rss.xml" zdnet linux)
-                       ("https://www.phoronix.com/rss.php" phoronix linux)
-                       ("http://feeds.feedburner.com/d0od" omgubuntu linux)
-                       ("https://www.computerworld.com/index.rss" computerworld linux)
-                       ("https://www.networkworld.com/category/linux/index.rss" networkworld linux)
-                       ("https://www.techrepublic.com/rssfeeds/topic/open-source/" techrepublic linux)
-                       ("https://betanews.com/feed" betanews linux)
-                       ("http://lxer.com/module/newswire/headlines.rss" lxer linux)
-                       ("https://distrowatch.com/news/dwd.xml" distrowatch linux))))
-  (with-eval-after-load 'evil-collection
-    (evil-collection-define-key 'normal 'elfeed-search-mode-map
-      "l" 'elfeed-search-show-entry)))	; also remain in elfeed window?
-
-
-(use-package elfeed-goodies
-  :after elfeed
-  :config
-  (elfeed-goodies/setup)
-  (setq elfeed-goodies/entry-pane-size 0.5))
-
-(use-package elfeed-tube
-  :ensure t
-  :after elfeed
-  :config
-  ;; (setq elfeed-tube-auto-save-p nil) ; default value
-  ;; (setq elfeed-tube-auto-fetch-p t)  ; default value
-  (elfeed-tube-setup)
-
-  :bind (:map elfeed-show-mode-map
-              ("F" . elfeed-tube-fetch)
-              ([remap save-buffer] . elfeed-tube-save)
-              :map elfeed-search-mode-map
-              ("F" . elfeed-tube-fetch)
-              ([remap save-buffer] . elfeed-tube-save)))
-
-(use-package elfeed-tube-mpv
-  :after elfeed
-  :ensure t
-  :bind (:map elfeed-show-mode-map
-              ("C-c C-f" . elfeed-tube-mpv-follow-mode)
-              ("C-c C-w" . elfeed-tube-mpv-where)))
-
-#+end_src
-
 ** EVIL
 [[https://github.com/emacs-evil/evil][Evil]] is an extensible vi/vim layer for Emacs.  Because...let's face it.  The Vim keybindings are just plain better.
 
@@ -1643,29 +1536,6 @@ evil-toggle-key
 
 #+end_src
 
-** FLYCHECK
-Install =luacheck= from your Linux distro's repositories for flycheck to work correctly with lua files.  Install =python-pylint= for flycheck to work with python files.  Haskell works with flycheck as long as =haskell-ghc= or =haskell-stack-ghc= is installed.  For more information on language support for flycheck, [[https://www.flycheck.org/en/latest/languages.html][read this]].
-
-#+begin_src elisp
-(use-package flycheck
-  :ensure t
-  :defer t
-  :diminish
-  :hook (prog-mode . flycheck-mode))
-
-(use-package flyover
-  :ensure (:host github :repo "konrad1977/flyover")
-  :defer t
-  :hook (flycheck-mode . flyover-mode)
-  )
-#+end_src
-
-*** Font preview
-#+begin_src elisp
-(use-package show-font
-  :ensure (:host github :repo "protesilaos/show-font"))
-#+end_src
-
 ** GENERAL KEYBINDINGS
 #+begin_src elisp
 (use-package general
@@ -1916,6 +1786,117 @@ This package implements hiding or abbreviation of the modeline displays (lighter
 #+begin_src elisp
 (use-package diminish)
 #+end_src
+
+*** Pages
+#+begin_src elisp
+(use-package page-break-lines)
+#+end_src
+
+*** Prism
+#+begin_src elisp
+(use-package prism
+  :ensure (:host github :repo "alphapapa/prism.el"))
+#+end_src
+
+#+begin_src elisp
+(use-package eros
+  :ensure (:host github :repo "xiongtx/eros")
+  :init (eros-mode 1)
+  )
+#+end_src
+
+*** HIGHLIGHT TODO
+Adding highlights to TODO and related words.
+
+#+begin_src elisp
+(use-package hl-todo
+  :hook ((org-mode . hl-todo-mode)
+         (prog-mode . hl-todo-mode))
+  :config
+  (setq hl-todo-highlight-punctuation ":"
+        hl-todo-keyword-faces
+        `(("TODO"       warning bold)
+          ("FIXME"      error bold)
+          ("HACK"       font-lock-constant-face bold)
+          ("REVIEW"     font-lock-keyword-face bold)
+          ("NOTE"       success bold)
+          ("DEPRECATED" font-lock-doc-face bold))))
+
+#+end_src
+
+*** THEME
+The first line below designates the directory where will place all of our custom-made themes, which I have created only one (dtmacs).  You can create your own Emacs themes with the help of the [[https://emacsfodder.github.io/emacs-theme-editor/][Emacs Theme Editor]].  I am also installing =doom-themes= because it contains a huge collection of themes.  M-x load-theme will list all of the themes available.
+
+#+begin_src elisp :noweb yes
+;; (add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
+
+(use-package modus-themes :ensure t)
+(use-package ef-themes 
+  :ensure (:host github :repo "protesilaos/ef-themes")
+  :bind
+  (("<f5>" . ef-themes-rotate)
+   ("C-<f5>" . ef-themes-select)
+   ("M-<f5>" . ef-themes-load-random))
+  :after modus-themes
+  ;; :config (modus-themes-load-theme 'ef-dream)
+  :config
+  ;; All customisations here.
+  (setq modus-themes-mixed-fonts t)
+  (setq modus-themes-italic-constructs t)
+
+)
+
+(use-package auto-dark
+  :ensure t
+  :custom
+  (auto-dark-themes ; first = dark, second = light
+    '((<<~/dots/_lib|.org:theme(color_scheme="dark")>>)
+     (<<~/dots/_lib|.org:theme(color_scheme="light")>>)))
+  :init
+  (auto-dark-mode))
+#+end_src
+
+*** DASHBOARD
+Emacs Dashboard is an extensible startup screen showing you recent files, bookmarks, agenda items and an Emacs banner.
+
+#+begin_src elisp
+(defun gz/dashboard-new-buffer-insert ()
+  (interactive)
+  (switch-to-buffer (generate-new-buffer "untitled"))
+  (evil-insert-state))
+
+(defun gz/dashboard-setup-evil-keys ()
+  (when (boundp 'dashboard-mode-map)
+    (evil-define-key 'normal dashboard-mode-map (kbd "i") #'gz/dashboard-new-buffer-insert)))
+
+(use-package dashboard
+  :ensure t
+  :init
+  (setq initial-buffer-choice 'dashboard-open)
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
+  (setq dashboard-banner-logo-title "Emacs Is More Than A Text Editor!")
+  ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
+  ;; https://www.reddit.com/r/emacs/comments/1f068oi/i_have_commissioned_an_artist_to_draw_an_emacs/
+  (setq dashboard-startup-banner "~/.config/emacs/images/emacs-dragon-small.png")  ;; use custom image as banner
+  (setq dashboard-center-content t) ;; set to 't' for centered content
+  (setq dashboard-items '((recents . 5)
+                          (agenda . 5 )
+                          (bookmarks . 3)
+                          (projects . 3)
+                          (registers . 3)))
+  :custom
+  (dashboard-modify-heading-icons '((recents . "file-text")
+            (bookmarks . "book")))
+  :config
+  (dashboard-setup-startup-hook)
+  (with-eval-after-load 'evil
+    (gz/dashboard-setup-evil-keys))
+  (with-eval-after-load 'evil-collection
+    (gz/dashboard-setup-evil-keys)))
+
+#+end_src
+
 ** GIT
 *** Magit
 [[https://magit.vc/manual/][Magit]] is a full-featured git client for Emacs.
@@ -1971,25 +1952,6 @@ how to go from diff to file w/ line num?
       "g u" '(git-gutter:revert-hunk :wk "Unstage hunk ")))
   :config
   (global-git-gutter-mode +1))
-#+end_src
-
-** HIGHLIGHT TODO
-Adding highlights to TODO and related words.
-
-#+begin_src elisp
-(use-package hl-todo
-  :hook ((org-mode . hl-todo-mode)
-         (prog-mode . hl-todo-mode))
-  :config
-  (setq hl-todo-highlight-punctuation ":"
-        hl-todo-keyword-faces
-        `(("TODO"       warning bold)
-          ("FIXME"      error bold)
-          ("HACK"       font-lock-constant-face bold)
-          ("REVIEW"     font-lock-keyword-face bold)
-          ("NOTE"       success bold)
-          ("DEPRECATED" font-lock-doc-face bold))))
-
 #+end_src
 
 ** VERTICO (CONSULT)
@@ -2134,7 +2096,6 @@ Emacs has built-in programming language modes for Lisp, Scheme, DSSSL, Ada, ASM,
   :ensure (:host github :repo "openscad/emacs-scad-mode"))
 #+end_src
 
-
 ** SHELLS AND TERMINALS
 In my configs, all of my shells (bash, fish, zsh and the ESHELL) require my shell-color-scripts-git package to be installed.  On Arch Linux, you can install it from the AUR.  Otherwise, go to my shell-color-scripts repository on GitLab to get it.
 
@@ -2232,7 +2193,7 @@ ghostel-max-scrollback 5000)
 (use-package tldr :commands tldr)
 #+end_src
 
-** SUDO EDIT
+*** SUDO EDIT
 [[https://github.com/nflath/sudo-edit][sudo-edit]] gives us the ability to open files with sudo privileges or switch over to editing with sudo privileges if we initially opened the file without such privileges.
 
 #+begin_src elisp
@@ -2241,77 +2202,18 @@ ghostel-max-scrollback 5000)
 ;; '(sudo-edit :wk "Sudo edit file"))
 #+end_src
 
-** THEME
-The first line below designates the directory where will place all of our custom-made themes, which I have created only one (dtmacs).  You can create your own Emacs themes with the help of the [[https://emacsfodder.github.io/emacs-theme-editor/][Emacs Theme Editor]].  I am also installing =doom-themes= because it contains a huge collection of themes.  M-x load-theme will list all of the themes available.
-
-#+begin_src elisp :noweb yes
-;; (add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
-
-(use-package modus-themes :ensure t)
-(use-package ef-themes 
-  :ensure (:host github :repo "protesilaos/ef-themes")
-  :bind
-  (("<f5>" . ef-themes-rotate)
-   ("C-<f5>" . ef-themes-select)
-   ("M-<f5>" . ef-themes-load-random))
-  :after modus-themes
-  ;; :config (modus-themes-load-theme 'ef-dream)
-  :config
-  ;; All customisations here.
-  (setq modus-themes-mixed-fonts t)
-  (setq modus-themes-italic-constructs t)
-
-)
-
-(use-package auto-dark
+*** Docker
+https://github.com/abrochard/kubel
+#+begin_src elisp
+(use-package docker
   :ensure t
-  :custom
-  (auto-dark-themes ; first = dark, second = light
-    '((<<~/dots/_lib|.org:theme(color_scheme="dark")>>)
-     (<<~/dots/_lib|.org:theme(color_scheme="light")>>)))
-  :init
-  (auto-dark-mode))
+  :bind ("C-c d" . docker)
+  )
 #+end_src
 
 ** NOTMUCH
 #+begin_src elisp
 (autoload 'notmuch "notmuch" "Notmuch mail" t)
-#+end_src
-
-** WHICH-KEY
-TODO: put popup in the middle?
-how to copy or put everything in the popup in a buffer?
-#+begin_src elisp
-(use-package which-key
-    :defer 0
-  :diminish
-  :config
-  (setq which-key-side-window-location 'top
-  which-key-sort-order #'which-key-key-order-alpha
-  which-key-allow-imprecise-window-fit nil
-  which-key-sort-uppercase-first nil
-  which-key-add-column-padding 1
-  which-key-max-display-columns nil
-  which-key-min-display-lines 6
-  which-key-side-window-slot -10
-  which-key-side-window-max-height 0.33
-  which-key-idle-delay 0.8
-  which-key-max-description-length 25
-  which-key-allow-imprecise-window-fit nil
-  which-key-separator " → " )
-  (which-key-mode)
-    )
-;; height? how to align?
-(use-package which-key-posframe
-  :custom (which-key-posframe-parameters '((border-width . 2)
-                                           (internal-border-width . 1)))
-  ;; (left-fringe . 20)
-  :after which-key
-  :diminish t
-  :ensure t
-  :config (which-key-posframe-mode)
-  (setq which-key-posframe-poshandler 'posframe-poshandler-frame-center)
-  )
 #+end_src
 
 ** COMMAND-LOG
@@ -2375,13 +2277,6 @@ keycast
 ;;   (lispyville-set-key-theme '(operators c-w additional)))
 #+end_src
 
-** ERC
-#+begin_src elisp
-(setq erc-prompt(lambda()(concat"["(buffer-name)"]"))
-      erc-server "irc.libera.chat")
-;; hide IP?
-#+end_src
-
 ** QUIZ
 key-quiz-use-mode
 #+begin_src elisp
@@ -2407,9 +2302,6 @@ key-quiz-use-mode
          ("<f7>" . org-srs-review-rate-hard)
          ("<f8>" . org-srs-review-rate-again)))
 #+end_src
-** notes?
- css: #+setupfile: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
-https://github.com/chenyanming/paw?tab=readme-ov-file
 ** TODO Radio
 integrate w/ emms? no only music, but news, etc...?
 #+begin_src elisp
@@ -2469,23 +2361,6 @@ integrate w/ emms? no only music, but news, etc...?
         )))
 ;; ("cyberia - lainon"  . "https://lainon.life/radio/cyberia.ogg.m3u") ;; cyberpunk-esque electronica
 ;; ("cafe - lainon"     . "https://lainon.life/radio/cafe.ogg.m3u")))  ;; boring ambient, but with lain
-#+end_src
-
-** info
-disable vim keys in info-mode except j and k?
-#+begin_src elisp
-(use-package info-colors
-  :hook (Info-selection . info-colors-fontify-node)
-  )
-#+end_src
-
-** docker
-https://github.com/abrochard/kubel
-#+begin_src elisp
-(use-package docker
-  :ensure t
-  :bind ("C-c d" . docker)
-  )
 #+end_src
 
 ** AI
@@ -2732,6 +2607,14 @@ invert colors?
 
 (use-package doc-toc
   :mode "\\.pdf\\'")
+
+(use-package buffer-to-pdf
+  :elpaca (:host github :repo "protesilaos/buffer-to-pdf")
+  ;; :commands (buffer-to-pdf buffer-to-pdf-black-on-white buffer-to-pdf-white-on-black)
+  :custom
+  ;; Configure `buffer-to-pdf-directory' to specify where PDF files are stored.
+  ;; This is the default value:
+  (buffer-to-pdf-directory (expand-file-name "~/Documents/")))
 #+end_src
 
 *** EPUBs
@@ -2799,7 +2682,56 @@ Bookmarks like in mini.files?
 
 #+end_src
 
-** [#A] LSP
+*** Info
+#+begin_src elisp
+(use-package info-variable-pitch
+  :ensure (:host github :repo "kisaragi-hiu/info-variable-pitch")
+  :hook (Info-mode . info-variable-pitch-mode))
+
+;; disable vim keys in info-mode except j and k?
+(use-package info-colors
+  :hook (Info-selection . info-colors-fontify-node))
+#+end_src
+#+end_src
+
+
+*** WHICH-KEY
+TODO: put popup in the middle?
+how to copy or put everything in the popup in a buffer?
+#+begin_src elisp
+(use-package which-key
+    :defer 0
+  :diminish
+  :config
+  (setq which-key-side-window-location 'top
+  which-key-sort-order #'which-key-key-order-alpha
+  which-key-allow-imprecise-window-fit nil
+  which-key-sort-uppercase-first nil
+  which-key-add-column-padding 1
+  which-key-max-display-columns nil
+  which-key-min-display-lines 6
+  which-key-side-window-slot -10
+  which-key-side-window-max-height 0.33
+  which-key-idle-delay 0.8
+  which-key-max-description-length 25
+  which-key-allow-imprecise-window-fit nil
+  which-key-separator " → " )
+  (which-key-mode)
+    )
+;; height? how to align?
+(use-package which-key-posframe
+  :custom (which-key-posframe-parameters '((border-width . 2)
+                                           (internal-border-width . 1)))
+  ;; (left-fringe . 20)
+  :after which-key
+  :diminish t
+  :ensure t
+  :config (which-key-posframe-mode)
+  (setq which-key-posframe-poshandler 'posframe-poshandler-frame-center)
+  )
+#+end_src
+
+*** [#A] LSP
 #+begin_src elisp
 (defun efs/lsp-mode-setup ()
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
@@ -2828,8 +2760,8 @@ Bookmarks like in mini.files?
 
 #+end_src
 
-** Tree-sitter
-*** Text-objects
+*** Tree-sitter
+**** Text-objects
 #+begin_src elisp :tangle no
 (use-package evil-textobj-tree-sitter :ensure t
   :after evil
@@ -2839,8 +2771,50 @@ Bookmarks like in mini.files?
   (define-key evil-outer-text-objects-map "o" (evil-textobj-tree-sitter-get-textobj ("loop.outer")))
   )
 #+end_src
+*** Snippets
+https://www.youtube.com/watch?v=W-bRZlseNm0
+#+begin_src elisp
+(use-package yasnippet-snippets
+  :ensure t)
+
+(use-package yasnippet
+  :config
+  (setq yas-snippet-dirs '("~/.config/emacs/snippets"))
+  (yas-global-mode 1))
+#+end_src
+
+
+*** FLYCHECK
+Install =luacheck= from your Linux distro's repositories for flycheck to work correctly with lua files.  Install =python-pylint= for flycheck to work with python files.  Haskell works with flycheck as long as =haskell-ghc= or =haskell-stack-ghc= is installed.  For more information on language support for flycheck, [[https://www.flycheck.org/en/latest/languages.html][read this]].
+
+#+begin_src elisp
+(use-package flycheck
+  :ensure t
+  :defer t
+  :diminish
+  :hook (prog-mode . flycheck-mode))
+
+(use-package flyover
+  :ensure (:host github :repo "konrad1977/flyover")
+  :defer t
+  :hook (flycheck-mode . flyover-mode)
+  )
+#+end_src
+
+*** Font preview
+#+begin_src elisp
+(use-package show-font
+  :ensure (:host github :repo "protesilaos/show-font"))
+#+end_src
 
 ** Socials
+*** ERC
+#+begin_src elisp
+(setq erc-prompt(lambda()(concat"["(buffer-name)"]"))
+      erc-server "irc.libera.chat")
+;; hide IP?
+#+end_src
+
 *** Reddit
 #+begin_src elisp
 (use-package reddigg
@@ -2857,16 +2831,71 @@ https://github.com/alphapapa/ement.el
   :ensure t)
 #+end_src
 
-** Snippets
-https://www.youtube.com/watch?v=W-bRZlseNm0
-#+begin_src elisp
-(use-package yasnippet-snippets
-  :ensure t)
+*** ELFEED
+An RSS newsfeed reader for Emacs.  Move through the articles with 'j/k'.  Move through the stories with 'CTRL j/k' when in other frame.
 
-(use-package yasnippet
+https://github.com/remyhonig/elfeed-org
+
+#+begin_src elisp
+(use-package elfeed
+  :bind (("C-c e" . elfeed))
+  :init
+  (setq elfeed-db-directory (concat user-emacs-directory "elfeed/db/")
+        elfeed-enclosure-default-dir (concat user-emacs-directory "elfeed/enclosures/"))
   :config
-  (setq yas-snippet-dirs '("~/.config/emacs/snippets"))
-  (yas-global-mode 1))
+  (setq elfeed-search-feed-face ":foreground #ffffff :weight bold"
+        elfeed-feeds (quote
+                      (("https://www.reddit.com/r/linux.rss?sort=new" reddit linux)
+                       ("https://www.reddit.com/r/commandline.rss" reddit commandline)
+                       ("https://www.reddit.com/r/distrotube.rss" reddit distrotube)
+                       ("https://www.reddit.com/r/emacs.rss" reddit emacs)
+                       ("https://www.gamingonlinux.com/article_rss.php" gaming linux)
+                       ("https://hackaday.com/blog/feed/" hackaday linux)
+                       ("https://opensource.com/feed" opensource linux)
+                       ("https://linux.softpedia.com/backend.xml" softpedia linux)
+                       ("https://itsfoss.com/feed/" itsfoss linux)
+                       ("https://www.zdnet.com/topic/linux/rss.xml" zdnet linux)
+                       ("https://www.phoronix.com/rss.php" phoronix linux)
+                       ("http://feeds.feedburner.com/d0od" omgubuntu linux)
+                       ("https://www.computerworld.com/index.rss" computerworld linux)
+                       ("https://www.networkworld.com/category/linux/index.rss" networkworld linux)
+                       ("https://www.techrepublic.com/rssfeeds/topic/open-source/" techrepublic linux)
+                       ("https://betanews.com/feed" betanews linux)
+                       ("http://lxer.com/module/newswire/headlines.rss" lxer linux)
+                       ("https://distrowatch.com/news/dwd.xml" distrowatch linux))))
+  (with-eval-after-load 'evil-collection
+    (evil-collection-define-key 'normal 'elfeed-search-mode-map
+      "l" 'elfeed-search-show-entry)))	; also remain in elfeed window?
+
+
+(use-package elfeed-goodies
+  :after elfeed
+  :config
+  (elfeed-goodies/setup)
+  (setq elfeed-goodies/entry-pane-size 0.5))
+
+(use-package elfeed-tube
+  :ensure t
+  :after elfeed
+  :config
+  ;; (setq elfeed-tube-auto-save-p nil) ; default value
+  ;; (setq elfeed-tube-auto-fetch-p t)  ; default value
+  (elfeed-tube-setup)
+
+  :bind (:map elfeed-show-mode-map
+              ("F" . elfeed-tube-fetch)
+              ([remap save-buffer] . elfeed-tube-save)
+              :map elfeed-search-mode-map
+              ("F" . elfeed-tube-fetch)
+              ([remap save-buffer] . elfeed-tube-save)))
+
+(use-package elfeed-tube-mpv
+  :after elfeed
+  :ensure t
+  :bind (:map elfeed-show-mode-map
+              ("C-c C-f" . elfeed-tube-mpv-follow-mode)
+              ("C-c C-w" . elfeed-tube-mpv-where)))
+
 #+end_src
 
 ** Password management
@@ -2917,59 +2946,13 @@ https://github.com/ecraven/ivy-pass
   )
 
 #+end_src
-
-** Info
-#+begin_src elisp
-(use-package info-variable-pitch
-  :ensure (:host github :repo "kisaragi-hiu/info-variable-pitch")
-  :hook (Info-mode . info-variable-pitch-mode))
-#+end_src
-
-** Translation
-#+begin_src elisp
-(use-package immersive-translate
-  :ensure t
-  :custom (immersive-translate-backend 'trans)
-  (immersive-translate-trans-target-language "en")
-  (immersive-translate-trans-source-language "bn")
-)
-#+end_src
-
-** Pages
-#+begin_src elisp
-(use-package page-break-lines)
-#+end_src
-
-** Prism
-#+begin_src elisp
-(use-package prism
-  :ensure (:host github :repo "alphapapa/prism.el"))
-#+end_src
-
 ** Gnuplot
 #+begin_src elisp
 (use-package gnuplot)
 #+end_src
 
-#+begin_src elisp
-(use-package eros
-  :ensure (:host github :repo "xiongtx/eros")
-  :init (eros-mode 1)
-  )
-#+end_src
-
-** Buffer-to-pdf
-#+begin_src elisp
-(use-package buffer-to-pdf
-  :elpaca (:host github :repo "protesilaos/buffer-to-pdf")
-  ;; :commands (buffer-to-pdf buffer-to-pdf-black-on-white buffer-to-pdf-white-on-black)
-  :custom
-  ;; Configure `buffer-to-pdf-directory' to specify where PDF files are stored.
-  ;; This is the default value:
-  (buffer-to-pdf-directory (expand-file-name "~/Documents/")))
-#+end_src
-
-** Thesaurus
+** Languages
+*** Thesaurus
 
 #+begin_src elisp
 (use-package powerthesaurus
@@ -2979,3 +2962,13 @@ https://github.com/ecraven/ivy-pass
       "t" '(powerthesaurus-transient :wk "Thesaurus"))))
 #+end_src
 
+
+*** Translation
+#+begin_src elisp
+(use-package immersive-translate
+  :ensure t
+  :custom (immersive-translate-backend 'trans)
+  (immersive-translate-trans-target-language "en")
+  (immersive-translate-trans-source-language "bn")
+)
+#+end_src
