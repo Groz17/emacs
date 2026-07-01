@@ -11,6 +11,7 @@
 - [ ] notes? css: #+setupfile: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup https://github.com/chenyanming/paw?tab=readme-ov-file
 - [ ] tangle only part of file that was modified (diff), especially not touched files
 - [ ] make undo work like vim (u0?)
+- [ ] enable posframe in M-: (eval-expression)?
 - [ ] gz operator to narrow
 - [ ] c-o in help buffers?
 - [ ] ts textobjects
@@ -86,7 +87,6 @@ The following settings are simple modes that are enabled (or disabled) so that E
 (setq highlight-nonselected-windows nil)
 
 (column-number-mode)
-;; t and 1 difference here?
 (global-display-line-numbers-mode 1) ;; Display line numbers
 ;; Disable line numbers for some modes
 (dolist(mode '(org-mode-hook ghostel-mode-hook term-mode-hook shell-mode-hook eshell-mode-hook scad-preview-mode-hook))(add-hook mode (lambda()(display-line-numbers-mode 0))))
@@ -298,6 +298,7 @@ Disable automatic clipboard sync and only sync to system clipboard when Emacs lo
 (setq history-length 25)
 (savehist-mode 1)
 (save-place-mode 1)
+;; universal-argument for repeat mode?
 (repeat-mode 1)
 (with-eval-after-load 'face-remap
   (let ((m (make-sparse-keymap)))
@@ -428,6 +429,29 @@ automatically fold when moving j/k?
 
 
 * KEYBINDINGS
+** Kanata
+#+begin_src elisp
+(with-eval-after-load 'org
+  (add-to-list 'org-src-lang-modes '("kbd" . kanata-kbd)))
+;; would be cool (add-to-list 'org-babel-load-languages '(kanata . t))
+
+;; (define-key key-translation-map (kbd "<clt-x>") (kbd "C-x"))
+;; (define-key global-map (kbd "<clt-x>") ctl-x-map)
+;; now i can use C-x behaviour in normal mode!
+;; press f12 to show which-key i guess, u cannot do the same with modifiers or f13-f24 since they're not on the kbd
+(define-key key-translation-map (kbd "<f12>") [ctl-x]) ; hide translation in help files? don't really care
+(define-key function-key-map (kbd "<f12> @") 
+  (lookup-key function-key-map (kbd "C-x @")))
+(define-key global-map [ctl-x] ctl-x-map)
+(global-set-key [f15]
+  (lambda ()
+    (interactive)
+    (setq unread-command-events (listify-key-sequence "\C-c"))))
+
+;; (define-key key-translation-map (kbd "<Launch5>") (lambda()(interactive)(universal-argument 0))) ;; doesn't even work
+;; (define-key key-translation-map (kbd "<Launch5>") (kbd "M-0")) ;; basically u can use 0 for v:count now
+#+end_src
+
 #+begin_src elisp
 (define-key global-map (kbd "C-c w") 'webjump)
 ;;   "s d" '(dictionary-search :wk "Search dictionary")
@@ -532,6 +556,15 @@ automatically fold when moving j/k?
   (let ((kill-emacs-hook (append kill-emacs-hook (list (lambda () (call-process "emacsclient -a''" nil nil nil))))))
     (save-buffers-kill-emacs)))
 #+end_src
+
+** Vimwiki
+#+begin_src elisp
+;; (with-eval-after-load 'evil-maps
+;; (define-key evil-normal-state-map (kbd "v d") (lambda () (interactive) (consult-find "~/vimwiki" "todo.txt ")))
+;; )
+
+#+end_src
+
 * HOOKS
 ** SUBWORD MODE
 use ij/aj for this?
@@ -630,7 +663,7 @@ https://github.com/isamert/corg.el
   (with-eval-after-load 'evil
     (evil-define-key 'normal org-mode-map (kbd "gj") 'evil-next-visual-line)
     (evil-define-key 'normal org-mode-map (kbd "gk") 'evil-previous-visual-line)
-    (evil-define-key 'normal org-mode-map (kbd "zj") 'org-forward-heading-same-level)
+    (evil-define-key 'normal org-mode-map (kbd "zj") 'org-backward-heading-same-level)
     (evil-define-key 'normal org-mode-map (kbd "zk") 'org-forward-heading-same-level)
     (evil-define-key '(normal visual) org-mode-map (kbd "}") 'evil-forward-paragraph)
     (evil-define-key '(normal visual) org-mode-map (kbd "{") 'evil-backward-paragraph))
@@ -1183,7 +1216,6 @@ https://github.com/fuxialexander/org-pdftools
   (define-key org-noter-notes-mode-map (kbd "C-M-.") 'org-noter-sync-current-page-or-chapter)
   (define-key org-noter-notes-mode-map (kbd "C-M-n") 'org-noter-sync-next-page-or-chapter))
 #+end_src
-git clone https://github.com/.git
 
 *** Org-graphviz
 https://github.com/the-ted/org-mind-map
@@ -1331,11 +1363,8 @@ evil-toggle-key
 (defun my-save-if-bufferfilename ()
   (if (buffer-file-name)
       (progn
-        (save-buffer)
-        )
-    (message "no file is associated to this buffer: do nothing")
-    )
-  )
+        (save-buffer))
+    (message "no file is associated to this buffer: do nothing")))
 
 (add-hook 'evil-insert-state-exit-hook 'my-save-if-bufferfilename)
 
@@ -1614,10 +1643,6 @@ evil-toggle-key
 
 (gz/leader-keys
   "u" '(universal-argument :wk "Universal argument") ; doesn't work for (C-u){2,}
-
-  ;;"RET"
-  ;;'((lambda ()
-  ;;(vterm)))
 
   ;; would be cool if worked in visual mode ala narrowing
   ;; also match modes (if insert stays in insert) in both editors
@@ -1976,6 +2001,11 @@ also check out helm/etc... keybindings
 
 (use-package vertico
   :ensure t
+  :custom
+  (vertico-scroll-margin 0) ;; Different scroll margin
+  (vertico-count 20) ;; Show more candidates
+  (vertico-resize t) ;; Grow and shrink the Vertico minibuffer
+  (vertico-cycle t) ;; Enable cycling for `vertico-next/previous'
   :init
   (vertico-mode 1)
   :bind (:map vertico-map
@@ -1990,7 +2020,18 @@ also check out helm/etc... keybindings
     "k" #'vertico-previous
     "l" #'vertico-exit)
   :custom
-  (enable-recursive-minibuffers t))
+ ;; Enable context menu. `vertico-multiform-mode' adds a menu in the minibuffer
+  ;; to switch display modes.
+  (context-menu-mode t)
+  ;; Support opening new minibuffers from inside existing minibuffers.
+  (enable-recursive-minibuffers t)
+  ;; Hide commands in M-x which do not work in the current mode.  Vertico
+  ;; commands are hidden in normal buffers. This setting is useful beyond
+  ;; Vertico.
+  (read-extended-command-predicate #'command-completion-default-include-p)
+  ;; Do not allow the cursor in the minibuffer prompt
+  (minibuffer-prompt-properties
+   '(read-only t cursor-intangible t face minibuffer-prompt)))
 
 (use-package vertico-carousel
   :ensure (:host github :repo "kn66/vertico-carousel")
@@ -2094,6 +2135,10 @@ Emacs has built-in programming language modes for Lisp, Scheme, DSSSL, Ada, ASM,
 ;; Works with stdin as well :)
 (use-package scad-mode
   :ensure (:host github :repo "openscad/emacs-scad-mode"))
+
+(use-package kanata-kbd-mode
+  :ensure (:host github :repo "chmouel/kanata-kbd-mode")
+  :mode ("\\.kbd\\'" . kanata-kbd-mode))
 #+end_src
 
 ** SHELLS AND TERMINALS
@@ -2148,7 +2193,6 @@ ghostel-max-scrollback 5000)
              (split-window-right)
              (other-window 1)
              (ghostel)
-	     ;; (vterm-other-window)
   
   ))
 ;; FIX:
@@ -2159,32 +2203,12 @@ ghostel-max-scrollback 5000)
              (split-window-below)
              (other-window 1)
              (ghostel)
-	     ;; (vterm-other-window)
   
   )))
 (use-package evil-ghostel
   :ensure t
   :after (ghostel evil)
   :hook (ghostel-mode . evil-ghostel-mode))
-#+end_src
-
-#+begin_src elisp
-
-;;  (with-eval-after-load 'evil
-;; (evil-define-key 'normal vterm-mode-map (kbd "<escape>") 'vterm--self-insert))
-;; (add-to-list 'display-buffer-alist
-;;             '((lambda (buffer-or-name _)
-;;                 (let ((buffer (get-buffer buffer-or-name)))
-;;                   (with-current-buffer buffer
-;;                     (or (equal major-mode 'vterm-mode)
-;;                         (string-prefix-p vterm-buffer-name (buffer-name buffer))))))
-;;               (display-buffer-reuse-window display-buffer-at-bottom)
-;;               ;;(display-buffer-reuse-window display-buffer-in-direction)
-;;               ;;display-buffer-in-direction/direction/dedicated is added in emacs27
-;;               ;; (direction . right)
-;;               ;;(dedicated . t) ;dedicated is supported in emacs27
-;;               (reusable-frames . visible)
-;;               (window-height . 0.4)))
 #+end_src
 
 *** TLDR
@@ -2221,34 +2245,6 @@ keycast
 #+begin_src elisp
 (use-package command-log-mode
     :commands command-log-mode)
-#+end_src
-
-** TODO [#B] KANATA SHEGANIGANS
-#+begin_src elisp
-(use-package kanata-kbd-mode
-  :ensure (:host github :repo "chmouel/kanata-kbd-mode")
-  :mode ("\\.kbd\\'" . kanata-kbd-mode))
-
-
-(with-eval-after-load 'org
-  (add-to-list 'org-src-lang-modes '("kbd" . kanata-kbd)))
-;; would be cool (add-to-list 'org-babel-load-languages '(kanata . t))
-
-;; (define-key key-translation-map (kbd "<clt-x>") (kbd "C-x"))
-;; (define-key global-map (kbd "<clt-x>") ctl-x-map)
-;; now i can use C-x behaviour in normal mode!
-;; press f12 to show which-key i guess, u cannot do the same with modifiers or f13-f24 since they're not on the kbd
-(define-key key-translation-map (kbd "<f12>") [ctl-x]) ; hide translation in help files? don't really care
-(define-key function-key-map (kbd "<f12> @") 
-  (lookup-key function-key-map (kbd "C-x @")))
-(define-key global-map [ctl-x] ctl-x-map)
-(global-set-key [f15]
-  (lambda ()
-    (interactive)
-    (setq unread-command-events (listify-key-sequence "\C-c"))))
-
-;; (define-key key-translation-map (kbd "<Launch5>") (lambda()(interactive)(universal-argument 0))) ;; doesn't even work
-;; (define-key key-translation-map (kbd "<Launch5>") (kbd "M-0")) ;; basically u can use 0 for v:count now
 #+end_src
 
 ** HYDRA
@@ -2288,6 +2284,13 @@ key-quiz-use-mode
 (use-package devdocs
   :bind (("C-h D" . devdocs-lookup))
   )
+#+end_src
+
+#+begin_src elisp
+(use-package rfc-mode
+  :custom
+  (rfc-mode-directory (expand-file-name "~/.local/share/rfc/"))
+)
 #+end_src
 
 ** anki editor
@@ -2609,7 +2612,7 @@ invert colors?
   :mode "\\.pdf\\'")
 
 (use-package buffer-to-pdf
-  :elpaca (:host github :repo "protesilaos/buffer-to-pdf")
+  :ensure (:host github :repo "protesilaos/buffer-to-pdf")
   ;; :commands (buffer-to-pdf buffer-to-pdf-black-on-white buffer-to-pdf-white-on-black)
   :custom
   ;; Configure `buffer-to-pdf-directory' to specify where PDF files are stored.
@@ -2901,6 +2904,12 @@ https://github.com/remyhonig/elfeed-org
 ** Password management
 
 https://github.com/ecraven/ivy-pass
+#+begin_src elisp
+(use-package password-store-menu
+  :ensure t
+  :config (password-store-menu-enable)
+  :custom (password-store-menu-key "C-c p"))
+#+end_src
 
 ** Music
 #+begin_src elisp
@@ -2959,7 +2968,7 @@ https://github.com/ecraven/ivy-pass
   :init
   (with-eval-after-load 'general
     (gz/leader-keys
-      "t" '(powerthesaurus-transient :wk "Thesaurus"))))
+      "T" '(powerthesaurus-transient :wk "Thesaurus"))))
 #+end_src
 
 
@@ -2970,5 +2979,51 @@ https://github.com/ecraven/ivy-pass
   :custom (immersive-translate-backend 'trans)
   (immersive-translate-trans-target-language "en")
   (immersive-translate-trans-source-language "bn")
+  :init
+  (defun my/immersive-translate-codes ()
+    (split-string (shell-command-to-string "trans -list-codes") "\n" t))
+  (defun my/immersive-translate-set-source (lang)
+    (interactive (list (completing-read "Source: " (my/immersive-translate-codes))))
+    (setq immersive-translate-trans-source-language lang))
+  (defun my/immersive-translate-set-target (lang)
+    (interactive (list (completing-read "Target: " (my/immersive-translate-codes))))
+    (setq immersive-translate-trans-target-language lang))
+  ;; how to automatically close after pressing both s and t?
+  (transient-define-prefix my/immersive-translate-transient ()
+    ["Immersive Translate"
+     ("s" "source" my/immersive-translate-set-source :transient t)
+     ("t" "target" my/immersive-translate-set-target :transient t)])
+  (with-eval-after-load 'general
+    (gz/leader-keys
+      "t" '(my/immersive-translate-transient :wk "Translate"))))
+#+end_src
+
+#+begin_src
+(use-package empv
+  :ensure (:host github :repo "isamert/empv.el")
+:custom (empv-invidious-instance "https://inv.nadeko.net/")
+)
+#+end_src
+
+** Maps
+#+begin_src elisp
+(use-package osm
+  :bind ("C-c o" . osm-prefix-map) ;; Alternatives: `osm-home' or `osm'
+
+  :custom
+  ;; Take a look at the customization group `osm' for more options.
+  (osm-default-server 'default) ;; Configure the tile server
+  (osm-default-zoom 15)         ;; Default zoom level
+  (osm-copyright t)             ;; Display the copyright information
+  (osm-home (list 0 0 3))       ;; Home, configure `calendar-latitude/longitude' instead
+
+  :config
+
+  ;; Add custom servers, see also https://github.com/minad/osm/wiki
+  ;; (osm-add-server 'myserver
+  ;;   :name "My tile server"
+  ;;   :group "Custom"
+  ;;   :description "Tiles based on aerial images"
+  ;;   :url "https://myserver/tiles/%z/%x/%y.png?apikey=%k")
 )
 #+end_src
