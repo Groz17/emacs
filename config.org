@@ -32,6 +32,7 @@
 - [ ] in emacs/insert mode, use c-x pressed as k and then x for vim insert, and l/s for emacs c-x
 - [ ] syncronize shada/command history
 - [ ] go to normal mode for pickers?
+- [ ] rg's --vimgrep for emacs?
 
 
 * IMPORTANT PROGRAMS TO LOAD FIRST
@@ -3017,7 +3018,10 @@ https://github.com/ecraven/ivy-pass
   (osm-copyright t)             ;; Display the copyright information
   (osm-home (list 0 0 3))       ;; Home, configure `calendar-latitude/longitude' instead
 
-  :config
+:config
+  (add-hook 'osm-mode-hook (lambda () 
+                             (visual-line-mode -1)
+                             (setq-local truncate-lines t)))
 
   ;; Add custom servers, see also https://github.com/minad/osm/wiki
   ;; (osm-add-server 'myserver
