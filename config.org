@@ -60,6 +60,7 @@ The following settings are simple modes that are enabled (or disabled) so that E
 (electric-pair-mode 1)       ;; Turns on automatic parens pairing
 (global-auto-revert-mode t)  ;; Automatically show changes if the file has changed
 (setq global-auto-revert-non-file-buffers t)  ;; Automatically show changes if the file has changed in dired
+(setq debug-on-quit nil)
 (setq revert-without-query '(".*"))  ;; Revert all files without asking
 (setq redisplay-skip-fontification-on-input t)
 (setq kill-do-not-save-duplicates t)
@@ -538,6 +539,18 @@ automatically fold when moving j/k?
     (insert (replace-regexp-in-string "(\\([^)]*\\))" "/" raw))))
 #+end_src
 
+** Copy Echo Message
+#+begin_src elisp
+(defun my/copy-last-message ()
+  (interactive) 
+  (ignore-errors 
+    (with-current-buffer "*Messages*" 
+      (goto-char (point-max)) 
+      (forward-line -1) 
+      (kill-new (string-trim (thing-at-point 'line t))))))
+
+(global-set-key (kbd "C-c y") 'my/copy-last-message)
+#+end_src
 
 ** Reload config
 #+begin_src elisp
@@ -566,6 +579,56 @@ automatically fold when moving j/k?
 
 #+end_src
 
+* COMMANDS
+#+begin_src elisp
+(defun highlight-bengali-if-in-vimwiki ()
+  "Find Bengali words in the current buffer, check if they exist in ~/vimwiki, and highlight them."
+  (interactive)
+  (hi-lock-mode 1)
+  (hi-lock-mode -1)
+  (message "Scanning current buffer for Bengali words...")
+
+  (let ((buffer-words '()))
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward "[\u0980-\u09FF]+" nil t)
+        (push (match-string-no-properties 0) buffer-words)))
+
+    (setq buffer-words (delete-dups buffer-words))
+
+    (if (null buffer-words)
+        (message "No Bengali words found in this buffer.")
+
+      (let ((temp-file (make-temp-file "emacs-bengali-")))
+        (with-temp-file temp-file
+          (dolist (word buffer-words)
+            (insert word "\n")))
+
+        (let* ((output
+                (with-temp-buffer
+                  (call-process
+                   "rg" nil t nil
+                   "-f" temp-file
+                   "-o"
+                   "--no-filename"
+		   "-g" "data.md"
+                   (expand-file-name "~/vimwiki"))
+                  (buffer-string)))
+               (found-words
+                (delete-dups
+                 (split-string output "\n" t))))
+
+          (delete-file temp-file)
+
+          (if (null found-words)
+              (message "None of the Bengali words were found in ~/vimwiki.")
+
+
+            (let ((regex (mapconcat #'regexp-quote found-words "\\|")))
+              (hi-lock-set-pattern regex 'hi-yellow)
+              (message "Highlighted %d words found in both buffer and ~/vimwiki."
+                       (length found-words)))))))))
+#+end_src
 * HOOKS
 ** SUBWORD MODE
 use ij/aj for this?
@@ -1185,6 +1248,7 @@ https://github.com/fuxialexander/org-pdftools
   :custom
   ;; org-noter-highlight-selected-text to t
   (org-noter-always-create-frame nil)
+(org-noter-auto-save-last-location t)
 (org-noter-notes-window-location 'vertical-split)
 ;; :init  (setq org-noter-always-create-frame nil)
  ;; (setq org-noter-notes-search-path '("~/notes"))
@@ -1195,7 +1259,12 @@ https://github.com/fuxialexander/org-pdftools
   ;;   :bind (:map evil-normal-state-map
   ;;  ("i" . #'org-noter-insert-note) ;; also works for org buffer
   ;; )
-  ;; :config
+  ;; because of project-rooter
+  :config
+(advice-add 'org-noter :around
+            (lambda (orig-fun &rest args)
+              (let ((default-directory (file-name-directory (or (buffer-file-name) default-directory))))
+                (apply orig-fun args))))
   )
 (with-eval-after-load 'org-noter
   (define-key org-noter-doc-mode-map (kbd "i")   'org-noter-insert-precise-note)
@@ -2012,7 +2081,8 @@ also check out helm/etc... keybindings
   :bind (:map vertico-map
               ("C-j" . vertico-next)
               ("C-k" . vertico-previous)
-              ("C-l" . vertico-exit)
+              ;; ("C-l" . vertico-insert) for find-file and vertico-exit for everything else?
+              ("C-l" . vertico-insert)
               ("C-t" . vertico-buffer-frame-toggle-preview))
   :config
   (defvar-keymap vertico-repeat-map
@@ -2502,6 +2572,7 @@ https://github.com/karthink/gptel/issues/165
 #+begin_src elisp
 (use-package posframe :ensure (:host github :repo "tumashu/posframe"))
 (use-package gptel-quick
+:after gptel
 :ensure (:host github :repo "karthink/gptel-quick")
 :bind (("C-c q"  . gptel-quick)
 ))
@@ -2696,8 +2767,25 @@ Bookmarks like in mini.files?
 (use-package info-colors
   :hook (Info-selection . info-colors-fontify-node))
 #+end_src
-#+end_src
 
+#+begin_src elisp :tangle no
+(use-package hyperbole
+  :ensure t
+  :custom
+  ;; one note -> one file?
+(hywiki-directory "~/vimwiki/Personal/hywiki/")
+(hkey-debug t)
+  :config
+  (setq hywiki-word-regexp
+        "\\([অ-৾]+\\)\\(?:\\.org\\)?")
+  (setq hywiki-word-with-optional-suffix-regexp
+        "\\([অ-৾]+\\)\\(?:\\.org\\)?\\(?:\\(#.*\\|:L[0-9]+\\|:C[0-9]+\\)?\\)")
+  (setq hywiki-word-with-optional-suffix-exact-regexp
+        "\\`\\([অ-৾]+\\)\\(?:\\.org\\)?\\(?:\\(#.*\\|:L[0-9]+\\|:C[0-9]+\\)?\\)\\'")
+  (setq hywiki--word-and-buttonize-character-regexp
+        "\\([অ-৾]+\\)\\(?:\\.org\\)?"))
+  (hyperbole-mode 1))
+#+end_src
 
 *** WHICH-KEY
 TODO: put popup in the middle?
