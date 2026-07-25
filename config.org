@@ -571,18 +571,10 @@ automatically fold when moving j/k?
     (save-buffers-kill-emacs)))
 #+end_src
 
-** Vimwiki
-#+begin_src elisp
-;; (with-eval-after-load 'evil-maps
-;; (define-key evil-normal-state-map (kbd "v d") (lambda () (interactive) (consult-find "~/vimwiki" "todo.txt ")))
-;; )
-
-#+end_src
-
 * COMMANDS
 #+begin_src elisp
-(defun highlight-bengali-if-in-vimwiki ()
-  "Find Bengali words in the current buffer, check if they exist in ~/vimwiki, and highlight them."
+(defun highlight-bengali-if-in-wiki ()
+  "Find Bengali words in the current buffer, check if they exist in ~/wiki, and highlight them."
   (interactive)
   (hi-lock-mode 1)
   (hi-lock-mode -1)
@@ -612,7 +604,7 @@ automatically fold when moving j/k?
                    "-o"
                    "--no-filename"
 		   "-g" "data.md"
-                   (expand-file-name "~/vimwiki"))
+                   (expand-file-name "~/org/wiki"))
                   (buffer-string)))
                (found-words
                 (delete-dups
@@ -621,12 +613,12 @@ automatically fold when moving j/k?
           (delete-file temp-file)
 
           (if (null found-words)
-              (message "None of the Bengali words were found in ~/vimwiki.")
+              (message "None of the Bengali words were found in ~/wiki.")
 
 
             (let ((regex (mapconcat #'regexp-quote found-words "\\|")))
               (hi-lock-set-pattern regex 'hi-yellow)
-              (message "Highlighted %d words found in both buffer and ~/vimwiki."
+              (message "Highlighted %d words found in both buffer and ~/wiki."
                        (length found-words)))))))))
 #+end_src
 * HOOKS
@@ -717,12 +709,25 @@ https://github.com/isamert/corg.el
   :bind (("C-c c" . org-capture)
    ("C-c l" . org-store-link)
    ("C-c a" . org-agenda)
-
    ;;   "m i" '(org-toggle-item :wk "Org toggle item")
    ;;   "m T" '(org-todo-list :wk "Org todo list")
    ;;   "m d t" '(org-time-stamp :wk "Org time stamp")
    )
   :config ;; (message "test lazy loading")
+
+(require 'consult)
+(defun my/wiki-search ()
+  (interactive)
+  (consult-ripgrep "~/org/"))
+(global-set-key (kbd "C-c s") #'my/wiki-search)
+(defun my/wiki-files ()
+  (interactive)
+  (let ((consult-fd-args (append consult-fd-args
+                                 (list
+                                  "--type file"))))
+    (consult-fd (expand-file-name "~/org/"))))
+
+(global-set-key (kbd "C-c p") #'my/wiki-files)
 
   (with-eval-after-load 'evil
     (evil-define-key 'normal org-mode-map (kbd "gj") 'evil-next-visual-line)
@@ -1231,7 +1236,7 @@ usa with yt-dlp
 org-cheatsheet, org-reveal.js? mindmaps?
 
 *** org modern
-#+begin_src elisp
+#+begin_src elisp :tangle no
 (use-package org-modern
   :hook (org-mode . org-modern-mode))
 #+end_src
@@ -1250,10 +1255,12 @@ https://github.com/fuxialexander/org-pdftools
   (org-noter-always-create-frame nil)
 (org-noter-auto-save-last-location t)
 (org-noter-notes-window-location 'vertical-split)
+(org-noter-highlight-selected-text t)
+(org-noter-max-short-selected-text-length 0)
 ;; :init  (setq org-noter-always-create-frame nil)
  ;; (setq org-noter-notes-search-path '("~/notes"))
-  :bind (:map pdf-view-mode-map
-        ("C-c n" . #'org-noter))
+  :bind 
+        ("C-c n" . #'org-noter)
   ;; :load-path "~/notes/pdfs/"
   ;; :ensure t
   ;;   :bind (:map evil-normal-state-map
@@ -1287,6 +1294,29 @@ https://github.com/fuxialexander/org-pdftools
   (define-key org-noter-notes-mode-map (kbd "C-M-n") 'org-noter-sync-next-page-or-chapter))
 #+end_src
 
+*** org-superlink
+#+begin_src elisp :tangle no
+(use-package org-super-links
+  :ensure (:host github :repo "toshism/org-super-links" :branch "develop")
+  :bind (("C-c s s" . org-super-links-link)
+         ("C-c s l" . org-super-links-store-link)
+         ("C-c s C-l" . org-super-links-insert-link)))
+#+end_src
+*** Org-ql
+#+begin_src elisp
+(use-package org-ql
+  :ensure (:host github
+           :repo "alphapapa/org-ql"
+           :files (:defaults (:exclude "helm-org-ql.el")))
+  
+  :custom
+(org-ql-search-directories-files-recursive t)
+  :bind (
+("C-c C-/" . org-ql-find-in-org-directory)
+  )
+
+  )
+#+end_src
 *** Org-graphviz
 https://github.com/the-ted/org-mind-map
 #+begin_src elisp
@@ -2125,6 +2155,8 @@ also check out helm/etc... keybindings
 
 (use-package consult
   :ensure t
+  :custom
+(consult-async-min-input 0)
   :bind (([remap switch-to-buffer] . consult-buffer)
          ([remap switch-to-buffer-other-window] . consult-buffer-other-window)
          :map evil-normal-state-map
@@ -2299,7 +2331,7 @@ ghostel-max-scrollback 5000)
 
 *** Docker
 https://github.com/abrochard/kubel
-#+begin_src elisp
+#+begin_src elisp :tangle no
 (use-package docker
   :ensure t
   :bind ("C-c d" . docker)
@@ -2375,6 +2407,9 @@ key-quiz-use-mode
          ("<f6>" . org-srs-review-rate-good)
          ("<f7>" . org-srs-review-rate-hard)
          ("<f8>" . org-srs-review-rate-again)))
+
+(use-package org-anki
+:ensure (:host github :repo "eyeinsky/org-anki"))
 #+end_src
 ** TODO Radio
 integrate w/ emms? no only music, but news, etc...?
@@ -2447,7 +2482,7 @@ https://github.com/karthink/gptel/issues/165
   :bind (
    ;; C-c and f15 two different prefixes 😁
    ;; ("C-c A" . 'gptel)
-   ("C-c s" . 'gptel-send)
+   ("C-c d" . 'gptel-send)
    :map gptel-mode-map
    ("<RET>" . 'gptel-send)
    ("C-g" . 'gptel-abort)
@@ -2993,7 +3028,7 @@ https://github.com/remyhonig/elfeed-org
 ** Password management
 
 https://github.com/ecraven/ivy-pass
-#+begin_src elisp
+#+begin_src elisp :tangle no
 (use-package password-store-menu
   :ensure t
   :config (password-store-menu-enable)
