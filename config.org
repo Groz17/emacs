@@ -2408,8 +2408,15 @@ key-quiz-use-mode
          ("<f7>" . org-srs-review-rate-hard)
          ("<f8>" . org-srs-review-rate-again)))
 
+;; bold for cloze?
 (use-package org-anki
-:ensure (:host github :repo "eyeinsky/org-anki"))
+:ensure (:host github :repo "eyeinsky/org-anki")
+:custom
+(org-anki-hierarchical-tags-separator ">>")
+(org-anki-default-deck "Default")
+;; org-anki-ignored-tags
+;; (org-anki-default-note-type "Basic (and reversed card)")
+)
 #+end_src
 ** TODO Radio
 integrate w/ emms? no only music, but news, etc...?
