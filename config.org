@@ -1118,6 +1118,8 @@ Also tangle when file's content externally modified (by command/LLM, ...), maybe
 #+begin_src elisp
 (setq org-edit-src-content-indentation 0) ;; Set src block automatic indent to 0 instead of 2.
 
+(setq-default major-mode 'org-mode)
+ ;; (setq initial-buffer-choice "~/notes.org")
 (setq org-imenu-depth 3)
 ;; Setting RETURN key in org-mode to follow links
 (setq org-return-follows-link  t)
@@ -2616,8 +2618,8 @@ https://github.com/karthink/gptel/issues/165
 (use-package gptel-quick
 :after gptel
 :ensure (:host github :repo "karthink/gptel-quick")
-:bind (("C-c q"  . gptel-quick)
-))
+;; :bind (("C-c q"  . gptel-quick)
+)
 
 (defun gptel-quick-translate ()
     "Check the region or thing at point with an LLM.
