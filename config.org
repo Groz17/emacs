@@ -819,7 +819,8 @@ https://github.com/isamert/corg.el
 
 (setq org-refile-targets
       '((org-agenda-files :maxlevel . 3)
-        ("~/org/someday.org" :level . 1)))
+        ;; ("~/org/someday.org" :level . 1)))
+        ("~/org/tasks.org" :level . 1)))
 (setq org-refile-use-outline-path 'file)
 (setq org-outline-path-complete-in-steps nil)
 
@@ -948,6 +949,10 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
 (with-eval-after-load 'org
   (setq org-agenda-files (list org-directory "~/dots")))
 ;; (setq org-log-done 'note)
+; (setq org-agenda-files
+      ; (append (directory-files-recursively "~/dots" "\\.org$")
+              ; (directory-files-recursively "~/org" "^todo\\.org$")
+              ; )))
 (setq org-support-shift-select t)   ;; always?
 ;; https://github.com/legalnonsense/elgantt
 
@@ -1447,6 +1452,7 @@ evil-toggle-key
              (git-rebase-mode . emacs)
              (term-mode . emacs)
              (help-mode . normal)
+             (org-agenda-mode . normal)
              (helm-grep-mode . emacs)
              (grep-mode . emacs)
              (bc-menu-mode . emacs)
@@ -3162,4 +3168,8 @@ https://github.com/ecraven/ivy-pass
   ;;   :description "Tiles based on aerial images"
   ;;   :url "https://myserver/tiles/%z/%x/%y.png?apikey=%k")
 )
+#+end_src
+
+#+begin_src elisp :tangle no
+(use-package emacs-everywhere)
 #+end_src
