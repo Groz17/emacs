@@ -67,6 +67,7 @@ The following settings are simple modes that are enabled (or disabled) so that E
 (setq ffap-machine-p-known 'reject)
 (setq window-combination-resize t)
 (setq help-window-select t)
+(setq compilation-auto-jump-to-first-error t)
 
 (winner-mode +1)
 (defun toggle-delete-other-windows ()
@@ -93,7 +94,7 @@ The following settings are simple modes that are enabled (or disabled) so that E
 ;; Disable line numbers for some modes
 (dolist(mode '(org-mode-hook ghostel-mode-hook term-mode-hook shell-mode-hook eshell-mode-hook scad-preview-mode-hook))(add-hook mode (lambda()(display-line-numbers-mode 0))))
 (global-visual-line-mode t)  ;; Enable truncated lines
-(menu-bar-mode -1)           ;; Disable the menu bar
+;; (menu-bar-mode -1)           ;; Disable the menu bar
 (scroll-bar-mode -1)         ;; Disable the scroll bar
 (tool-bar-mode -1)           ;; Disable the tool bar
 (setq xterm-extra-capabilities '(modifyOtherKeys getSelection setSelection))
@@ -235,7 +236,7 @@ ln -s ~/.local/share/Trash .
 Disable automatic clipboard sync and only sync to system clipboard when Emacs loses focus (like deferred-clipboard.nvim).
 
 #+begin_src elisp
-(setq select-enable-clipboard nil)
+(setq select-enable-clipboard t) ;; TODO: don't want it
 
 ; (defun sync-clipboard-on-focus-out ()
 ;   "Sync kill-ring to system clipboard when losing focus."
@@ -1316,8 +1317,8 @@ https://github.com/fuxialexander/org-pdftools
            :repo "alphapapa/org-ql"
            :files (:defaults (:exclude "helm-org-ql.el")))
   
-  :custom
-(org-ql-search-directories-files-recursive t)
+;;   :custom
+;; (org-ql-search-directories-files-recursive t)
   :bind (
 ("C-c C-/" . org-ql-find-in-org-directory)
   )
