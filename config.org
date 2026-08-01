@@ -1181,7 +1181,8 @@ Also tangle when file's content externally modified (by command/LLM, ...), maybe
 #+end_src
 *** Org-fragtog
 
-#+begin_src elisp
+org-appear does the same?
+#+begin_src elisp :tangle no
 (use-package org-fragtog
   :ensure (:host github :repo "io12/org-fragtog")
   :hook (org-mode . org-fragtog-mode)
@@ -1244,7 +1245,7 @@ usa with yt-dlp
 org-cheatsheet, org-reveal.js? mindmaps?
 
 *** org modern
-#+begin_src elisp :tangle no
+#+begin_src elisp
 (use-package org-modern
   :hook (org-mode . org-modern-mode))
 #+end_src
@@ -1332,6 +1333,20 @@ https://github.com/the-ted/org-mind-map
   :ensure (:host github :repo "nowislewis/org-graphviz-mindmap"))
 #+end_src
 
+
+*** Org-appear
+#+begin_src elisp
+(use-package org-appear :ensure (:host github :repo "awth13/org-appear")
+  :hook (org-mode . org-appear-mode)
+  :custom
+  (org-appear-autosubmarkers t)
+  (org-appear-autoentities t)
+  (org-appear-autolinks t)
+  (org-appear-autokeywords t)
+  (org-appear-inside-latex t)
+  )
+
+#+end_src
 
 * PLUGINS
 ** COMPANY
