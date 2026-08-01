@@ -737,6 +737,18 @@ https://github.com/isamert/corg.el
     (evil-define-key 'normal org-mode-map (kbd "zk") 'org-forward-heading-same-level)
     (evil-define-key '(normal visual) org-mode-map (kbd "}") 'evil-forward-paragraph)
     (evil-define-key '(normal visual) org-mode-map (kbd "{") 'evil-backward-paragraph))
+
+    ;; (evil-define-key '(normal ;; visual
+    ;; 			      ) org-mode-map (kbd "\\")
+    ;; 				;; (lookup-key org-mode-map (kbd "C-c C-x")))
+    ;; (key-binding (kbd "C-c C-x")))
+
+ (add-hook 'org-mode-hook
+            (lambda ()
+              (evil-local-set-key 'normal
+                (kbd "\\")
+                (lookup-key org-mode-map (kbd "C-c C-x")))))
+
   )
 #+end_src
 
