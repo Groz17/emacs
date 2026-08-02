@@ -948,7 +948,8 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
 *** ORG AGENDA
 #+begin_src elisp
 (with-eval-after-load 'org
-  (setq org-agenda-files (list org-directory "~/dots")))
+  (setq org-agenda-files (list org-directory ;; "~/dots"
+			       )))
 ;; (setq org-log-done 'note)
 ; (setq org-agenda-files
       ; (append (directory-files-recursively "~/dots" "\\.org$")
@@ -2188,7 +2189,11 @@ also check out helm/etc... keybindings
          ("C-p" . consult-find) ;; current cwd
          ("C-S-p" . project-find-file)       ; project?
          ("C-q" . consult-ripgrep) ;; current cwd
-         ("C-S-q" . consult-git-grep)))
+         ("C-S-q" . consult-git-grep)
+
+	 
+         ("C-c i" . consult-info)
+	 ))
 
 (use-package marginalia
   :ensure t
