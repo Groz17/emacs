@@ -68,6 +68,7 @@ The following settings are simple modes that are enabled (or disabled) so that E
 (setq window-combination-resize t)
 (setq help-window-select t)
 (setq compilation-auto-jump-to-first-error t)
+(setq compilation-scroll-output 'first-error)
 
 (winner-mode +1)
 (defun toggle-delete-other-windows ()
@@ -1159,7 +1160,7 @@ Also tangle when file's content externally modified (by command/LLM, ...), maybe
 (use-package shrface)
 #+end_src
 
-*** Yank
+*** org-rich-yank
 #+begin_src elisp
 (use-package org-rich-yank
   :ensure t
@@ -1350,10 +1351,10 @@ https://github.com/the-ted/org-mind-map
 #+end_src
 
 #+begin_src elisp
-(use-package org-transclusion
-  :bind (("S-<f12>" . org-transclusion-add)
-         ("C-c t m" . org-transclusion-transient-menu)
-         ("C-n t t") . org-transclusion-mode))
+(use-package org-transclusion)
+  ;; :bind (("S-<f12>" . org-transclusion-add)
+  ;;        ("C-c t m" . org-transclusion-transient-menu)
+  ;;        ("C-n t t") . org-transclusion-mode))
 #+end_src
 
 * PLUGINS
