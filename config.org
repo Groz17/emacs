@@ -294,13 +294,23 @@ Disable automatic clipboard sync and only sync to system clipboard when Emacs lo
 (setq show-trailing-whitespace t)
 ;; (setq initial-scratch-message "")
 
-(setq search-whitespace-regexp ".*?")
+;; (setq search-whitespace-regexp ".*?")
 
 ;; do for all files emacs create? maybe single option? not to clutter ~
 (setq tramp-histfile-override (concat user-emacs-directory "tramp_history"))
 
+(setq make-backup-files nil) ; stop creating backup~ files
+(setq auto-save-default nil) ; stop creating #autosave# files
+(setq create-lockfiles nil)  ; stop creating .# files
+
 (setq history-length 25)
 (savehist-mode 1)
+
+(setq savehist-additional-variables
+      '(evil-ex-history
+        evil-search-history
+        evil-register-history))
+
 (save-place-mode 1)
 ;; universal-argument for repeat mode?
 (repeat-mode 1)
@@ -605,7 +615,7 @@ automatically fold when moving j/k?
                    "-f" temp-file
                    "-o"
                    "--no-filename"
-		   "-g" "data.md"
+		   "-g" "data.org"
                    (expand-file-name "~/org/wiki"))
                   (buffer-string)))
                (found-words
@@ -837,8 +847,8 @@ https://github.com/isamert/corg.el
 #+begin_src elisp
 ;; start in insert mode?
 
-(with-eval-after-load 'org
-(setq org-default-notes-file (concat org-directory "/inbox.org")))
+;; (with-eval-after-load 'org
+;; (setq org-default-notes-file (concat org-directory "/inbox.org")))
 ;; (setq org-capture-templates
 ;;       `(("t" "Tasks / Projects")
 ;;   ("tt" "Task" entry (file+olp "~/notes/Tasks.org" "Inbox")
@@ -1021,6 +1031,7 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
    ;; how To make all langs true?
    '(;; other Babel languages
      (plantuml . t)
+     (sparql . t)
      ; (typst . t)
      (ditaa . t)
      (python . t)
@@ -2280,6 +2291,10 @@ Emacs has built-in programming language modes for Lisp, Scheme, DSSSL, Ada, ASM,
 (use-package kanata-kbd-mode
   :ensure (:host github :repo "chmouel/kanata-kbd-mode")
   :mode ("\\.kbd\\'" . kanata-kbd-mode))
+
+(use-package sparql-mode
+  :mode (("\\.sparql\\'" . sparql-mode)
+         ("\\.rq\\'" . sparql-mode)))
 #+end_src
 
 ** SHELLS AND TERMINALS
@@ -2454,6 +2469,11 @@ key-quiz-use-mode
 (org-anki-default-deck "Default")
 ;; org-anki-ignored-tags
 ;; (org-anki-default-note-type "Basic (and reversed card)")
+
+(org-anki-model-fields
+  '(("Basic" "Front" "Back")
+  ("Wiktionary" "Word"))
+)
 )
 #+end_src
 ** TODO Radio
