@@ -960,7 +960,9 @@ echo map(systemlist("rg --type-list"),{_,line->{(line->split(":")[0]):substitute
 #+begin_src elisp
 (with-eval-after-load 'org
   (setq org-agenda-files (list org-directory ;; "~/dots"
-			       )))
+			       ))
+  (setq org-archive-location "~/org/archive.org::* From %s")
+)
 ;; (setq org-log-done 'note)
 ; (setq org-agenda-files
       ; (append (directory-files-recursively "~/dots" "\\.org$")
@@ -1141,7 +1143,7 @@ Also tangle when file's content externally modified (by command/LLM, ...), maybe
  ;; (setq initial-buffer-choice "~/notes.org")
 (setq org-imenu-depth 3)
 ;; Setting RETURN key in org-mode to follow links
-(setq org-return-follows-link  t)
+;; (setq org-return-follows-link  t)
 
 ;; Automatically update TODO statistics cookies [/] and [%]
 ; (setq org-hierarchical-todo-statistics nil)
@@ -1226,7 +1228,11 @@ https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892
 )
 #+end_src
 
-
+*** gantt
+#+begin_src elisp
+(use-package elgantt
+  :ensure (:host github :repo "legalnonsense/elgantt"))
+#+end_src
 *** org-mpv-note
 usa with yt-dlp
 #+begin_src elisp
@@ -1781,12 +1787,19 @@ evil-toggle-key
   :states '(normal insert visual emacs)
   :keymaps 'override
   :prefix "SPC" ;; set leader
+  :prefix-map 'gz/leader-map
   ;; :global-prefix "M-SPC";; access leader in insert mode
   :global-prefix "<f19>";; i wanna use m-spc in insert mode... per il momento ignora, magari usa S-spc
   )
 
+(defun gz/leader-universal-argument ()
+  (interactive)
+  (prefix-command-preserve-state)
+  (universal-argument-more (list (prefix-numeric-value prefix-arg)))
+  (set-transient-map gz/leader-map))
+
 (gz/leader-keys
-  "u" '(universal-argument :wk "Universal argument") ; doesn't work for (C-u){2,}
+  "u" #'gz/leader-universal-argument
 
   ;; would be cool if worked in visual mode ala narrowing
   ;; also match modes (if insert stays in insert) in both editors
@@ -1815,7 +1828,8 @@ evil-toggle-key
                       (shell-quote-argument buffer-file-name)))
            (message "Current buffer is not visiting a file."))) :wk "Open in Emacs GUI"
 
-  "SPC" '(emskin-open-native-app :wk "Open app")
+  ;; "SPC" '(emskin-open-native-app :wk "Open app")
+  ;; "SPC" '(org-anki-sync-entry :wk "Add Entry To Anki")
   )
 
 ;; how to show the descriptions in c-h l (lossage)?
@@ -2147,18 +2161,27 @@ also check out helm/etc... keybindings
   :ensure t
   :custom
   (vertico-scroll-margin 0) ;; Different scroll margin
-  (vertico-count 20) ;; Show more candidates
-  (vertico-resize t) ;; Grow and shrink the Vertico minibuffer
-  (vertico-cycle t) ;; Enable cycling for `vertico-next/previous'
+  (vertico-count 20)        ;; Show more candidates
+  (vertico-resize t)        ;; Grow and shrink the Vertico minibuffer
+  (vertico-cycle t)         ;; Enable cycling for `vertico-next/previous'
+  (context-menu-mode t)
+  (enable-recursive-minibuffers t)
+  (read-extended-command-predicate #'command-completion-default-include-p)
+  (minibuffer-prompt-properties
+   '(read-only t cursor-intangible t face minibuffer-prompt))
+
   :init
   (vertico-mode 1)
-  :bind (:map vertico-map
-              ("C-j" . vertico-next)
-              ("C-k" . vertico-previous)
-              ;; ("C-l" . vertico-insert) for find-file and vertico-exit for everything else?
-              ("C-l" . vertico-insert)
-              ("C-t" . vertico-buffer-frame-toggle-preview))
+
+  :bind
+  (:map vertico-map
+        ("C-j" . vertico-next)
+        ("C-k" . vertico-previous)
+        ("C-l" . vertico-exit)
+        ("C-t" . vertico-buffer-frame-toggle-preview))
+
   :config
+
   (defvar-keymap vertico-repeat-map
     :repeat t
     "j" #'vertico-next
@@ -2472,7 +2495,8 @@ key-quiz-use-mode
 
 (org-anki-model-fields
   '(("Basic" "Front" "Back")
-  ("Wiktionary" "Word"))
+  ;; ("Wiktionary" "Word"))
+  ("Wiktionary" "Word" "Mnemonic"))
 )
 )
 #+end_src
@@ -2997,6 +3021,11 @@ Install =luacheck= from your Linux distro's repositories for flycheck to work co
 #+begin_src elisp
 (use-package show-font
   :ensure (:host github :repo "protesilaos/show-font"))
+;; TODO for org tables...
+;; (use-package mixed-pitch
+;;   :hook
+;;   ;; If you want it in all text modes:
+;;   (text-mode . mixed-pitch-mode))
 #+end_src
 
 ** Socials
