@@ -8,6 +8,7 @@
 ** Vim feature parity
 
 ** Emacs [2/48] [4%]
+- [ ] use os notification when command finished in emacs but you're outside it
 - [ ] notes? css: #+setupfile: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup https://github.com/chenyanming/paw?tab=readme-ov-file
 - [ ] tangle only part of file that was modified (diff), especially not touched files
 - [ ] make undo work like vim (u0?)
@@ -303,7 +304,7 @@ Disable automatic clipboard sync and only sync to system clipboard when Emacs lo
 (setq auto-save-default nil) ; stop creating #autosave# files
 (setq create-lockfiles nil)  ; stop creating .# files
 
-(setq history-length 25)
+(setq history-length t)
 (savehist-mode 1)
 
 (setq savehist-additional-variables
@@ -3251,4 +3252,14 @@ https://github.com/ecraven/ivy-pass
 
 #+begin_src elisp :tangle no
 (use-package emacs-everywhere)
+#+end_src
+
+#+begin_src elisp
+(use-package org-draw
+  :ensure (:host github :repo "larrasket/org-draw"
+           :files ("*.el" ("web" "web/canvas.html")))
+  :commands (org-draw org-draw-edit org-draw-setup)
+  :custom
+(org-draw-copy-url nil)
+  )
 #+end_src
