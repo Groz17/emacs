@@ -582,6 +582,8 @@ automatically fold when moving j/k?
   (interactive)
   (let ((kill-emacs-hook (append kill-emacs-hook (list (lambda () (call-process "emacsclient -a''" nil nil nil))))))
     (save-buffers-kill-emacs)))
+(with-eval-after-load 'evil-maps
+  (define-key evil-normal-state-map (kbd "Z R") 'gz/restart-emacs))
 #+end_src
 
 * COMMANDS
@@ -1866,7 +1868,6 @@ evil-toggle-key
 (gz/leader-keys
   "r" '(:ignore t :wk "Reload")
   "r r" '(gz/reload-config :wk "Reload config")
-  "r R" '(gz/restart-emacs :wk "Restart Emacs")
   )
 )
 #+end_src
@@ -2717,7 +2718,7 @@ word count of the response."
 #+end_src
 
 *** MCP
-#+begin_src elisp
+#+begin_src elisp :tangle no
 (use-package mcp-server
   :ensure (:host github :repo "rhblind/emacs-mcp-server"
            :files ("*.el" "tools/*.el" "mcp-wrapper.py" "mcp-wrapper.sh"))
