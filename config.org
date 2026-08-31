@@ -824,6 +824,9 @@ https://github.com/isamert/corg.el
   ("idea" . ?i)
   ("thinking" . ?t)
   ("recurring" . ?r)))
+
+;; Make :I: tag appear subdued in Org (instead of headline-wide font-lock hacks).
+(setq org-tag-faces '(("I" . font-lock-comment-face)))
 #+end_src
 
 ** Refiling
@@ -2513,13 +2516,6 @@ make ignored headers greyed out
   ;; ("Wiktionary" "Word"))
   ("Wiktionary" "Word" "Mnemonic")))
 (org-anki-ignored-tags '("I"))
-:config
-            (font-lock-add-keywords
-             'org-mode
-             '(("^[ \t]*\\*+.*:I:.*$" 0 font-lock-comment-face))
-             t)
-            (font-lock-flush)
-
 )
 #+end_src
 ** TODO Radio
