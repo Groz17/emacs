@@ -70,6 +70,7 @@ The following settings are simple modes that are enabled (or disabled) so that E
 (setq help-window-select t)
 (setq compilation-auto-jump-to-first-error t)
 (setq compilation-scroll-output 'first-error)
+(setq search-default-mode #'char-fold-to-regexp)
 
 (winner-mode +1)
 (defun toggle-delete-other-windows ()
@@ -1333,6 +1334,17 @@ https://github.com/fuxialexander/org-pdftools
          ("C-c s l" . org-super-links-store-link)
          ("C-c s C-l" . org-super-links-insert-link)))
 #+end_src
+
+*** org-other-agenda
+#+begin_src elisp
+(use-package textui
+  :ensure (:host github :repo "yibie/textui" :files ("*.el")))
+(use-package org-other-agenda
+  :ensure (:host github
+           :repo "yibie/org-other-agenda"
+           :files ("*.el"))
+  :commands (org-other-agenda))
+#+end_src
 *** Org-ql
 #+begin_src elisp
 (use-package org-ql
@@ -2474,7 +2486,8 @@ key-quiz-use-mode
 )
 #+end_src
 
-** anki editor
+** TODO anki editor
+make ignored headers greyed out
  org-queue 
 #+begin_src elisp
 (use-package org-srs
@@ -2498,8 +2511,15 @@ key-quiz-use-mode
 (org-anki-model-fields
   '(("Basic" "Front" "Back")
   ;; ("Wiktionary" "Word"))
-  ("Wiktionary" "Word" "Mnemonic"))
-)
+  ("Wiktionary" "Word" "Mnemonic")))
+(org-anki-ignored-tags '("I"))
+:config
+            (font-lock-add-keywords
+             'org-mode
+             '(("^[ \t]*\\*+.*:I:.*$" 0 font-lock-comment-face))
+             t)
+            (font-lock-flush)
+
 )
 #+end_src
 ** TODO Radio
@@ -3218,7 +3238,7 @@ https://github.com/ecraven/ivy-pass
       "t" '(my/immersive-translate-transient :wk "Translate"))))
 #+end_src
 
-#+begin_src
+#+begin_src elisp
 (use-package empv
   :ensure (:host github :repo "isamert/empv.el")
 :custom (empv-invidious-instance "https://inv.nadeko.net/")
