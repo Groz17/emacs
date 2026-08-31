@@ -2996,9 +2996,12 @@ how to copy or put everything in the popup in a buffer?
                                            (internal-border-width . 1)))
   ;; (left-fringe . 20)
   :after which-key
+  :if (display-graphic-p)
   :diminish t
   :ensure t
-  :config (which-key-posframe-mode)
+  :hook (which-key-mode . which-key-posframe-mode)
+  :defer t
+  :config
   (setq which-key-posframe-poshandler 'posframe-poshandler-frame-center)
   )
 #+end_src
@@ -3047,12 +3050,16 @@ how to copy or put everything in the popup in a buffer?
 https://www.youtube.com/watch?v=W-bRZlseNm0
 #+begin_src elisp
 (use-package yasnippet-snippets
-  :ensure t)
+  :ensure t
+  :after yasnippet
+  :defer t)
 
 (use-package yasnippet
+  :hook ((prog-mode . yas-minor-mode)
+         (org-mode . yas-minor-mode)
+         (text-mode . yas-minor-mode))
   :config
-  (setq yas-snippet-dirs '("~/.config/emacs/snippets"))
-  (yas-global-mode 1))
+  (setq yas-snippet-dirs '("~/.config/emacs/snippets")))
 #+end_src
 
 
@@ -3076,7 +3083,8 @@ Install =luacheck= from your Linux distro's repositories for flycheck to work co
 *** Font preview
 #+begin_src elisp
 (use-package show-font
-  :ensure (:host github :repo "protesilaos/show-font"))
+  :ensure (:host github :repo "protesilaos/show-font")
+  :defer t)
 ;; TODO for org tables...
 ;; (use-package mixed-pitch
 ;;   :hook
