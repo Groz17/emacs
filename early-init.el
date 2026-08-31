@@ -14,12 +14,10 @@
 (setq frame-inhibit-implied-resize t)
 
 ;; Do not repaint intermediate startup states (prevents visible flash).
-(setq inhibit-redisplay t
-      inhibit-message t)
+(setq inhibit-redisplay t)
 (add-hook 'window-setup-hook
           (lambda ()
-            (setq inhibit-redisplay nil
-                  inhibit-message nil)
+            (setq inhibit-redisplay nil)
             (redisplay)))
 
 ;; Startup acceleration: relax GC and skip expensive file handlers during init.
