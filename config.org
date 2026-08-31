@@ -1313,6 +1313,7 @@ https://github.com/fuxialexander/org-pdftools
 (org-noter-auto-save-last-location t)
 (org-noter-notes-window-location 'vertical-split)
 (org-noter-highlight-selected-text t)
+(org-noter-supported-modes '(doc-view-mode pdf-view-mode nov-mode))
 (org-noter-max-short-selected-text-length 0)
 ;; :init  (setq org-noter-always-create-frame nil)
  ;; (setq org-noter-notes-search-path '("~/notes"))
