@@ -19,7 +19,16 @@
      default))
  '(safe-local-variable-directories `(,(expand-file-name "~/dots")))
  '(safe-local-variable-values
-   '((eval evil-ex-define-cmd "org-anki-sync-entry" #'org-anki-sync-entry)
+   '((eval highlight-regexp "হোয়ার্টন" 'ansi-color-bright-white)
+     (eval advice-add 'org-set-property :after
+	   (lambda (&rest _) (save-buffer) (org-anki-sync-entry)))
+     (eval advice-add 'org-set-property :after
+	   (lambda (&rest _) (org-anki-sync-entry)))
+     (eval advice-add 'org-set-property :after #'org-anki-sync-entry)
+     (org-refile-targets) (org-anki-ignored-tags "ignore")
+     (org-anki-ignored-tags . "ignore")
+     (eval evil-ex-define-cmd "org-anki-sync-entry"
+	   #'org-anki-sync-entry)
      (org-anki-field-templates
       ("Wiktionary"
        ("Mnemonic" lambda (_it) (or (org-entry-get nil "MNEMONIC") ""))))

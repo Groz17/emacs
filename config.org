@@ -129,7 +129,21 @@ Use only the gpg-encrypted version of the file.
 With Emacs version 29, true transparency has been added.  I have turned transparency off by setting the alpha to '100'.  If you want some slight transparency, try setting alpha to '90'.  Of course, if you set alpha to '0', the background of Emacs would completely transparent.
 
 #+begin_src elisp
-(add-to-list 'default-frame-alist '(alpha-background . 87)) ; For all new frames henceforth
+;; Keep startup frame fully usable, then enable transparency once init is done.
+(defvar gz/frame-alpha-background 87)
+(setf (alist-get 'alpha-background default-frame-alist) 100)
+
+(defun gz/apply-frame-transparency (&optional frame)
+  (set-frame-parameter (or frame (selected-frame))
+                       'alpha-background
+                       gz/frame-alpha-background))
+
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (setf (alist-get 'alpha-background default-frame-alist)
+                  gz/frame-alpha-background)
+            (gz/apply-frame-transparency)))
+(add-hook 'after-make-frame-functions #'gz/apply-frame-transparency)
 
 ;; Terminal transparency (clears background to use terminal's transparency)
 ; (defun gz/terminal-transparency ()
