@@ -1186,19 +1186,21 @@ Also tangle when file's content externally modified (by command/LLM, ...), maybe
 
 *** Org-web-tools
 #+begin_src elisp
-(use-package org-web-tools)
+(use-package org-web-tools
+  :defer t)
 #+end_src
 
 *** shrface
 #+begin_src elisp
-(use-package shrface)
+(use-package shrface
+  :defer t)
 #+end_src
 
 *** org-rich-yank
 #+begin_src elisp
 (use-package org-rich-yank
   :ensure t
-  :demand t
+  :commands (org-rich-yank)
   :bind (:map org-mode-map
               ("C-M-y" . org-rich-yank))
   :config
@@ -1252,14 +1254,15 @@ https://extgit.isec.tugraz.at/smore/org-mode/-/blob/8fde9fc9054b370f9e8241205892
 *** gantt
 #+begin_src elisp
 (use-package elgantt
-  :ensure (:host github :repo "legalnonsense/elgantt"))
+  :ensure (:host github :repo "legalnonsense/elgantt")
+  :defer t)
 #+end_src
 *** org-mpv-note
 usa with yt-dlp
 #+begin_src elisp
 (use-package smartrep
   :ensure t
-  :demand t)
+  :defer t)
 
 (use-package org-mpv-notes
   :ensure t
@@ -1355,7 +1358,8 @@ https://github.com/fuxialexander/org-pdftools
 *** org-other-agenda
 #+begin_src elisp
 (use-package textui
-  :ensure (:host github :repo "yibie/textui" :files ("*.el")))
+  :ensure (:host github :repo "yibie/textui" :files ("*.el"))
+  :defer t)
 (use-package org-other-agenda
   :ensure (:host github
            :repo "yibie/org-other-agenda"
@@ -1381,7 +1385,8 @@ https://github.com/fuxialexander/org-pdftools
 https://github.com/the-ted/org-mind-map
 #+begin_src elisp
 (use-package org-graphviz-mindmap
-  :ensure (:host github :repo "nowislewis/org-graphviz-mindmap"))
+  :ensure (:host github :repo "nowislewis/org-graphviz-mindmap")
+  :defer t)
 #+end_src
 
 
@@ -1400,7 +1405,10 @@ https://github.com/the-ted/org-mind-map
 #+end_src
 
 #+begin_src elisp
-(use-package org-transclusion)
+(use-package org-transclusion
+  :commands (org-transclusion-add
+             org-transclusion-mode
+             org-transclusion-transient-menu))
   ;; :bind (("S-<f12>" . org-transclusion-add)
   ;;        ("C-c t m" . org-transclusion-transient-menu)
   ;;        ("C-n t t") . org-transclusion-mode))
@@ -1921,8 +1929,7 @@ The modeline is the bottom status bar that appears in Emacs windows.  While you 
 #+begin_src elisp
 (use-package doom-modeline
   :ensure t
-  :init
-  (doom-modeline-mode 1)
+  :hook (emacs-startup . doom-modeline-mode)
   ;; change mode-line to the top (put on the left?)
   ;; (setq-default mode-line-format nil)
   ;; (setq-default header-line-format (doom-modeline-set-main-modeline))
@@ -2003,13 +2010,15 @@ This package implements hiding or abbreviation of the modeline displays (lighter
 
 *** Pages
 #+begin_src elisp
-(use-package page-break-lines)
+(use-package page-break-lines
+  :defer t)
 #+end_src
 
 *** Prism
 #+begin_src elisp
 (use-package prism
-  :ensure (:host github :repo "alphapapa/prism.el"))
+  :ensure (:host github :repo "alphapapa/prism.el")
+  :defer t)
 #+end_src
 
 #+begin_src elisp
@@ -2148,7 +2157,6 @@ how to go from diff to file w/ line num?
 *** Git-gutter
 #+begin_src elisp
 (use-package git-gutter
-  :demand t
   :bind
   (:map evil-normal-state-map
         ("[g" . git-gutter:previous-hunk)
@@ -2163,8 +2171,13 @@ how to go from diff to file w/ line num?
       "g" '(:ignore t :wk "Git")
       "g s" '(git-gutter:stage-hunk :wk "Stage hunk")
       "g u" '(git-gutter:revert-hunk :wk "Unstage hunk ")))
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (run-with-idle-timer 1 nil
+                                   (lambda ()
+                                     (global-git-gutter-mode +1)))))
   :config
-  (global-git-gutter-mode +1))
+  nil)
 #+end_src
 
 ** VERTICO (CONSULT)
@@ -2184,8 +2197,7 @@ also check out helm/etc... keybindings
 
 #+begin_src elisp
 (use-package compat
-  :ensure (:host github :repo "emacs-compat/compat")
-  :demand t)
+  :ensure (:host github :repo "emacs-compat/compat"))
 
 (use-package vertico
   :ensure t
@@ -2430,7 +2442,8 @@ ghostel-max-scrollback 5000)
 [[https://github.com/nflath/sudo-edit][sudo-edit]] gives us the ability to open files with sudo privileges or switch over to editing with sudo privileges if we initially opened the file without such privileges.
 
 #+begin_src elisp
-(use-package sudo-edit)
+(use-package sudo-edit
+  :commands (sudo-edit sudo-edit-find-file))
 ;; '(sudo-edit-find-file :wk "Sudo find file")
 ;; '(sudo-edit :wk "Sudo edit file"))
 #+end_src
@@ -2497,6 +2510,7 @@ key-quiz-use-mode
 
 #+begin_src elisp
 (use-package rfc-mode
+  :commands (rfc-mode)
   :custom
   (rfc-mode-directory (expand-file-name "~/.local/share/rfc/"))
 )
@@ -2725,7 +2739,9 @@ https://github.com/karthink/gptel/issues/165
 
 ***** Quick
 #+begin_src elisp
-(use-package posframe :ensure (:host github :repo "tumashu/posframe"))
+(use-package posframe
+  :ensure (:host github :repo "tumashu/posframe")
+  :defer t)
 (use-package gptel-quick
 :after gptel
 :ensure (:host github :repo "karthink/gptel-quick")
@@ -2758,7 +2774,8 @@ word count of the response."
 *** ACP
 #+begin_src elisp
 (use-package agent-shell
-  :ensure t)
+  :ensure t
+  :defer t)
 #+end_src
 
 ** Media
