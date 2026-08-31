@@ -94,7 +94,11 @@ The following settings are simple modes that are enabled (or disabled) so that E
 (setq highlight-nonselected-windows nil)
 
 (column-number-mode)
-(global-display-line-numbers-mode 1) ;; Display line numbers
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (run-with-idle-timer 0.2 nil
+                                 (lambda ()
+                                   (global-display-line-numbers-mode 1))))) ;; Display line numbers
 ;; Disable line numbers for some modes
 (dolist(mode '(org-mode-hook ghostel-mode-hook term-mode-hook shell-mode-hook eshell-mode-hook scad-preview-mode-hook))(add-hook mode (lambda()(display-line-numbers-mode 0))))
 (global-visual-line-mode t)  ;; Enable truncated lines
@@ -2076,7 +2080,9 @@ The first line below designates the directory where will place all of our custom
     '((<<~/dots/_lib|.org:theme(color_scheme="dark")>>)
      (<<~/dots/_lib|.org:theme(color_scheme="light")>>)))
   :init
-  (auto-dark-mode))
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (run-with-idle-timer 0.4 nil #'auto-dark-mode))))
 #+end_src
 
 *** DASHBOARD
@@ -2095,7 +2101,7 @@ Emacs Dashboard is an extensible startup screen showing you recent files, bookma
 (use-package dashboard
   :ensure t
   :init
-  (setq initial-buffer-choice 'dashboard-open)
+  (setq initial-buffer-choice nil)
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
   (setq dashboard-banner-logo-title "Emacs Is More Than A Text Editor!")
@@ -2111,7 +2117,9 @@ Emacs Dashboard is an extensible startup screen showing you recent files, bookma
   (dashboard-modify-heading-icons '((recents . "file-text")
             (bookmarks . "book")))
   :config
-  (dashboard-setup-startup-hook)
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (run-with-idle-timer 0.3 nil #'dashboard-open)))
   (with-eval-after-load 'evil
     (gz/dashboard-setup-evil-keys))
   (with-eval-after-load 'evil-collection
