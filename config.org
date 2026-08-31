@@ -47,7 +47,8 @@ To keep this =config.org= a reasonable length, I have moved a lot of code to ind
 ** Sourcing the scripts
 #+begin_src elisp
 (require 'elpaca-setup)  ;; The Elpaca Package Manager
-(require 'app-launchers) ;; Use emacs as a run launcher like dmenu (experimental)
+;; Load only when command is used.
+(autoload 'dt/emacs-run-launcher "app-launchers" nil t)
 #+end_src
 
 * OPTIONS
