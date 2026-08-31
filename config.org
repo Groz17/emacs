@@ -732,7 +732,6 @@ https://github.com/isamert/corg.el
    )
   :config ;; (message "test lazy loading")
 
-(require 'consult)
 (defun my/wiki-search ()
   (interactive)
   (consult-ripgrep "~/org/"))
