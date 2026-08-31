@@ -2081,9 +2081,7 @@ The first line below designates the directory where will place all of our custom
     '((<<~/dots/_lib|.org:theme(color_scheme="dark")>>)
      (<<~/dots/_lib|.org:theme(color_scheme="light")>>)))
   :init
-  (add-hook 'emacs-startup-hook
-            (lambda ()
-              (run-with-idle-timer 0.4 nil #'auto-dark-mode))))
+  (auto-dark-mode))
 #+end_src
 
 *** DASHBOARD

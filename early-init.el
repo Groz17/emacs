@@ -1,5 +1,27 @@
 (setq package-enable-at-startup nil)
 
+;; Prevent white flash before theme loads.
+(defvar gz/early-frame-background "#111111")
+(add-to-list 'default-frame-alist `(background-color . ,gz/early-frame-background))
+(add-to-list 'initial-frame-alist `(background-color . ,gz/early-frame-background))
+(set-face-attribute 'default nil :background gz/early-frame-background :foreground "#e6e6e6")
+(setq frame-background-mode 'dark)
+
+;; Avoid first-frame flicker by setting frame chrome before it is drawn.
+(push '(menu-bar-lines . 0) default-frame-alist)
+(push '(tool-bar-lines . 0) default-frame-alist)
+(push '(vertical-scroll-bars . nil) default-frame-alist)
+(setq frame-inhibit-implied-resize t)
+
+;; Do not repaint intermediate startup states (prevents visible flash).
+(setq inhibit-redisplay t
+      inhibit-message t)
+(add-hook 'window-setup-hook
+          (lambda ()
+            (setq inhibit-redisplay nil
+                  inhibit-message nil)
+            (redisplay)))
+
 ;; Startup acceleration: relax GC and skip expensive file handlers during init.
 (setq gc-cons-threshold most-positive-fixnum
       gc-cons-percentage 0.6)
