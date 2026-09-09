@@ -2106,10 +2106,11 @@ Emacs Dashboard is an extensible startup screen showing you recent files, bookma
   (when (boundp 'dashboard-mode-map)
     (evil-define-key 'normal dashboard-mode-map (kbd "i") #'gz/dashboard-new-buffer-insert)))
 
+;; only non-editing keybindings allowed in dashboard buffer, like f,t,w, etc... (should behave like an empty buffer)
 (use-package dashboard
   :ensure t
   :init
-  (setq initial-buffer-choice nil)
+  (setq initial-buffer-choice #'dashboard-open)
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
   (setq dashboard-banner-logo-title "Emacs Is More Than A Text Editor!")
@@ -2125,9 +2126,7 @@ Emacs Dashboard is an extensible startup screen showing you recent files, bookma
   (dashboard-modify-heading-icons '((recents . "file-text")
             (bookmarks . "book")))
   :config
-  (add-hook 'emacs-startup-hook
-            (lambda ()
-              (run-with-idle-timer 0.3 nil #'dashboard-open)))
+  (dashboard-setup-startup-hook)
   (with-eval-after-load 'evil
     (gz/dashboard-setup-evil-keys))
   (with-eval-after-load 'evil-collection
