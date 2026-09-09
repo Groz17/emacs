@@ -98,7 +98,9 @@ The following settings are simple modes that are enabled (or disabled) so that E
           (lambda ()
             (run-with-idle-timer 0.2 nil
                                  (lambda ()
-                                   (global-display-line-numbers-mode 1))))) ;; Display line numbers
+                                   (global-display-line-numbers-mode 1)
+                                   (when (derived-mode-p 'dashboard-mode)
+                                     (display-line-numbers-mode -1)))))) ;; Display line numbers
 ;; Disable line numbers for some modes
 (dolist(mode '(org-mode-hook ghostel-mode-hook term-mode-hook shell-mode-hook eshell-mode-hook scad-preview-mode-hook))(add-hook mode (lambda()(display-line-numbers-mode 0))))
 (global-visual-line-mode t)  ;; Enable truncated lines
