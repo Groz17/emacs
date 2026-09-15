@@ -72,6 +72,8 @@ The following settings are simple modes that are enabled (or disabled) so that E
 (setq compilation-auto-jump-to-first-error t)
 (setq compilation-scroll-output 'first-error)
 (setq search-default-mode #'char-fold-to-regexp)
+;; make it only for pdfs?
+(setq large-file-warning-threshold nil)
 
 (winner-mode +1)
 (defun toggle-delete-other-windows ()
@@ -102,7 +104,7 @@ The following settings are simple modes that are enabled (or disabled) so that E
                                    (when (derived-mode-p 'dashboard-mode)
                                      (display-line-numbers-mode -1)))))) ;; Display line numbers
 ;; Disable line numbers for some modes
-(dolist(mode '(org-mode-hook ghostel-mode-hook term-mode-hook shell-mode-hook eshell-mode-hook scad-preview-mode-hook))(add-hook mode (lambda()(display-line-numbers-mode 0))))
+(dolist(mode '(org-mode-hook ghostel-mode-hook pdf-view-mode-hook term-mode-hook shell-mode-hook eshell-mode-hook scad-preview-mode-hook))(add-hook mode (lambda()(display-line-numbers-mode 0))))
 (global-visual-line-mode t)  ;; Enable truncated lines
 ;; (menu-bar-mode -1)           ;; Disable the menu bar
 (scroll-bar-mode -1)         ;; Disable the scroll bar
@@ -2806,6 +2808,7 @@ invert colors?
 (use-package pdf-tools
     ; :ensure (:repo "aikrahguzar/pdf-tools" :host github :branch "upstream-pdf-roll")
     :ensure (:repo "rahguzar/pdf-tools" :host codeberg)
+:hook (pdf-view-mode . pdf-view-roll-minor-mode)
   :defer t
   :commands (pdf-loader-install)
   :mode "\\.pdf\\'"
@@ -2871,6 +2874,27 @@ invert colors?
 
 (use-package doc-toc
   :mode "\\.pdf\\'")
+
+(use-package qpdf.el
+  :ensure (:host github :repo "orgtre/qpdf.el")
+  :config
+(defun qpdf-delete-current-page ()
+  "Delete the current page of pdf file."
+  (interactive)
+  (unless (or (equal major-mode 'doc-view-mode)
+	      (equal major-mode 'pdf-view-mode))
+    (error "Buffer should visit a pdf file in doc-view-mode or pdf-view-mode."))
+  (qpdf-run (list
+	     (concat "--pages="
+		     (qpdf--read-pages-with-presets nil nil nil
+						    'except-current))
+	     (concat "--infile="
+		     (buffer-file-name))
+	     "--replace-input")))
+
+  (general-define-key :states 'normal :keymaps 'pdf-view-mode-map
+          "d d" 'qpdf-delete-current-page
+  ))
 
 (use-package buffer-to-pdf
   :ensure (:host github :repo "protesilaos/buffer-to-pdf")
