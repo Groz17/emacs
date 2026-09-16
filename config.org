@@ -1471,6 +1471,20 @@ https://github.com/the-ted/org-mind-map
 
 evil-toggle-key
 #+begin_src elisp
+;; Define this before evil-maps loads because one text object is installed
+;; from a with-eval-after-load form during Evil's initialization.
+;; this macro was copied from here: https://stackoverflow.com/a/22418983/4921402
+(defmacro define-and-bind-quoted-text-object (name key start-regex end-regex)
+  (let ((inner-name (make-symbol (concat "evil-inner-" name)))
+        (outer-name (make-symbol (concat "evil-a-" name))))
+    `(progn
+       (evil-define-text-object ,inner-name (count &optional beg end type)
+         (evil-select-paren ,start-regex ,end-regex beg end type count nil))
+       (evil-define-text-object ,outer-name (count &optional beg end type)
+         (evil-select-paren ,start-regex ,end-regex beg end type count t))
+       (define-key evil-inner-text-objects-map ,key #',inner-name)
+       (define-key evil-outer-text-objects-map ,key #',outer-name))))
+
 (use-package evil
   ;; :init      ; tweak evil's configuration before loading it
    :init
@@ -1583,18 +1597,6 @@ evil-toggle-key
   ;; :custom (evil-surround-pairs-alist
   ;;          '((?r . ("[" . "]"))
   ;;            (?a . ("<" . ">"))))
-  ;; this macro was copied from here: https://stackoverflow.com/a/22418983/4921402
-  (defmacro define-and-bind-quoted-text-object (name key start-regex end-regex)
-    (let ((inner-name (make-symbol (concat "evil-inner-" name)))
-    (outer-name (make-symbol (concat "evil-a-" name))))
-      `(progn
-   (evil-define-text-object ,inner-name (count &optional beg end type)
-     (evil-select-paren ,start-regex ,end-regex beg end type count nil))
-   (evil-define-text-object ,outer-name (count &optional beg end type)
-     (evil-select-paren ,start-regex ,end-regex beg end type count t))
-   (define-key evil-inner-text-objects-map ,key #',inner-name)
-   (define-key evil-outer-text-objects-map ,key #',outer-name))))
-
 ;;  follows keyboard order
   (define-and-bind-quoted-text-object "bang" "!" "!" "!")
   (define-and-bind-quoted-text-object "at" "@" "@" "@")
