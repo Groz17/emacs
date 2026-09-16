@@ -1747,6 +1747,7 @@ evil-toggle-key
   ;; alias for multiple?
   (define-key evil-outer-text-objects-map "q" 'evil-a-double-quote)
   (define-key evil-inner-text-objects-map "q" 'evil-inner-double-quote)
+  (define-and-bind-quoted-text-object "smart" "Q" "“" "”")
 
   ;; how to Continue being in insert mode if called from insert mode?
   (global-set-key (kbd "<f16>") 'evil-window-map)
@@ -2850,9 +2851,10 @@ invert colors?
   ;; (define-key evil-normal-state-local-map (kbd "C-k")#'pdf-view-enlarge)
   )
 
-(add-hook 'pdf-view-mode-hook #'(lambda () (interactive) (display-line-numbers-mode -1)
+(add-hook 'pdf-view-mode-hook #'(lambda () (interactive) 
                                   (blink-cursor-mode -1)
-                                  (doom-modeline-mode -1) ; revert when exiting?
+                                  ;; (doom-modeline-mode -1)
+					; revert when exiting?
           ; (define-key evil-normal-state-local-map (kbd "C-j")#'pdf-view-shrink)
           ;; (define-key evil-normal-state-map (kbd "C-j")#'pdf-view-shrink)
           ;; (define-key evil-normal-state-map (kbd "C-k")#'pdf-view-enlarge)
