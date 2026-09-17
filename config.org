@@ -499,6 +499,41 @@ automatically fold when moving j/k?
 ;;   "s w" '(woman :wk "Similar to man but doesn't require man"))
 #+end_src
 
+** Bengali audio
+#+begin_src elisp
+(defvar my-edge-tts-process nil
+  "Current edge-tts/mpv process.")
+
+(defun my-edge-tts-speak-region (beg end)
+  "Speak the currently selected region with edge-tts."
+  (interactive "r")
+  (unless (use-region-p)
+    (user-error "Select some text first"))
+
+  ;; Stop previous playback, if any.
+  (when (process-live-p my-edge-tts-process)
+    (kill-process my-edge-tts-process))
+
+  (let* ((text (buffer-substring-no-properties beg end))
+         (voice "bn-BD-NabanitaNeural")
+         (command
+          (format
+           "edge-tts --rate=-20%% --voice %s --text %s | mpv --no-terminal -"
+           (shell-quote-argument voice)
+           (shell-quote-argument text))))
+
+    (setq my-edge-tts-process
+          (start-process-shell-command
+           "edge-tts-mpv"
+           "*edge-tts*"
+           command))
+
+    (deactivate-mark)
+    (message "Speaking selected text...")))
+
+(global-set-key (kbd "C-c t") #'my-edge-tts-speak-region)
+#+end_src
+
 ** Bengali IPA
 #+begin_src elisp
 (require 'subr-x)
