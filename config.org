@@ -509,7 +509,7 @@ automatically fold when moving j/k?
 (defvar my-edge-tts-voice "bn-BD-NabanitaNeural"
   "Currently selected edge-tts voice.")
 
-(defvar my-edge-tts-rate "+0%"
+(defvar my-edge-tts-rate "+0"
   "Current edge-tts speech rate.")
 
 (defvar my-edge-tts-region-beg nil
@@ -532,25 +532,45 @@ automatically fold when moving j/k?
   (setq my-edge-tts-voice voice)
   (message "Voice: %s" voice))
 
+(defun my-edge-tts-set-nabanita ()
+  "Use the Nabanita voice."
+  (interactive)
+  (my-edge-tts-set-voice "bn-BD-NabanitaNeural"))
+
+(defun my-edge-tts-set-pradeep ()
+  "Use the Pradeep voice."
+  (interactive)
+  (my-edge-tts-set-voice "bn-BD-PradeepNeural"))
+
+(defun my-edge-tts-set-bashkar ()
+  "Use the Bashkar voice."
+  (interactive)
+  (my-edge-tts-set-voice "bn-IN-BashkarNeural"))
+
+(defun my-edge-tts-set-tanishaa ()
+  "Use the Tanishaa voice."
+  (interactive)
+  (my-edge-tts-set-voice "bn-IN-TanishaaNeural"))
+
 (defun my-edge-tts-set-rate ()
   "Set the edge-tts speech rate."
   (interactive)
   (let ((rate
          (read-string
-          (format "Rate, e.g. +0%%, +20%%, -20%% [%s]: "
+          (format "Rate, e.g. +0, +20, -20 [%s]: "
                   my-edge-tts-rate)
           nil
           nil
           my-edge-tts-rate)))
-    (unless (string-match-p "\\`[+-]?[0-9]+%\\'" rate)
-      (user-error "Rate must look like +20%%, -20%%, or +0%%"))
+    (unless (string-match-p "\\`[+-]?[0-9]+\\'" rate)
+      (user-error "Rate must look like +20, -20, or +0"))
     (setq my-edge-tts-rate rate)
     (message "Rate: %s" rate)))
 
 (defun my-edge-tts-reset-rate ()
   "Reset the speech rate to normal speed."
   (interactive)
-  (setq my-edge-tts-rate "+0%")
+  (setq my-edge-tts-rate "+0")
   (message "Rate reset to %s" my-edge-tts-rate))
 
 (defun my-edge-tts-speak ()
@@ -571,7 +591,7 @@ automatically fold when moving j/k?
          ;; Use --rate=VALUE so negative rates are handled correctly.
          (command
           (format
-           "edge-tts --voice %s --rate=%s --text %s --write-media - | mpv --no-terminal -"
+           "edge-tts --voice %s --rate=%s%% --text %s --write-media - | mpv --no-terminal -"
            voice
            rate
            quoted-text)))
@@ -592,46 +612,23 @@ automatically fold when moving j/k?
 (transient-define-prefix my-edge-tts-menu ()
   "Speak the selected region with edge-tts."
   [["Voices"
-    ("1" "Nabanita — Female" 
-     (lambda ()
-       (interactive)
-       (my-edge-tts-set-voice "bn-BD-NabanitaNeural"))
-     :transient t)
-
-    ("2" "Pradeep — Male"
-     (lambda ()
-       (interactive)
-       (my-edge-tts-set-voice "bn-BD-PradeepNeural"))
-     :transient t)
-
-    ("3" "Bashkar — Male"
-     (lambda ()
-       (interactive)
-       (my-edge-tts-set-voice "bn-IN-BashkarNeural"))
-     :transient t)
-
-    ("4" "Tanishaa — Female"
-     (lambda ()
-       (interactive)
-       (my-edge-tts-set-voice "bn-IN-TanishaaNeural"))
-     :transient t)]
-
+    ("1" "Nabanita — Female" my-edge-tts-set-nabanita :transient t)
+    ("2" "Pradeep — Male" my-edge-tts-set-pradeep :transient t)
+    ("3" "Bashkar — Male" my-edge-tts-set-bashkar :transient t)
+    ("4" "Tanishaa — Female" my-edge-tts-set-tanishaa :transient t)]
    ["Options"
-    ("r" "Set rate"
-     my-edge-tts-set-rate
-     :transient t)
-
-    ("0" "Reset rate"
-     my-edge-tts-reset-rate
-     :transient t)
-
-    ("k" "Stop playback"
-     my-edge-tts-stop
-     :transient t)]
-
+    ("r" "Set rate" my-edge-tts-set-rate :transient t)
+    ("0" "Reset rate" my-edge-tts-reset-rate :transient t)
+    ("k" "Stop playback" my-edge-tts-stop :transient t)]
    ["Action"
-    ("RET" "Speak selected text"
-     my-edge-tts-speak)]])
+    ("RET" "Speak selected text" my-edge-tts-speak)]])
+
+(defun my-edge-tts-menu ()
+  "Open the Edge TTS menu with a fresh Transient prefix object."
+  (interactive)
+  (put 'my-edge-tts-menu 'transient--prefix
+       (transient-prefix :command 'my-edge-tts-menu))
+  (transient-setup 'my-edge-tts-menu))
 
 (defun my-edge-tts-speak-region (beg end)
   "Open a Transient menu for speaking the selected region."
