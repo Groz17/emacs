@@ -20,7 +20,14 @@
      default))
  '(safe-local-variable-directories `(,(expand-file-name "~/dots")))
  '(safe-local-variable-values
-   '((eval highlight-regexp "হোয়ার্টন" 'ansi-color-bright-white)
+   '((eval highlight-regexp "^.* =" 'ansi-color-bright-white)
+     (eval advice-add 'org-set-property :after
+	   (lambda (&rest _)
+	     (when
+		 (eq (current-buffer)
+		     (get-file-buffer buffer-file-name))
+	       (save-buffer) (org-anki-sync-entry))))
+     (eval highlight-regexp "হোয়ার্টন" 'ansi-color-bright-white)
      (eval advice-add 'org-set-property :after
 	   (lambda (&rest _) (save-buffer) (org-anki-sync-entry)))
      (eval advice-add 'org-set-property :after
