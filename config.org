@@ -963,10 +963,37 @@ https://github.com/isamert/corg.el
 
 *** visual-fill-column
 #+begin_src elisp
+(defvar-local efs/org-mode-visual-fill--last-scale nil)
+(defvar-local efs/org-mode-visual-fill--margins nil)
+
+(defun efs/org-mode-visual-fill-adjust-window (&rest _)
+  (when visual-fill-column-mode
+    (let* ((window (get-buffer-window (current-buffer) t))
+           (scale (and (boundp 'text-scale-mode-amount)
+                       text-scale-mode-amount)))
+      (when window
+        (if (and (not (equal scale efs/org-mode-visual-fill--last-scale))
+                 efs/org-mode-visual-fill--margins)
+            (set-window-margins
+             window
+             (car efs/org-mode-visual-fill--margins)
+             (cdr efs/org-mode-visual-fill--margins))
+          (setq efs/org-mode-visual-fill--margins
+                (window-margins window)))
+        (setq efs/org-mode-visual-fill--last-scale scale)))))
+
 (defun efs/org-mode-visual-fill ()
   (setq visual-fill-column-width 100
-        visual-fill-column-center-text t)
-  (visual-fill-column-mode 1))
+        visual-fill-column-center-text t
+        visual-fill-column-adjust-for-text-scale nil)
+  (visual-fill-column-mode 1)
+  (setq efs/org-mode-visual-fill--last-scale
+        (and (boundp 'text-scale-mode-amount)
+             text-scale-mode-amount)
+        efs/org-mode-visual-fill--margins
+        (window-margins (selected-window)))
+  (add-hook 'window-state-change-functions
+            #'efs/org-mode-visual-fill-adjust-window 'append 'local))
 
 (use-package visual-fill-column
   :hook (org-mode . efs/org-mode-visual-fill))
