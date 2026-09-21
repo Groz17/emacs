@@ -1379,6 +1379,52 @@ Also tangle when file's content externally modified (by command/LLM, ...), maybe
   :hook (org-mode . toc-org-enable))
 #+end_src
 
+#+begin_src elisp
+(use-package org-re-reveal
+  :ensure t
+  :init
+  (setq org-re-reveal-transition 'none
+        org-re-reveal-theme "dracula"))
+
+(use-package ob-mermaid
+  :ensure t
+  :init
+  (setq ob-mermaid-cli-path "mmdc")
+  (setq org-confirm-babel-evaluate nil)
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((mermaid . t)
+     (scheme . t)))
+  )
+#+end_src
+
+*** org-contacts
+#+begin_src elisp
+(use-package org-contacts
+  :ensure t
+  :custom
+  (org-contacts-files
+   (list (expand-file-name "contacts.org" "~/org")))
+  :config
+  (add-to-list 'org-agenda-files
+               (expand-file-name "contacts.org" "~/org"))
+
+  (add-to-list
+   'org-capture-templates
+   '("c" "Contact" entry
+     (file "~/org/contacts.org")
+     "* %^{Name}
+:PROPERTIES:
+:EMAIL: %^{Email}
+:PHONE: %^{Phone}
+:ADDRESS: %^{Address}
+:BIRTHDAY: %^{Birthday (YYYY-MM-DD)}
+:END:
+"
+     :empty-lines 1)))
+
+#+end_src
 *** Org-web-tools
 #+begin_src elisp
 (use-package org-web-tools
@@ -2529,6 +2575,20 @@ Emacs has built-in programming language modes for Lisp, Scheme, DSSSL, Ada, ASM,
 
 #+begin_src elisp
 (use-package haskell-mode :mode "\\.hs\\'")
+
+;; https://www.youtube.com/watch?v=SsC-OsHR9RY
+;; Make the diagram fit:
+;; #+attr html: :style max-height: 50vh; width: auto; object-fit: contain;
+
+
+(use-package d2-mode
+  :init
+  (setq d2-flags (list "--layout" "elk" "--theme" "200"))
+  (define-advice d2-compile
+      (:before (&rest _) setup) (save-buffer)))
+
+
+
 (use-package lua-mode :mode "\\.lua\\'")
 (use-package typescript-mode
   :mode "\\.ts\\'"
@@ -3507,7 +3567,7 @@ https://github.com/ecraven/ivy-pass
 #+begin_src elisp
 (use-package empv
   :ensure (:host github :repo "isamert/empv.el")
-:custom (empv-invidious-instance "https://inv.nadeko.net/")
+:custom (empv-invidious-instance 'ivjs)
 )
 #+end_src
 
