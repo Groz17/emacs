@@ -2466,9 +2466,6 @@ ivy-occur copy the whole line, not just selected?
 also check out helm/etc... keybindings
 
 #+begin_src elisp
-(use-package compat
-  :ensure (:host github :repo "emacs-compat/compat"))
-
 (use-package vertico
   :ensure t
   :custom
