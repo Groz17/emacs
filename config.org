@@ -810,6 +810,23 @@ use ij/aj for this?
 (add-hook 'prog-mode-hook #'subword-mode)
 #+end_src
 
+** OS Notifications
+See emacs messages as OS notifications when not focused
+#+begin_src elisp
+(require 'notifications)
+
+(defun my/notify-emacs-message (format-string &rest args)
+  (when (and (stringp format-string)
+             (not inhibit-message)
+             (not (frame-focus-state)))
+    (let ((msg (apply #'format-message format-string args)))
+      (when (and (stringp msg) (not (string-empty-p msg)))
+        (notifications-notify
+         :title "Emacs"
+         :body msg)))))
+
+(advice-add 'message :after #'my/notify-emacs-message)
+#+end_src
 * VIM PARITY
 
 #+begin_src elisp
@@ -1399,10 +1416,13 @@ Also tangle when file's content externally modified (by command/LLM, ...), maybe
      (file "~/org/contacts.org")
      "* %^{Name}
 :PROPERTIES:
-:EMAIL: %^{Email}
-:PHONE: %^{Phone}
+:ALIAS: %^{hefis}
+:NICKNAME: %^{hefistion}
 :ADDRESS: %^{Address}
-:BIRTHDAY: %^{Birthday (YYYY-MM-DD)}
+:BIRTHDAY: %^{yyyy-mm-dd}
+:EMAIL: %(org-contacts-template-email)
+:NOTE: %^{NOTE}
+:PHONE: %^{Phone}
 :END:
 "
      :empty-lines 1)))
