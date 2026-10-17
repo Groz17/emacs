@@ -20,7 +20,12 @@
      default))
  '(safe-local-variable-directories `(,(expand-file-name "~/dots")))
  '(safe-local-variable-values
-   '((eval highlight-regexp "^.* =" 'ansi-color-bright-white)
+   '((eval let ((buf (current-buffer)))
+	   (advice-add 'org-set-property :after
+		       (lambda (&rest _)
+			 (when (eq (current-buffer) buf)
+			   (save-buffer) (org-anki-sync-entry)))))
+     (eval highlight-regexp "^.* =" 'ansi-color-bright-white)
      (eval advice-add 'org-set-property :after
 	   (lambda (&rest _)
 	     (when

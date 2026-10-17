@@ -2339,6 +2339,7 @@ The first line below designates the directory where will place all of our custom
 *** DASHBOARD
 Emacs Dashboard is an extensible startup screen showing you recent files, bookmarks, agenda items and an Emacs banner.
 
+org-mode agenda here?
 #+begin_src elisp
 (defun gz/dashboard-new-buffer-insert ()
   (interactive)
@@ -2632,6 +2633,10 @@ Emacs has built-in programming language modes for Lisp, Scheme, DSSSL, Ada, ASM,
 (use-package sparql-mode
   :mode (("\\.sparql\\'" . sparql-mode)
          ("\\.rq\\'" . sparql-mode)))
+
+(use-package rmsbolt
+  :ensure (:host gitlab :repo "jgkamat/rmsbolt"))
+
 #+end_src
 
 ** SHELLS AND TERMINALS
@@ -3347,6 +3352,18 @@ https://www.youtube.com/watch?v=W-bRZlseNm0
          (text-mode . yas-minor-mode))
   :config
   (setq yas-snippet-dirs '("~/.config/emacs/snippets")))
+
+;;;
+;; in alphabetic order
+;; * Abugida
+;; ** Vowels
+;; 
+;; *** Dependant
+;; ** Consonants
+;; 
+;; *** Conjuncts
+;; * Alphabet .... etc...
+;;;
 #+end_src
 
 
