@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 (setq package-enable-at-startup nil)
 
 ;; Avoid first-frame flicker by setting frame chrome before it is drawn.

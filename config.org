@@ -4,6 +4,10 @@
 #+STARTUP: overview
 #+property: header-args :tangle ~/.config/emacs/init.el
 
+#+begin_src elisp
+;; -*- lexical-binding: t; -*-
+#+end_src
+
 * TODO TASK LIST
 ** Vim feature parity
 
