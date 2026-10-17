@@ -52,6 +52,11 @@ To keep this =config.org= a reasonable length, I have moved a lot of code to ind
 ** Sourcing the scripts
 #+begin_src elisp
 (require 'elpaca-setup)  ;; The Elpaca Package Manager
+(elpaca transient (require 'transient))
+(elpaca-wait)
+(require 'server)
+(unless (or (daemonp) (server-running-p))
+  (server-start))
 ;; Load only when command is used.
 (autoload 'dt/emacs-run-launcher "app-launchers" nil t)
 #+end_src
@@ -122,7 +127,7 @@ The following settings are simple modes that are enabled (or disabled) so that E
   ;; Function to send OSC 2 escape sequence to terminal
   (defun my/update-terminal-title ()
     (when (not (display-graphic-p))
-      (when-let ((title (concat (buffer-name) " - Emacs")))
+      (when-let* ((title (concat (buffer-name) " - Emacs")))
         (send-string-to-terminal (format "\033]2;%s\007" title)))))
   ;; Run it every time you change buffers or commands
   (add-hook 'post-command-hook #'my/update-terminal-title))
@@ -519,8 +524,6 @@ automatically fold when moving j/k?
 ** TODO Bengali audio
 Autodetect language
 #+begin_src elisp
-(require 'transient)
-
 (defvar my-edge-tts-process nil
   "Current edge-tts/mpv process.")
 
@@ -767,7 +770,11 @@ Autodetect language
 (defun gz/restart-emacs ()
   "Restart Emacs"
   (interactive)
-  (let ((kill-emacs-hook (append kill-emacs-hook (list (lambda () (call-process "emacsclient -a''" nil nil nil))))))
+  (let ((kill-emacs-hook
+         (append kill-emacs-hook
+                 (list (lambda ()
+                         (call-process "emacsclient" nil nil nil
+                                       "-a" ""))))))
     (save-buffers-kill-emacs)))
 (with-eval-after-load 'evil-maps
   (define-key evil-normal-state-map (kbd "Z R") 'gz/restart-emacs))
@@ -2392,8 +2399,8 @@ how to go from diff to file w/ line num?
 - [ ] Always open status on the right? I'd like To know how to do it with smth dumb like ^wL
 
 #+begin_src elisp
-(use-package cond-let)
-(use-package transient :bind (:map transient-map ("<escape>" . transient-quit-one))) ;; Make escape quit magit prompts
+(with-eval-after-load 'transient
+  (define-key transient-map (kbd "<escape>") #'transient-quit-one)) ;; Make escape quit magit prompts
 
 (setq magit-define-global-key-bindings 'recommended)
 (use-package magit :after transient
