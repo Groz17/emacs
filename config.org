@@ -480,7 +480,6 @@ automatically fold when moving j/k?
 #+end_src
 
 
-
 * KEYBINDINGS
 ** Kanata
 #+begin_src elisp
@@ -773,13 +772,17 @@ Autodetect language
 * COMMANDS
 #+begin_src elisp
 (defun highlight-bengali-if-in-wiki ()
-  "Find Bengali words in the current buffer, check if they exist in ~/wiki, and highlight them."
+  "Highlight Bengali words not listed by NEW_WORDS."
   (interactive)
   (hi-lock-mode 1)
   (hi-lock-mode -1)
   (message "Scanning current buffer for Bengali words...")
 
-  (let ((buffer-words '()))
+  (let ((buffer-words '())
+        (new-words
+         (split-string
+          (org-babel-ref-resolve "~/dots/_lib|.org:NEW_WORDS()")
+          "|" t)))
     (save-excursion
       (goto-char (point-min))
       (while (re-search-forward "[\u0980-\u09FF]+" nil t)
@@ -790,35 +793,15 @@ Autodetect language
     (if (null buffer-words)
         (message "No Bengali words found in this buffer.")
 
-      (let ((temp-file (make-temp-file "emacs-bengali-")))
-        (with-temp-file temp-file
-          (dolist (word buffer-words)
-            (insert word "\n")))
-
-        (let* ((output
-                (with-temp-buffer
-                  (call-process
-                   "rg" nil t nil
-                   "-f" temp-file
-                   "-o"
-                   "--no-filename"
-		   "-g" "data.org"
-                   (expand-file-name "~/org/wiki"))
-                  (buffer-string)))
-               (found-words
-                (delete-dups
-                 (split-string output "\n" t))))
-
-          (delete-file temp-file)
-
-          (if (null found-words)
-              (message "None of the Bengali words were found in ~/wiki.")
-
-
-            (let ((regex (mapconcat #'regexp-quote found-words "\\|")))
-              (hi-lock-set-pattern regex 'hi-yellow)
-              (message "Highlighted %d words found in both buffer and ~/wiki."
-                       (length found-words)))))))))
+      (let ((unfound-words
+             (seq-remove (lambda (word) (member word new-words))
+                         buffer-words)))
+            (if (null unfound-words)
+                (message "All Bengali words are listed by NEW_WORDS.")
+              (let ((regex (mapconcat #'regexp-quote unfound-words "\\|")))
+                (hi-lock-set-pattern regex 'hi-yellow)
+                (message "Highlighted %d Bengali words not listed by NEW_WORDS."
+                         (length unfound-words))))))))
 #+end_src
 * HOOKS
 ** SUBWORD MODE
